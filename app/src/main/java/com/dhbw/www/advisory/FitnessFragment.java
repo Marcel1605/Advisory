@@ -13,7 +13,7 @@ import android.support.v4.app.Fragment;
  * Created by Magnus on 30.05.17.
  */
 
-@android.support.annotation.RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
+
 public class FitnessFragment extends Fragment {
     public FitnessFragment(){
 
