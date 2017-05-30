@@ -1,14 +1,13 @@
 package com.dhbw.www.advisory;
 
 import android.annotation.TargetApi;
-import android.app.Fragment;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.support.v4.
+import android.support.v4.app.Fragment;
 
 /**
  * Created by Magnus on 30.05.17.

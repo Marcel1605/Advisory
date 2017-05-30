@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
-                switch (id){
+                switch (id) {
                     case R.id.fitness:
                         _fragment = new FitnessFragment();
                         break;
@@ -40,14 +40,12 @@ public class MainActivity extends AppCompatActivity {
                         //_fragment = new RezepteFragment();
                         break;
                     case R.id.gym:
-                       // _fragment = new GymFragment();
+                        // _fragment = new GymFragment();
                         break;
                 }
                 final FragmentTransaction transaction = _fragmentManager.beginTransaction();
                 transaction.replace(R.id.main_container, _fragment).commit();
                 return true;
             }
-        }
-
-    }
-}
+        });
+    }}
