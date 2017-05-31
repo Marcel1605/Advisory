@@ -9,7 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
 
     protected BottomNavigationView _bottomNavigation = null;
     protected Fragment _fragment;
@@ -23,24 +23,30 @@ public class MainActivity extends AppCompatActivity {
         _bottomNavigation = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         _fragmentManager = getSupportFragmentManager();
 
-        _bottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int id = item.getItemId();
-                switch (id) {
-                    case R.id.fitness:
-                        _fragment = new FitnessFragment();
-                        break;
-                    case R.id.rezepte:
-                        //_fragment = new RezepteFragment();
-                        break;
-                    case R.id.gym:
-                        // _fragment = new GymFragment();
-                        break;
-                }
-                final FragmentTransaction transaction = _fragmentManager.beginTransaction();
-                transaction.replace(R.id.main_container, _fragment).commit();
-                return true;
-            }
-        });
-    }}
+        //Fitness Fragment als erstes Fragment hinzufügen
+        _fragment = new FitnessFragment();
+        FragmentTransaction transaction = _fragmentManager.beginTransaction();
+        transaction.replace(R.id.main_container, _fragment).commit();
+
+
+        _bottomNavigation.setOnNavigationItemSelectedListener(this);
+    }
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.fitness:
+                _fragment = new FitnessFragment();
+                break;
+            case R.id.rezepte:
+                _fragment = new RezepteFragment();
+                break;
+            case R.id.gym:
+                _fragment = new GymFragment();
+                break;
+        }
+        FragmentTransaction transaction = _fragmentManager.beginTransaction();
+        transaction.replace(R.id.main_container, _fragment).commit();
+        return true;
+    }
+}
