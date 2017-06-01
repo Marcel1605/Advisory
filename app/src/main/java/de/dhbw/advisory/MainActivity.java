@@ -15,11 +15,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     protected Fragment _fragment;
     protected FragmentManager _fragmentManager;
 
-    private double
-
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         _bottomNavigation = (BottomNavigationView) findViewById(R.id.bottom_navigation);
