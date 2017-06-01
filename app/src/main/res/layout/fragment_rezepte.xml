@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -19,13 +20,13 @@
                 android:layout_height="fill_parent"
                 android:stretchColumns="1" >
 
-                <TableRow>
+                <TableRow
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="20dp">
                     <TextView
                         android:id="@+id/Rezepte_Überschrift"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="20dp"
                         android:layout_weight="1"
                         android:gravity="center"
                         android:text="Hier ihr Mittagessen!"
@@ -34,7 +35,6 @@
                         android:textStyle="bold" />
                 </TableRow>
                 <TableRow
-                    android:layout_marginTop="20dp"
                     android:layout_marginBottom="20dp">
                     <TextView
                         android:id="@+id/Rezepte_Titel"
@@ -46,6 +46,167 @@
                         android:textColor="@color/black"
                         android:textSize="20dp"
                         android:textStyle="italic" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_marginBottom="20dp">
+
+                    <ImageView />
+                </TableRow>
+
+                <!--Nutritions anzeigen-->
+                <TableRow
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginRight="40dp"
+                    android:layout_marginBottom="5dp">
+                        <TableRow>
+                            <TextView
+                                android:id="@+id/rezepte_Kohlenhydrate"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="left"
+                                android:text="Kohlenhydrate:"
+                                android:textColor="@color/black"
+                                android:textSize="10dp" />
+                            <TextView
+                                android:id="@+id/rezepte_Kohlenhydrate_Wert"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_marginLeft="3dp"
+                                android:gravity="left"
+                                android:text="10g"
+                                android:textColor="@color/black"
+                                android:textSize="10dp" />
+
+
+                            <TextView
+                                android:id="@+id/rezepte_Protein"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="left"
+                                android:layout_marginLeft="7dp"
+                                android:text="Proteine:"
+                                android:textColor="@color/black"
+                                android:textSize="10dp" />
+                            <TextView
+                                android:id="@+id/rezepte_Protein_Wert"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="left"
+                                android:layout_marginLeft="3dp"
+                                android:text="23g"
+                                android:textColor="@color/black"
+                                android:textSize="10dp" />
+                        </TableRow>
+                </TableRow>
+
+                <TableRow
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginRight="40dp">
+
+                    <TableRow>
+                        <TextView
+                            android:id="@+id/rezepte_Zucker"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="3dp"
+                            android:layout_weight="1"
+                            android:gravity="left"
+                            android:text="Zucker:"
+                            android:textColor="@color/black"
+                            android:textSize="10dp" />
+
+                        <TextView
+                            android:id="@+id/rezepte_Zucker_Wert"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginLeft="3dp"
+                            android:gravity="left"
+                            android:text="10g"
+                            android:textColor="@color/black"
+                            android:textSize="10dp" />
+
+                        <TextView
+                            android:id="@+id/rezepte_Fett"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginLeft="7dp"
+                            android:gravity="left"
+                            android:text="Fett:"
+                            android:textColor="@color/black"
+                            android:textSize="10dp" />
+
+                        <TextView
+                            android:id="@+id/rezepte_Fett_Wert"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginLeft="3dp"
+                            android:gravity="left"
+                            android:text="15g"
+                            android:textColor="@color/black"
+                            android:textSize="10dp" />
+
+                    </TableRow>
+                </TableRow>
+
+                <TableRow
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginRight="40dp">
+                    <TextView
+                        android:id="@+id/rezepte_Zutaten"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginBottom="10dp"
+                        android:gravity="left"
+                        android:text="Zutaten:"
+                        android:textColor="@color/black"
+                        android:textSize="16dp" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginRight="40dp">
+                    <TextView
+                        android:id="@+id/rezepte_Zutaten1"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:layout_weight="1"
+                        android:text="Eier:"
+                        android:textColor="@color/black"
+                        android:textSize="10dp" />
+                    <TextView
+                        android:id="@+id/rezepte_Zutaten_Wert1"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="left"
+                        android:text="5 Stück"
+                        android:textColor="@color/black"
+                        android:textSize="10dp" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="30dp">
+                    <TextView
+                        android:id="@+id/rezepte_Rezept"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:layout_weight="1"
+                        android:text="Rezept:"
+                        android:textColor="@color/black"
+                        android:textSize="16dp" />
                 </TableRow>
 
             </TableLayout>
