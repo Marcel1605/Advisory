@@ -15,6 +15,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     protected Fragment _fragment;
     protected FragmentManager _fragmentManager;
 
+    private double
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,9 +30,12 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         FragmentTransaction transaction = _fragmentManager.beginTransaction();
         transaction.replace(R.id.main_container, _fragment).commit();
 
-
         _bottomNavigation.setOnNavigationItemSelectedListener(this);
+
+
     }
+
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();

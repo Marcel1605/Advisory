@@ -157,8 +157,8 @@
                 </TableRow>
 
                 <TableRow
-                    android:layout_marginLeft="40dp"
-                    android:layout_marginRight="40dp">
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp">
                     <TextView
                         android:id="@+id/rezepte_Zutaten"
                         android:layout_width="match_parent"
@@ -198,15 +198,33 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginTop="30dp">
+
                     <TextView
                         android:id="@+id/rezepte_Rezept"
-                        android:layout_width="0dip"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="left"
+                        android:layout_marginBottom="10dp"
                         android:layout_weight="1"
+                        android:gravity="left"
                         android:text="Rezept:"
                         android:textColor="@color/black"
                         android:textSize="16dp" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="20dp">
+
+                    <TextView
+                        android:id="@+id/rezepte_Rezept_Text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:layout_weight="1"
+                        android:gravity="left"
+                        android:text="Bli Bla Blubb"
+                        android:textColor="@color/black"
+                        android:textSize="10dp" />
                 </TableRow>
 
             </TableLayout>
