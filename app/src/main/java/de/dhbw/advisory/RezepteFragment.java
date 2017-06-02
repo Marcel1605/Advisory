@@ -132,7 +132,7 @@ public class RezepteFragment extends Fragment {
             type = "salad";
         } else {
             //Fehler
-            
+
         }
 
 

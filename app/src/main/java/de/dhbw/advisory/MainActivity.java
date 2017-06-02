@@ -15,11 +15,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     protected Fragment _fragment;
     protected FragmentManager _fragmentManager;
 
-//<<<<<<< HEAD
-//=======
-//
-//>>>>>>> 895e1aed0d1536ffd342bd1a56e1fe3fc96bfd23
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
