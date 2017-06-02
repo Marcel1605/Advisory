@@ -15,12 +15,13 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     protected Fragment _fragment;
     protected FragmentManager _fragmentManager;
 
-<<<<<<< HEAD
-=======
+//<<<<<<< HEAD
+//=======
+//
+//>>>>>>> 895e1aed0d1536ffd342bd1a56e1fe3fc96bfd23
 
->>>>>>> 895e1aed0d1536ffd342bd1a56e1fe3fc96bfd23
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -37,9 +38,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     }
 
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         switch (id) {
             case R.id.fitness:

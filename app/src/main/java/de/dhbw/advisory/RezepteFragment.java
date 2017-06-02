@@ -90,6 +90,51 @@ public class RezepteFragment extends Fragment {
      * @param hh
      */
     public void setEssensTyp(int hh) {
+        //bread 6-9
+        //appetizer 10-11
+        //main course 12-14
+        //side dish 15
+        //dessert 16
+        //main course 17-21
+        //salad 22-23
+        //soup 24-5
+
+        String query;
+        String type;
+
+        if (hh == 24 || hh <= 5) {
+            //Soup
+            query = "soup";
+            type = "soup";
+        } else if (hh >= 6 && hh <= 9) {
+            //Bread
+            query = "bread";
+            type = "bread";
+        } else if (hh >= 10 && hh <= 11) {
+            //Appetizer
+            query = "appetizer";
+            type = "appetizer";
+        } else if (hh >= 12 && hh <= 14 || hh >= 17 && hh <= 21) {
+            //Main Course
+            query = "main+course";
+            type = "main+course";
+        } else if (hh == 15) {
+            //side dish
+            query = "side+dish";
+            type = "side+dish";
+        } else if (hh == 16) {
+            //Dessert
+            query = "dessert";
+            type = "dessert";
+        }  else if (hh >= 22 && hh <= 23) {
+            //Salad
+            query = "salad";
+            type = "salad";
+        } else {
+            //Fehler
+            
+        }
+
 
     }
 }
