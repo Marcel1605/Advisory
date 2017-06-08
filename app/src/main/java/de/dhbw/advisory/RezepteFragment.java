@@ -1,16 +1,25 @@
 package de.dhbw.advisory;
 
 
-import android.annotation.TargetApi;
-import android.os.Build;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.app.Fragment;
+import android.widget.ImageView;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.os.AsyncTask;
+import android.content.Context;
+import android.widget.TableRow.LayoutParams;
+import java.io.InputStream;
+import android.graphics.BitmapFactory;
+
 
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpHeaders;
@@ -20,12 +29,14 @@ import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
-        import java.util.Calendar;
+import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * Created by Magnus on 30.05.17.
@@ -56,25 +67,28 @@ public class RezepteFragment extends Fragment {
     /**UI-Elemente*/
     protected TextView _rezepteÜberschrift = null;
     protected TextView _rezepteTitel = null;
-
-
+    protected TextView _rezepteAnleitung = null;
+    protected TableLayout _rezepteZutatenliste = null;
+    protected ImageView _rezepteIcon = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_rezepte, container, false);
 
         //Referenzen der Textviews abfragen
         _rezepteTitel = (TextView) view.findViewById(R.id.Rezepte_Titel);
         _rezepteÜberschrift = (TextView) view.findViewById(R.id.Rezepte_Überschrift);
+        _rezepteAnleitung = (TextView) view.findViewById(R.id.rezepte_Rezept_Text);
+        _rezepteZutatenliste = (TableLayout) view.findViewById(R.id.rezepte_Zutatenliste);
+        _rezepteIcon = (ImageView) view.findViewById(R.id.rezepte_Icon);
 
         //Titel aktualisieren
         int h= actualHour();
         _rezepteÜberschrift.setText(getEssensTyp(h));
 
         //API Aufruf starten und Felder aktualisieren
-        MeinAsyncTask mat = new MeinAsyncTask();
+        RecipeAPI mat = new RecipeAPI(this.getContext());
 
         mat.execute(getEssensTypAnfrage(h));
 
@@ -181,10 +195,10 @@ public class RezepteFragment extends Fragment {
             typ = "appetizer";
         } else if (hh >= 12 && hh <= 14 || hh >= 17 && hh <= 21) {
             //Main Course
-            typ = "main+course";
+            typ = "main course";
         } else if (hh == 15) {
             //side dish
-            typ = "side+dish";
+            typ = "side dish";
         } else if (hh == 16) {
             //Dessert
             typ = "dessert";
@@ -200,29 +214,121 @@ public class RezepteFragment extends Fragment {
     }
 
 
+    public class GetImage extends AsyncTask <String, String, Bitmap>{
+
+        @Override
+        protected Bitmap doInBackground(String... url) {
+            Bitmap icon = null;
+
+            Log.i("imageDoInBackground", "gestartet");
+
+            try {
+                InputStream in = new java.net.URL(url[0]).openStream();
+                icon = BitmapFactory.decodeStream(in);
+            } catch (Exception e ) {
+                Log.e("Error", e.getMessage());
+            }
+
+            return icon;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap icon) {
+
+            _rezepteIcon.setImageBitmap(icon);
+        }
+
+
+    }
+
     /**
      * Klasse für den Hintergrund Thread
      */
-    public class MeinAsyncTask extends AsyncTask<String, String, String[]> {
+    public class RecipeAPI extends AsyncTask<String, String, ArrayList> {
+
+        protected Context context;
+
+        RecipeAPI(Context context){
+            super();
+            this.context = context;
+        }
 
         @Override
-        protected String[] doInBackground(String... params) {
+        protected ArrayList doInBackground(String... params) {
             try{
                 //Zu untersuchende ID via API herausfinden
-                String jsonResponseString = getRecipeSearch(params[0]);
-                int id = parseRecipeSearch(jsonResponseString);
-                String[] erg = new String[1];
-                erg[0] = String.valueOf(id);
+                Log.i("doInBackground: ", "Methode begonnen");
+                String jsonResponseRecipeSearch = getRecipe(params[0]);
+                Log.i("doInBackground: ", "API Aufruf beendet");
+                ArrayList erg = parseRecipe(jsonResponseRecipeSearch);
+                Log.i("doInBackground: ", "parsen beendet");
+
+                Log.i("doInBackground: ", "Methode beendet");
                 return erg;
             } catch (Exception e){
-                return new String[0];
+                Log.i("doInBackground: ", "Fehler doInBackground");
+                return new ArrayList();
             }
 
         }
 
+
         @Override
-        protected void onPostExecute(String[] ergebnis) {
-            
+        protected void onPostExecute(ArrayList ergebnis) {
+            Log.i("onPostExecute", "Methode begonnen");
+
+            if (ergebnis.isEmpty()) {
+                //Zurückgegebenes Ergebnis ist leer; Fehler
+                _rezepteTitel.setText("ERROR");
+                Log.i("onPostExecute","Fehler: Zurückgegebene Arraylist ist leer.");
+            } else {
+                Log.i("onPostExecute","Methode begonnen");
+                //Titel setzten
+                _rezepteTitel.setText(ergebnis.get(0).toString());
+                //Rezeptanleitung setzen
+                _rezepteAnleitung.setText(ergebnis.get(2).toString());
+
+                GetImage img = new GetImage();
+                img.execute((String) ergebnis.get(3));
+
+                //Zutaten bekommen
+                String[][] zutaten = (String[][]) ergebnis.get(1);
+
+                //TableRow & TextView Arrays erstellen
+                TableRow[] tr = new TableRow[zutaten.length];
+                TextView[] tv_ing = new TextView[zutaten.length];
+                TextView[] tv_amount = new TextView[zutaten.length];
+
+                LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+                params.weight = 1f;
+
+                //Zutaten in die Liste setzen
+               for (int i = 0; i < zutaten.length; i++) {
+                   tr[i] = new TableRow(context);
+                   tv_ing[i] = new TextView(context);
+                   tv_amount[i] = new TextView(context);
+
+                   tv_ing[i].setLayoutParams(params);
+                   tv_ing[i].setTextColor(Color.BLACK);
+                   tv_ing[i].setTextSize(TypedValue.COMPLEX_UNIT_DIP, 10);
+                   tv_ing[i].setText("" + zutaten[i][0] + ":");
+
+                   tv_amount[i].setLayoutParams(params);
+                   tv_amount[i].setTextColor(Color.BLACK);
+                   tv_amount[i].setTextSize(TypedValue.COMPLEX_UNIT_DIP, 10);
+                   tv_amount[i].setText("" + zutaten[i][1] + " " + zutaten[i][2]);
+
+                   tr[i].addView(tv_ing[i]);
+                   tr[i].addView(tv_amount[i]);
+                   _rezepteZutatenliste.addView(tr[i]);
+               }
+
+                _rezepteZutatenliste.refreshDrawableState();
+                Log.i("onPostExecute","Views aktualisiert");
+
+            }
+
+            Log.i("onPostExecute", "Methode beendet");
         }
 
         /**
@@ -233,27 +339,42 @@ public class RezepteFragment extends Fragment {
          * @return gibt den HTTP Request zurück
          * @throws Exception
          */
-        protected String getRecipeSearch(String typ) throws Exception {
+        protected String getRecipe(String typ) throws Exception {
             try {
+                Log.i("getRecipe: ","Methode begonnen");
+                Log.i("getRecipe: ","Übergebener Wert: " + typ);
+                Log.i("getRecipe: ","Starte API Aufruf");
                 //1. Request Factory holen
+                Log.i("getRecipe: ","Request Factory holen begonnen");
                 HttpTransport httpTransport = new NetHttpTransport();
                 HttpRequestFactory requestFactory = httpTransport.createRequestFactory();
+                Log.i("getRecipe: ","Request Factory holen beendet");
 
                 //2. Url hinzufügen
-                GenericUrl url = new GenericUrl("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/search");
-                url.put("instructionsRequired", "true");
-                url.put("number", "10");
-                url.put("query", typ);
-                url.put("type", typ);
+                Log.i("getRecipe: ","URL hinzufügen begonnen");
+                GenericUrl url = new GenericUrl("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/random");
+                url.put("limitLicense", "false");
+                url.put("number", "1");
+                url.put("tags", "" + typ);
+                Log.i("getRecipe","URL hinzufügen, typ: " + typ);
+                Log.i("getRecipe: ","URL hinzufügen beendet");
+
 
                 //3. Request absetzen
+                Log.i("getRecipe: ","Request absetzen begonnen");
                 HttpHeaders httpHeaders = new HttpHeaders();
                 httpHeaders.set("X-Mashape-Key", "knWwtaM7bHmshY9d7wMYMZJd8AS3p1xbRHvjsnq4NKZcfVsSiP");
                 HttpRequest request = requestFactory.buildGetRequest(url);
                 request.setHeaders(httpHeaders);
+                Log.i("getRecipe: ","Request absetzen Daten Header hinzugefügt");
                 HttpResponse httpResponse = request.execute();
+                Log.i("getRecipe: ","Request absetzen beendet");
 
+                Log.i("getRecipe: ","Request parsen");
                 String jsonResponseString = httpResponse.parseAsString();
+
+                Log.i("getRecipe: ","API Aufruf beendet");
+                Log.i("getRecipe: ","Erhaltene JSON: " + jsonResponseString);
                 return jsonResponseString;
             } catch (Exception e) {
                 //! Fehler Exception unspeziefisch
@@ -270,25 +391,64 @@ public class RezepteFragment extends Fragment {
          * @return
          * @throws JSONException
          */
-        protected int parseRecipeSearch(String jsonString) throws JSONException {
+        protected ArrayList parseRecipe(String jsonString) throws JSONException {
             try{
+                Log.i("parseRecipe:", "Beginnt das parsen");
+                Log.i("parseRecipe:", "Übergebenes Objekt: " + jsonString);
                 //Eigentliches parsen
                 JSONObject jsonObject = new JSONObject(jsonString);
 
-                //Zufällig ein Rezept JSON Objekt aus dem JSON Array nehmen
-                JSONArray jsonArray = jsonObject.getJSONArray("results");
-                int length = jsonArray.length();
-                int position =  ((int) Math.random()) *length;
-                JSONObject recipe = jsonArray.getJSONObject(position);
+                //Wichtigsten Inhalt entnehmen
+                JSONArray jsonArray = jsonObject.getJSONArray("recipes");
+                JSONObject i = jsonArray.getJSONObject(0);
+                Log.i("parseRecipe:", "Recipes geparst");
 
-                //ID des zufällig gewählten JSON Objekt auswählen
-                int id = recipe.getInt("id");
+                int servings = i.getInt("servings");
+                Log.i("parseRecipe:", "Servings geparst");
 
-                return id;
+                JSONArray ingredients = i.getJSONArray("extendedIngredients");
+                int length = ingredients.length();
+                //[][0] = aisle
+                //[][1] = amount
+                //[][2] = unit
+                String[][] ing = new String[length][3];
+
+                for(int x = 0; x < length; x++){
+                    ing [x][0] = ingredients.getJSONObject(x).getString("aisle");
+                    ing [x][1] = ingredients.getJSONObject(x).getString("amount");
+                    ing [x][2] = ingredients.getJSONObject(x).getString("unit");
+                }
+
+                Log.i("parseRecipe:", "Ingredients geparst");
+
+                String title = i.getString("title");
+                Log.i("parseRecipe:", "title gesetzt");
+                String img_url = i.getString("image");
+
+                Log.i("parseRecipe:", "title und img_url gesetzt");
+                //Instructions verschönern
+                String newinstructions = i.getString("instructions");
+                String teiler = "                         ";
+                String instructions = newinstructions.replaceAll(teiler, "\n");
+
+                //TODO durch eine Map ersetzen
+                ArrayList<Object> information = new ArrayList<>();
+
+                Log.i("parseRecipe:", "Parsen fast beendet");
+                Log.i("parseRecipe:", "title: " + title);
+                Log.i("parseRecipe:", "ing: " + ing.toString());
+                Log.i("parseRecipe:", "instructions: " + instructions);
+
+                information.add(0,title);
+                information.add(1, ing);
+                information.add(2,instructions);
+                information.add(3, img_url);
+
+                return information;
             } catch (Exception e) {
                 //Fehler Exception
                 Log.i("parseRecipeSearch","Parsen ReipeSearch fehlgeschlagen");
-                return 0;
+                return new ArrayList();
             }
 
         }
