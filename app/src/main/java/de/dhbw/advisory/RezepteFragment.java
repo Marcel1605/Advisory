@@ -33,6 +33,7 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -70,6 +71,8 @@ public class RezepteFragment extends Fragment {
     protected TextView _rezepteAnleitung = null;
     protected TableLayout _rezepteZutatenliste = null;
     protected ImageView _rezepteIcon = null;
+    protected TextView _rezepteZutaten = null;
+    protected TextView _rezepteRezepte = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -82,6 +85,8 @@ public class RezepteFragment extends Fragment {
         _rezepteAnleitung = (TextView) view.findViewById(R.id.rezepte_Rezept_Text);
         _rezepteZutatenliste = (TableLayout) view.findViewById(R.id.rezepte_Zutatenliste);
         _rezepteIcon = (ImageView) view.findViewById(R.id.rezepte_Icon);
+        _rezepteZutaten = (TextView) view.findViewById(R.id.rezepte_Zutaten);
+        _rezepteRezepte = (TextView) view.findViewById(R.id.rezepte_Rezept);
 
         //Titel aktualisieren
         int h= actualHour();
@@ -322,6 +327,9 @@ public class RezepteFragment extends Fragment {
                    tr[i].addView(tv_amount[i]);
                    _rezepteZutatenliste.addView(tr[i]);
                }
+
+                _rezepteRezepte.setText("Rezepte:");
+               _rezepteZutaten.setText("Zutaten:");
 
                 _rezepteZutatenliste.refreshDrawableState();
                 Log.i("onPostExecute","Views aktualisiert");
