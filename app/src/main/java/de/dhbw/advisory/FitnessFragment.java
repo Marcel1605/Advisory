@@ -1,6 +1,9 @@
 package de.dhbw.advisory;
 
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -26,6 +29,7 @@ import com.squareup.picasso.Picasso;
 public class FitnessFragment extends Fragment implements IYoutubeCardView {
     private ProgressDialog alertDialog;
     private ViewGroup container;
+    private LayoutInflater inflater;
 
     public FitnessFragment(){ }
 
@@ -33,9 +37,24 @@ public class FitnessFragment extends Fragment implements IYoutubeCardView {
         alertDialog.dismiss();
     }
 
-    public void addCard(SearchResult item) {
-        LinearLayout root = (LinearLayout) getView().findViewById(R.id.youtubeRoot);
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.card, root, false);
+    public void addCard(final SearchResult item) {
+        LinearLayout root = (LinearLayout) this.container.findViewById(R.id.youtubeRoot);
+        View view = inflater.inflate(R.layout.card, root, false);
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/watch?v=" + item.getId().getVideoId())));
+                try {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube://" + item.getId().getVideoId()));
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                } catch (ActivityNotFoundException e) {
+                    // if youtube is not installed it will be opened in another available app
+                    Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("https://youtube.com/embed/" + item.getId().getVideoId() + "?autoplay=1"));
+                    startActivity(i);
+                }
+            }
+        });
         TextView tv = (TextView) view.findViewById(R.id.videoTitle);
         tv.setText(item.getSnippet().getTitle());
 
@@ -54,20 +73,15 @@ public class FitnessFragment extends Fragment implements IYoutubeCardView {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.container = container;
-        return inflater.inflate(R.layout.fragment_fitness, container, false);
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
+        this.inflater = inflater; 
         alertDialog = new ProgressDialog(getContext());
         alertDialog.setMessage(getResources().getString(R.string.loader));
         alertDialog.setCancelable(false);
         alertDialog.show();
-
         AsyncTask<String, Void, AsyncTaskResult> task = new YoutubeSearch(getContext(), this);
         task.execute("Bizeps Übungen");
+
+        return inflater.inflate(R.layout.fragment_fitness, container, false);
     }
 
     @Override

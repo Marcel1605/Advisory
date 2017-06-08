@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.Window;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
 
@@ -23,14 +24,13 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         _bottomNavigation = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         _fragmentManager = getSupportFragmentManager();
 
-        //Fitness Fragment als erstes Fragment hinzufügen
-        _fragment = new FitnessFragment();
-        FragmentTransaction transaction = _fragmentManager.beginTransaction();
-        transaction.replace(R.id.main_container, _fragment).commit();
-
+        //Beim initialen Activity-Start Fitness Fragment als erstes Fragment hinzufügen
+        if (savedInstanceState == null) {
+            _fragment = new FitnessFragment();
+            FragmentTransaction transaction = _fragmentManager.beginTransaction();
+            transaction.replace(R.id.main_container, _fragment).commit();
+        }
         _bottomNavigation.setOnNavigationItemSelectedListener(this);
-
-
     }
 
         @Override
