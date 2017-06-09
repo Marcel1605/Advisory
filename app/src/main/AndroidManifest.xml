@@ -17,6 +17,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!-- Start of Google Maps V2 API Key -->
+        <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyB9pyEvpG5Te2ZqbYEN-7HckmdPC8jy530"/>
+        <!-- End of Google Maps V2 API Key -->
     </application>
 
 </manifest>
