@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 _fragment = new RezepteFragment();
                 break;
             case R.id.gym:
-                _fragment = new GymFragment();
+                _fragment = new PlacePickerFragment();
                 break;
         }
         FragmentTransaction transaction = _fragmentManager.beginTransaction();

@@ -14,7 +14,7 @@
 * limitations under the License.
 */
 
-package de.dhbw.advisory.placepicker;
+package de.dhbw.advisory;
 
 
 import android.app.Activity;
