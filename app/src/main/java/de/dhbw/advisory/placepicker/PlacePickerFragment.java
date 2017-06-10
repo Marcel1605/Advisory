@@ -14,7 +14,7 @@
 * limitations under the License.
 */
 
-package de.dhbw.advisory;
+package de.dhbw.advisory.placepicker;
 
 
 import android.app.Activity;
@@ -22,7 +22,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-
 import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -31,6 +30,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 
+import de.dhbw.advisory.R;
 import de.dhbw.advisory.placepicker.cardstream.Card;
 import de.dhbw.advisory.placepicker.cardstream.CardStream;
 import de.dhbw.advisory.placepicker.cardstream.CardStreamFragment;
@@ -51,7 +51,7 @@ import java.util.List;
  * @see PlacePicker
  * @see Place
  */
-public class GymFragment extends Fragment implements OnCardClickListener {
+public class PlacePickerFragment extends Fragment implements OnCardClickListener {
 
     private static final String TAG = "PlacePickerSample";
 
@@ -78,7 +78,6 @@ public class GymFragment extends Fragment implements OnCardClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i("doInBackground: ", "GymFragment begonnen");
     }
 
     @Override
