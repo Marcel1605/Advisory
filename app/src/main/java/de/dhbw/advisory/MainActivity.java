@@ -9,18 +9,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.Window;
-import android.widget.TextView;
 
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.location.places.ui.PlacePicker;
-import de.dhbw.advisory.placepicker.cardstream.CardStream;
-import de.dhbw.advisory.placepicker.cardstream.CardStreamFragment;
-import de.dhbw.advisory.placepicker.cardstream.CardStreamState;
-import de.dhbw.advisory.placepicker.cardstream.OnCardClickListener;
-import de.dhbw.advisory.placepicker.cardstream.StreamRetentionFragment;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
 
@@ -57,7 +46,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 _fragment = new RezepteFragment();
                 break;
             case R.id.gym:
-                _fragment = new PlacePickerFragment();
+                Intent intent = new Intent(this, GymFragment.class);
+                startActivity(intent);
+                //_fragment = new GymFragment();
                 break;
         }
         FragmentTransaction transaction = _fragmentManager.beginTransaction();
