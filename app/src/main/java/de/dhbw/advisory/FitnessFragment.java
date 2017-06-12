@@ -21,11 +21,6 @@ import com.google.api.services.youtube.model.SearchResult;
 import com.google.api.services.youtube.model.Thumbnail;
 import com.squareup.picasso.Picasso;
 
-/**
- * Created by Magnus on 30.05.17.
- */
-
-
 public class FitnessFragment extends Fragment implements IYoutubeCardView {
     private ProgressDialog alertDialog;
     private ViewGroup container;
@@ -37,32 +32,40 @@ public class FitnessFragment extends Fragment implements IYoutubeCardView {
         alertDialog.dismiss();
     }
 
+    /*
+    Methode veranlasst, dass die von der YouTube API empfangenen Ergebnisse in Form von Karten in das Layout eingefügt werden.
+    Die Karte besteht aus einem Vorschaubild des Videos und dem Titel des Videos
+     */
     public void addCard(final SearchResult item) {
         LinearLayout root = (LinearLayout) this.container.findViewById(R.id.youtubeRoot);
         View view = inflater.inflate(R.layout.card, root, false);
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/watch?v=" + item.getId().getVideoId())));
                 try {
+                    //Sofern die YouTube App auf dem Gerät installiert ist, soll das Video dort abgespielt werden
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube://" + item.getId().getVideoId()));
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
                 } catch (ActivityNotFoundException e) {
-                    // if youtube is not installed it will be opened in another available app
+                    //Sollte die YouTube App nicht auf dem Gerät installiert sein, wird das Video in einer anderen geeigneten App gestartet (z.B Browser)
                     Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("https://youtube.com/embed/" + item.getId().getVideoId() + "?autoplay=1"));
                     startActivity(i);
                 }
             }
         });
+        //Die Karte wird mit dem Titel des Videos versehen
         TextView tv = (TextView) view.findViewById(R.id.videoTitle);
         tv.setText(item.getSnippet().getTitle());
 
+        //Das Vorschaubild des Videos wird referenziert
         ImageView imageView = (ImageView) view.findViewById(R.id.thumbnail);
         Thumbnail thumbnail = item.getSnippet().getThumbnails().getHigh();
         if(thumbnail == null) {
             thumbnail = item.getSnippet().getThumbnails().getDefault();
         }
+
+        //Die Picasso-Bibliothek übernimmt den Download und das Caching der Bilddatei
         Picasso.with(getContext()).load(thumbnail.getUrl()).into(imageView);
 
         System.out.println("Card added!");
@@ -86,7 +89,7 @@ public class FitnessFragment extends Fragment implements IYoutubeCardView {
 
     @Override
     public void onPause(){
-        //The system calls this method as the first indication that the user is leaving the fragment (though it does not always mean the fragment is being destroyed). This is usually where you should commit any changes that should be persisted beyond the current user session (because the user might not come back).
+        //Das System ruft diese Methode auf, sobald der Nutzer das erste mal andeutet, dass er das Fragment verlassen möchte. Hier sollten alle Änderungen commited werden, die länger als die aktuelle user session zu Verfügung stehen sollen
         Log.e("DEBUG", "OnPause of loginFragment");
         super.onPause();
     }

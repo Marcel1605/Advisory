@@ -1,9 +1,4 @@
 package de.dhbw.advisory;
-
-/**
- * Created by Konstantin on 01.06.2017.
- */
-
         import android.content.Context;
         import android.content.res.AssetManager;
         import android.os.AsyncTask;
@@ -40,8 +35,7 @@ public class YoutubeSearch extends AsyncTask<String, Void, AsyncTaskResult> {
     private static final long NUMBER_OF_VIDEOS_RETURNED = 25;
 
     /**
-     * Define a global instance of a Youtube object, which will be used
-     * to make YouTube Data API requests.
+     * Die Instanz des YouTube-Objekts wird dazu verwendet eine Datenanfrage mit der YouTube API zu machen
      */
     private final YouTube youtube;
     private Context context;
@@ -50,23 +44,22 @@ public class YoutubeSearch extends AsyncTask<String, Void, AsyncTaskResult> {
     public YoutubeSearch(Context context, IYoutubeCardView resultView) {
         this.context = context;
         this.resultView = resultView;
-        // This object is used to make YouTube Data API requests. The last
-        // argument is required, but since we don't need anything
-        // initialized when the HttpRequest is initialized, we override
-        // the interface and provide a no-op function.
+        //Dieses Objekt wird dazu verwendet die Datenanfrage mit der YouTube API zu machen
+        //Das letzte Argument muss angegeben werden, aber da hier nichts initialisiert werden muss,
+        //wenn der HttpRequest initilisiert wird kann das Interface mit einer "no-operation"-Funktion überschrieben werden
         this.youtube = new YouTube.Builder(new NetHttpTransport(), new JacksonFactory(), new HttpRequestInitializer() {
             public void initialize(HttpRequest request) throws IOException {
             }
         }).setApplicationName("advisory").build();
     }
 
-    /**
-     * Initialize a YouTube object to search for videos on YouTube. Then
-     * display the name and thumbnail image of each video in the result set.
+    /*
+     * Diese Methode vollzieht den Aufruf der YouTube-API um Videos und dazugehörige Informationen abzurufen
      */
     private AsyncTaskResult searchVideo(Context context, String queryTerm) {
-        // Read the developer key from the properties file.
+        // Der developer key wird später aus der properties-Datei ausgelesen
         Properties properties = new Properties();
+
         try {
             AssetManager assetManager = context.getAssets();
             InputStream inputStream = assetManager.open("youtube.properties");
@@ -77,26 +70,26 @@ public class YoutubeSearch extends AsyncTask<String, Void, AsyncTaskResult> {
         }
 
         try {
+            // Definition der API-Anfrage für abzurufende Suchergebnisse
             // Define the API request for retrieving search results.
             YouTube.Search.List search = youtube.search().list("id,snippet");
 
-            // Set your developer key from the {{ Google Cloud Console }} for
-            // non-authenticated requests. See:
-            // {{ https://cloud.google.com/console }}
+            // Auslesen des developer key
             String apiKey = properties.getProperty("youtube.apikey");
             search.setKey(apiKey);
             search.setQ(queryTerm);
 
-            // Restrict the search results to only include videos. See:
+            // Die Suchergbenisse werden auf Videos beschränkt. Vgl.:
             // https://developers.google.com/youtube/v3/docs/search/list#type
             search.setType("video");
 
-            // To increase efficiency, only retrieve the fields that the
-            // application uses.
+            // Um die Abfrage zu beschleunigen werden nur die Infos abgerufen, die in der Applikation benötigt werden:
+            //Später soll der Titel des Videos und das Vorschaubild abgebildet werden
+            //Beim Klick auf das Video soll dieses abgespielt werden
             search.setFields("items(id/kind,id/videoId,snippet/title,snippet/thumbnails/high/url)");
             search.setMaxResults(NUMBER_OF_VIDEOS_RETURNED);
 
-            // Call the API and print results.
+            // Hier erfolgt der Aufruf der API
             SearchListResponse searchResponse = search.execute();
 
             return new AsyncTaskResult(searchResponse.getItems());
@@ -146,6 +139,7 @@ public class YoutubeSearch extends AsyncTask<String, Void, AsyncTaskResult> {
         }
     }
 
+    //Auslagern des Aufrufs
     @Override
     protected AsyncTaskResult doInBackground(String... params) {
         return searchVideo(this.context, params[0]);
@@ -153,11 +147,15 @@ public class YoutubeSearch extends AsyncTask<String, Void, AsyncTaskResult> {
 
     @Override
     protected void onPostExecute(AsyncTaskResult asyncTaskResult) {
+        ////Sobald Videos gefunden wurden, wird zunächst der Ladebildschirm entfernt
         resultView.cancelProgressDialog();
+
+        //Gibt es Ergbnisse, so werden diese dem View in Form einer Karte hinzugefügt
         if(asyncTaskResult.isSuccessful()) {
             for(SearchResult item : asyncTaskResult.getResult()) {
                 resultView.addCard(item);
             }
+
         } else {
             System.err.println(asyncTaskResult.getError().getMessage());
         }

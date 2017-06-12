@@ -6,10 +6,6 @@ import com.google.api.services.youtube.model.SearchResult;
 import java.util.Collection;
 import java.util.List;
 
-/**
- * Created by D062645 on 01.06.2017.
- */
-
 public class AsyncTaskResult {
     private Throwable error;
     private Collection<SearchResult> result;
