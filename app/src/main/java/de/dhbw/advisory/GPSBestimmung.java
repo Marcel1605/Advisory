@@ -9,6 +9,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 
 /**
@@ -31,7 +32,6 @@ public class GPSBestimmung extends Service implements LocationListener {
     public GPSBestimmung(Context context) {
         this.c = context;
     }
-
 
 
     @Override
@@ -90,6 +90,7 @@ public class GPSBestimmung extends Service implements LocationListener {
             if (GPSaktiv) {
                 //Bestimmung der GPS Position, sofern GPS eingeschaltet ist. Die daten werden in der Variable "position" gespeichert.
 
+
                 if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     // TODO: Consider calling
                     //    ActivityCompat#requestPermissions
@@ -117,5 +118,6 @@ public class GPSBestimmung extends Service implements LocationListener {
             locationManager.removeUpdates(GPSBestimmung.this);
         }
     }
+
 }
 

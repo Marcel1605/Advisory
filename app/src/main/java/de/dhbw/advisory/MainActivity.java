@@ -1,8 +1,10 @@
 package de.dhbw.advisory;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -25,7 +27,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         _bottomNavigation = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         _fragmentManager = getSupportFragmentManager();
 
-
         //Beim initialen Activity-Start Fitness Fragment als erstes Fragment hinzufügen
         if (savedInstanceState == null) {
             _fragment = new FitnessFragment();
@@ -33,6 +34,18 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             transaction.replace(R.id.main_container, _fragment).commit();
         }
         _bottomNavigation.setOnNavigationItemSelectedListener(this);
+
+        //Holt die fehlende Permission beim Nutzer ein
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            boolean permissionGranted = ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+
+            if(permissionGranted) {
+                // {Some Code}
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 200);
+            }
+            return;
+        }
     }
 
         @Override

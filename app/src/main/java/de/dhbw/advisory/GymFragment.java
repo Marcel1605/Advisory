@@ -2,8 +2,10 @@ package de.dhbw.advisory;
 
 
 import android.app.Service;
+import android.content.pm.PackageManager;
 import android.location.LocationListener;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
