@@ -2,14 +2,11 @@ package de.dhbw.advisory;
 
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+
 import de.android.common.activities.SampleActivityBase;
-import de.android.common.logger.Log;
+import de.dhbw.advisory.placepicker.PlacePickerFragment;
 import de.dhbw.advisory.placepicker.cardstream.CardStream;
 import de.dhbw.advisory.placepicker.cardstream.CardStreamFragment;
 import de.dhbw.advisory.placepicker.cardstream.CardStreamState;

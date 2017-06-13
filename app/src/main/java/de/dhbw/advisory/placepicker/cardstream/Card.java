@@ -53,7 +53,7 @@ public class Card {
 
     // The card model contains a reference to its desired layout (for extensibility), title,
     // description, zero to many action buttons, and zero or 1 progress indicators.
-    private int mLayoutId = R.layout.card;
+    private int mLayoutId = R.layout.card_main;
 
     /**
      * Tag that uniquely identifies this card.
