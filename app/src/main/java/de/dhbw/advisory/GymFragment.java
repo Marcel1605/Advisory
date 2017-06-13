@@ -1,6 +1,8 @@
 package de.dhbw.advisory;
 
 
+import android.app.Service;
+import android.location.LocationListener;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -9,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 
 /**
@@ -16,9 +19,25 @@ import android.view.ViewGroup;
  */
 public class GymFragment extends Fragment {
 
+    GPSBestimmung GPS;
+    TextView mein_laengengrad;
+    TextView mein_breitengradgrad;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_gym, container, false);
+
+        GPS = new GPSBestimmung(this.getContext());
+        GPS.setPosition();
+
+        mein_laengengrad = (TextView) v.findViewById(R.id.Gym_Name_Content1);
+        mein_breitengradgrad = (TextView) v.findViewById(R.id.Gym_Entfernung_Content1);
+
+        if(GPS.istGPSaktiv() == true){
+            //GPS ist aktiv, Grade ausgeben
+            mein_laengengrad.setText("Längengrad: " + GPS.getLaengengrad());
+            mein_breitengradgrad.setText("Breitengrad: " + GPS.getBreitengrad());
+        }
 
     return v;
     }
@@ -31,3 +50,4 @@ public class GymFragment extends Fragment {
     }
 
 }
+

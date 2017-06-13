@@ -81,7 +81,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Name"
+                            android:text=""
                             android:textColor="@color/black"
                             android:textSize="12dp"
                             android:textStyle="bold" />
@@ -90,7 +90,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Entfernung"
+                            android:text=""
                             android:textColor="@color/black"
                             android:textSize="12dp"
                             android:textStyle="bold" />
@@ -107,7 +107,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Name"
+                            android:text=""
                             android:textColor="@color/black"
                             android:textSize="12dp"
                             android:textStyle="bold" />
@@ -116,7 +116,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Entfernung"
+                            android:text=""
                             android:textColor="@color/black"
                             android:textSize="12dp"
                             android:textStyle="bold" />
@@ -169,7 +169,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Name"
+                            android:text=""
                             android:textColor="@color/black"
                             android:textSize="12dp"
                             android:textStyle="bold" />
@@ -178,7 +178,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Entfernung"
+                            android:text=""
                             android:textColor="@color/black"
                             android:textSize="12dp"
                             android:textStyle="bold" />
@@ -195,7 +195,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Name"
+                            android:text=""
                             android:textColor="@color/black"
                             android:textSize="12dp"
                             android:textStyle="bold" />
@@ -204,7 +204,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Entfernung"
+                            android:text=""
                             android:textColor="@color/black"
                             android:textSize="12dp"
                             android:textStyle="bold" />
@@ -261,7 +261,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Name"
+                            android:text=""
                             android:textColor="@color/black"
                             android:textSize="12dp"
                             android:textStyle="bold" />
@@ -271,7 +271,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Entfernung"
+                            android:text=""
                             android:textColor="@color/black"
                             android:textSize="12dp"
                             android:textStyle="bold" />
@@ -290,7 +290,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Name"
+                            android:text=""
                             android:textColor="@color/black"
                             android:textSize="12dp"
                             android:textStyle="bold" />
@@ -299,7 +299,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Entfernung"
+                            android:text=""
                             android:textColor="@color/black"
                             android:textSize="12dp"
                             android:textStyle="bold" />

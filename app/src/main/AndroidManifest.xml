@@ -19,7 +19,7 @@
             </intent-filter>
         </activity>
         <!-- Start of Google Maps V2 API Key -->
-        <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyB9pyEvpG5Te2ZqbYEN-7HckmdPC8jy530"/>
+        <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyDXzj9XCSY5FtsEyvtKaOtxctEX7ybzrpU"/>
         <!-- End of Google Maps V2 API Key -->
     </application>
 
