@@ -46,9 +46,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 _fragment = new RezepteFragment();
                 break;
             case R.id.gym:
-                Intent intent = new Intent(this, GymFragment.class);
-                startActivity(intent);
-                //_fragment = new GymFragment();
+                _fragment = new GymFragment();
                 break;
         }
         FragmentTransaction transaction = _fragmentManager.beginTransaction();
