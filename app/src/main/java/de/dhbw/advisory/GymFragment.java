@@ -30,6 +30,7 @@ public class GymFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_gym, container, false);
 
         GPS = new GPSBestimmung(this.getContext());
+        Log.i("GymFragment", "setPosition gestartet");
         GPS.setPosition();
 
         mein_laengengrad = (TextView) v.findViewById(R.id.Gym_Name_Content1);
@@ -37,8 +38,11 @@ public class GymFragment extends Fragment {
 
         if(GPS.istGPSaktiv() == true){
             //GPS ist aktiv, Grade ausgeben
+            Log.i("GymFragment", "GPS aktiv und Speicherung gestartet");
             mein_laengengrad.setText("Längengrad: " + GPS.getLaengengrad());
             mein_breitengradgrad.setText("Breitengrad: " + GPS.getBreitengrad());
+            Log.i("GymFragment", "GPS aktiv und Speicherung beendet");
+
         }
 
     return v;

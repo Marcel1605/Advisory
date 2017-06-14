@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 
 /**
  * Created by NEU PC on 13.06.2017.
@@ -57,23 +58,6 @@ public class GPSBestimmung extends Service implements LocationListener {
         return null;
     }
 
-    //Gibt den Breitengrad als Double zurück
-    public double getBreitengrad() {
-        if (position != null) {
-            return position.getLatitude();
-        } else {
-            return 0;
-        }
-    }
-
-    //Gibt den Längengrad als double zurück
-    public double getLaengengrad() {
-        if (position != null) {
-            return position.getLongitude();
-        } else {
-            return 0;
-        }
-    }
 
     //Gibt zurück, ob GPS eingeschaltet ist (true oder false)
     public boolean istGPSaktiv() {
@@ -82,12 +66,15 @@ public class GPSBestimmung extends Service implements LocationListener {
 
     public void setPosition() {
         try {
+            Log.i("GPSBestimmung", "setPosition gestartet");
+
             locationManager = (LocationManager) c.getSystemService(LOCATION_SERVICE);
 
             //ließt den GPS Status aus (Aktiv = Ja/Nein)
             GPSaktiv = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
             if (GPSaktiv) {
+                Log.i("GPSBestimmung", "setPosition: GPSaktiv erkannt");
                 //Bestimmung der GPS Position, sofern GPS eingeschaltet ist. Die daten werden in der Variable "position" gespeichert.
 
 
@@ -102,7 +89,9 @@ public class GPSBestimmung extends Service implements LocationListener {
                     return;
                 }
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 60000, 10, this);
+
                 if (locationManager != null) {
+                    Log.i("GPSBestimmung", "setPosition: Speicherung wird vollzogen");
                     position = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                 }
             }
@@ -118,6 +107,31 @@ public class GPSBestimmung extends Service implements LocationListener {
             locationManager.removeUpdates(GPSBestimmung.this);
         }
     }
+
+    //Gibt den Breitengrad als Double zurück
+    public double getBreitengrad() {
+        Log.i("GPSBestimmung", "getBreitengrad gestartet");
+        if (position != null) {
+            Log.i("GPSBestimmung", "getBreitengrad position != null");
+            return position.getLatitude();
+        } else {
+            Log.i("GPSBestimmung", "getBreitengrad: position leer");
+            return 0;
+        }
+    }
+
+    //Gibt den Längengrad als double zurück
+    public double getLaengengrad() {
+        Log.i("GPSBestimmung", "getLaengengrad gestartet");
+        if (position != null) {
+            Log.i("GPSBestimmung", "getLaengengrad position != null");
+            return position.getLongitude();
+        } else {
+            Log.i("GPSBestimmung", "getLaengengrad: position leer");
+            return 0;
+        }
+    }
+
 
 }
 
