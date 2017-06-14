@@ -1,52 +1,84 @@
 package de.dhbw.advisory;
 
 
-import android.app.Service;
 import android.content.Context;
-import android.content.pm.PackageManager;
-import android.location.LocationListener;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpHeaders;
+import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpRequestFactory;
+import com.google.api.client.http.HttpResponse;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.javanet.NetHttpTransport;
+
+import org.json.JSONException;
+
+import java.util.ArrayList;
+
 
 /**
  * Created by Magnus on 30.05.17.
  */
+
+
 public class GymFragment extends Fragment {
 
-    GPSBestimmung gps;
-    TextView mein_laengengrad;
-    TextView mein_breitengradgrad;
+    //UI-Elemente für Gyms initialisieren
+    TextView Gym_Name_Content1;
+    TextView Gym_Entfernung_Content1;
+    TextView Gym_Name_Content2;
+    TextView Gym_Entfernung_Content2;
+
+    //UI-Elemente für Parks initialisieren
+    TextView Park_Name_Content1;
+    TextView Park_Entfernung_Content1;
+    TextView Park_Name_Content2;
+    TextView Park_Entfernung_Content2;
+
+    //UI-Elemente für Stadiums initialisieren
+    TextView Stadium_Name_Content1;
+    TextView Stadium_Entfernung_Content1;
+    TextView Stadium_Name_Content2;
+    TextView Stadium_Entfernung_Content2;
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_gym, container, false);
 
-        gps = new GPSBestimmung(this.getActivity());
-        Log.i("GymFragment", "setPosition gestartet");
-        gps.setPosition();
-        Log.i("GymFragment", gps.toString());
+        //UI-Elemente für Gyms zuweisen
+        Gym_Name_Content1 = (TextView) v.findViewById(R.id.Gym_Name_Content1);
+        Gym_Entfernung_Content1 = (TextView) v.findViewById(R.id.Gym_Entfernung_Content1);
+        Gym_Name_Content2 = (TextView) v.findViewById(R.id.Gym_Name_Content2);
+        Gym_Entfernung_Content2 = (TextView) v.findViewById(R.id.Gym_Entfernung_Content2);
+
+        //UI-Elemente für Parks zuweisen
+        Park_Name_Content1 = (TextView) v.findViewById(R.id.Park_Name_Content1);
+        Park_Entfernung_Content1 = (TextView) v.findViewById(R.id.Park_Entfernung_Content1);
+        Park_Name_Content2 = (TextView) v.findViewById(R.id.Park_Name_Content2);
+        Park_Entfernung_Content2 = (TextView) v.findViewById(R.id.Park_Entfernung_Content2);
+
+        //UI-Elemente für Stadiums zuweisen
+        Stadium_Name_Content1 = (TextView) v.findViewById(R.id.Stadium_Name_Content1);
+        Stadium_Entfernung_Content1 = (TextView) v.findViewById(R.id.Stadium_Entfernung_Content1);
+        Stadium_Name_Content2 = (TextView) v.findViewById(R.id.Stadium_Name_Content2);
+        Stadium_Entfernung_Content2 = (TextView) v.findViewById(R.id.Stadium_Entfernung_Content2);
 
 
-        mein_laengengrad = (TextView) v.findViewById(R.id.Gym_Name_Content1);
-        mein_breitengradgrad = (TextView) v.findViewById(R.id.Gym_Entfernung_Content1);
 
-        if(gps.istGPSaktiv() == true){
-            //GPS ist aktiv, Grade ausgeben
-            Log.i("GymFragment", "GPS aktiv und Beschreiben der Felder gestartet");
-            mein_laengengrad.setText("Längengrad: " + gps.getLaengengrad());
-            mein_breitengradgrad.setText("Breitengrad: " + gps.getBreitengrad());
-            Log.i("GymFragment", "GPS aktiv und Beschreiben der Felder beendet");
 
-        }
+        GymAPI mat = new GymAPI(this.getContext());
+        mat.doInBackground();
+
 
     return v;
     }
@@ -59,4 +91,5 @@ public class GymFragment extends Fragment {
     }
 
 }
+
 

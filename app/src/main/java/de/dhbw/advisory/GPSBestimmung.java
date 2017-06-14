@@ -1,5 +1,6 @@
 package de.dhbw.advisory;
 
+import android.app.IntentService;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +11,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
@@ -30,10 +32,14 @@ public class GPSBestimmung extends Service implements LocationListener {
     //Die Variable LocationManager wird später benötigt und ermöglicht die Positionsbestimmung
     protected LocationManager locationManager;
 
-    public GPSBestimmung(Context context) {
-        this.c = context;
+    /**
+     * Creates an IntentService.  Invoked by your subclass's constructor.
+     *
+     * @param c
+     */
+    public GPSBestimmung(Context c) {
+        this.c = c;
     }
-
 
     @Override
     public void onProviderDisabled(String provider) {
