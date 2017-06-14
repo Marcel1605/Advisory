@@ -77,25 +77,19 @@ public class GPSBestimmung extends Service implements LocationListener {
                 Log.i("GPSBestimmung", "setPosition: GPSaktiv erkannt");
                 //Bestimmung der GPS Position, sofern GPS eingeschaltet ist. Die daten werden in der Variable "position" gespeichert.
 
-
-                if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    return;
-                }
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 60000, 10, this);
+                Log.i("GPSBestimmung", "LocationManager ausgeführt: " + locationManager);
 
                 if (locationManager != null) {
-                    Log.i("GPSBestimmung", "setPosition: Speicherung wird vollzogen");
+                    Log.i("GPSBestimmung", "setPosition: Speicherung wird durchgeführt");
+
                     position = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                 }
             }
-        } catch (Exception e) {
+        } catch (SecurityException s) {
+            s.printStackTrace();
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
