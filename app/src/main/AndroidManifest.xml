@@ -21,9 +21,6 @@
         <!-- Start of Google Maps V2 API Key -->
         <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyDXzj9XCSY5FtsEyvtKaOtxctEX7ybzrpU"/>
         <!-- End of Google Maps V2 API Key -->
-        <service
-        android:name=".GPSBestimmung">
-        </service>
     </application>
 
 </manifest>
