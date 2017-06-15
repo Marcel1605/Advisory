@@ -28,6 +28,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 
@@ -190,36 +191,44 @@ public class GymFragment extends Fragment {
 
         @Override
         protected void onPostExecute(ArrayList ergebnis) {
-            Log.i("onPostExecute: ","Methode begonnen " + ergebnis);
 
-            ArrayList gymListe = (ArrayList) ergebnis.get(0);
-            Gym_Name_Content1.setText( (String) gymListe.get(0));
-            Gym_Adresse_Content1.setText((String) gymListe.get(1));
-            Gym_Entfernung_Content1.setText((String) gymListe.get(2));
-            Gym_Name_Content2.setText( (String) gymListe.get(3));
-            Gym_Adresse_Content2.setText((String) gymListe.get(4));
-            Gym_Entfernung_Content2.setText((String) gymListe.get(5));
+            try{
 
-            ArrayList parkListe = (ArrayList) ergebnis.get(1);
-            Park_Name_Content1.setText( (String) parkListe.get(0));
-            Park_Adresse_Content1.setText((String) parkListe.get(1));
-            Park_Entfernung_Content1.setText((String) parkListe.get(2));
-            Park_Name_Content2.setText( (String) parkListe.get(3));
-            Park_Adresse_Content2.setText((String) parkListe.get(4));
-            Park_Entfernung_Content2.setText((String) parkListe.get(5));
+                Log.i("onPostExecute: ","Methode begonnen " + ergebnis);
 
-            ArrayList stadiumListe = (ArrayList) ergebnis.get(2);
-            Stadium_Name_Content1.setText( (String) stadiumListe.get(0));
-            Stadium_Adresse_Content1.setText((String) stadiumListe.get(1));
-            Stadium_Entfernung_Content1.setText((String) stadiumListe.get(2));
-            Stadium_Name_Content2.setText( (String) stadiumListe.get(3));
-            Stadium_Adresse_Content2.setText((String) stadiumListe.get(4));
-            Stadium_Entfernung_Content2.setText((String) stadiumListe.get(5));
+                ArrayList gymListe = (ArrayList) ergebnis.get(0);
+                Gym_Name_Content1.setText( (String) gymListe.get(0));
+                Gym_Adresse_Content1.setText((String) gymListe.get(1));
+                Gym_Entfernung_Content1.setText((String) gymListe.get(2));
+                Gym_Name_Content2.setText( (String) gymListe.get(3));
+                Gym_Adresse_Content2.setText((String) gymListe.get(4));
+                Gym_Entfernung_Content2.setText((String) gymListe.get(5));
+
+                ArrayList parkListe = (ArrayList) ergebnis.get(1);
+                Park_Name_Content1.setText( (String) parkListe.get(0));
+                Park_Adresse_Content1.setText((String) parkListe.get(1));
+                Park_Entfernung_Content1.setText((String) parkListe.get(2));
+                Park_Name_Content2.setText( (String) parkListe.get(3));
+                Park_Adresse_Content2.setText((String) parkListe.get(4));
+                Park_Entfernung_Content2.setText((String) parkListe.get(5));
+
+                ArrayList stadiumListe = (ArrayList) ergebnis.get(2);
+                Stadium_Name_Content1.setText( (String) stadiumListe.get(0));
+                Stadium_Adresse_Content1.setText((String) stadiumListe.get(1));
+                Stadium_Entfernung_Content1.setText((String) stadiumListe.get(2));
+                Stadium_Name_Content2.setText( (String) stadiumListe.get(3));
+                Stadium_Adresse_Content2.setText((String) stadiumListe.get(4));
+                Stadium_Entfernung_Content2.setText((String) stadiumListe.get(5));
 
 
 
-            super.onPostExecute(ergebnis);
+                super.onPostExecute(ergebnis);
 
+
+            } catch (Exception e) {
+                Log.i("Fehler onPostExecute","" + e);
+
+            }
         }
 
 
