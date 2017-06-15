@@ -65,6 +65,15 @@
                         android:textSize="12dp"
                         android:textStyle="bold" />
                     <TextView
+                        android:id="@+id/Gym_Adresse"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Adresse"
+                        android:textColor="@color/black"
+                        android:textSize="12dp"
+                        android:textStyle="bold" />
+                    <TextView
                         android:id="@+id/Gym_Entfernung"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -78,6 +87,15 @@
                         android:gravity="right">
                         <TextView
                             android:id="@+id/Gym_Name_Content1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text=""
+                            android:textColor="@color/black"
+                            android:textSize="12dp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/Gym_Adresse_Content1"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -104,6 +122,15 @@
                         android:gravity="right">
                         <TextView
                             android:id="@+id/Gym_Name_Content2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text=""
+                            android:textColor="@color/black"
+                            android:textSize="12dp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/Gym_Adresse_Content2"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -153,6 +180,15 @@
                             android:textSize="12dp"
                             android:textStyle="bold" />
                         <TextView
+                            android:id="@+id/Park_Adresse"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Adresse"
+                            android:textColor="@color/black"
+                            android:textSize="12dp"
+                            android:textStyle="bold" />
+                        <TextView
                             android:id="@+id/Park_Entfernung"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -166,6 +202,15 @@
                         android:gravity="right">
                         <TextView
                             android:id="@+id/Park_Name_Content1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text=""
+                            android:textColor="@color/black"
+                            android:textSize="12dp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/Park_Adresse_Content1"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -192,6 +237,15 @@
                         android:gravity="right">
                         <TextView
                             android:id="@+id/Park_Name_Content2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text=""
+                            android:textColor="@color/black"
+                            android:textSize="12dp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/Park_Adresse_Content2"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -241,6 +295,15 @@
                             android:textSize="12dp"
                             android:textStyle="bold" />
                         <TextView
+                            android:id="@+id/Stadium_Adresse"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Adresse"
+                            android:textColor="@color/black"
+                            android:textSize="12dp"
+                            android:textStyle="bold" />
+                        <TextView
                             android:id="@+id/Stadium_Entfernung"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -255,7 +318,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="right">
-
                         <TextView
                             android:id="@+id/Stadium_Name_Content1"
                             android:layout_width="match_parent"
@@ -265,7 +327,6 @@
                             android:textColor="@color/black"
                             android:textSize="12dp"
                             android:textStyle="bold" />
-
                         <TextView
                             android:id="@+id/Stadium_Entfernung_Content1"
                             android:layout_width="match_parent"
@@ -275,7 +336,6 @@
                             android:textColor="@color/black"
                             android:textSize="12dp"
                             android:textStyle="bold" />
-
                         <Button
                             android:id="@+id/Stadium_Button_1"
                             android:layout_width="wrap_content"
@@ -287,6 +347,15 @@
                         android:gravity="right">
                         <TextView
                             android:id="@+id/Stadium_Name_Content2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text=""
+                            android:textColor="@color/black"
+                            android:textSize="12dp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/Stadium_Adresse_Content2"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"

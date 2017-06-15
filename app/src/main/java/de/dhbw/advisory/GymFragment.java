@@ -39,22 +39,28 @@ import java.util.ArrayList;
 public class GymFragment extends Fragment {
 
     //UI-Elemente für Gyms initialisieren
-    TextView Gym_Name_Content1;
-    TextView Gym_Entfernung_Content1;
-    TextView Gym_Name_Content2;
-    TextView Gym_Entfernung_Content2;
+    static TextView Gym_Name_Content1;
+    static TextView Gym_Adresse_Content1;
+    static TextView Gym_Entfernung_Content1;
+    static TextView Gym_Name_Content2;
+    static TextView Gym_Adresse_Content2;
+    static TextView Gym_Entfernung_Content2;
 
     //UI-Elemente für Parks initialisieren
-    TextView Park_Name_Content1;
-    TextView Park_Entfernung_Content1;
-    TextView Park_Name_Content2;
-    TextView Park_Entfernung_Content2;
+    static TextView Park_Name_Content1;
+    static TextView Park_Adresse_Content1;
+    static TextView Park_Entfernung_Content1;
+    static TextView Park_Name_Content2;
+    static TextView Park_Adresse_Content2;
+    static TextView Park_Entfernung_Content2;
 
     //UI-Elemente für Stadiums initialisieren
-    TextView Stadium_Name_Content1;
-    TextView Stadium_Entfernung_Content1;
-    TextView Stadium_Name_Content2;
-    TextView Stadium_Entfernung_Content2;
+    static TextView Stadium_Name_Content1;
+    static TextView Stadium_Adresse_Content1;
+    static TextView Stadium_Entfernung_Content1;
+    static TextView Stadium_Name_Content2;
+    static TextView Stadium_Adresse_Content2;
+    static TextView Stadium_Entfernung_Content2;
 
 
 
@@ -64,20 +70,26 @@ public class GymFragment extends Fragment {
 
         //UI-Elemente für Gyms zuweisen
         Gym_Name_Content1 = (TextView) v.findViewById(R.id.Gym_Name_Content1);
+        Gym_Adresse_Content1 = (TextView) v.findViewById(R.id.Gym_Adresse_Content1);
         Gym_Entfernung_Content1 = (TextView) v.findViewById(R.id.Gym_Entfernung_Content1);
         Gym_Name_Content2 = (TextView) v.findViewById(R.id.Gym_Name_Content2);
+        Gym_Adresse_Content2 = (TextView) v.findViewById(R.id.Gym_Adresse_Content2);
         Gym_Entfernung_Content2 = (TextView) v.findViewById(R.id.Gym_Entfernung_Content2);
 
         //UI-Elemente für Parks zuweisen
         Park_Name_Content1 = (TextView) v.findViewById(R.id.Park_Name_Content1);
+        Park_Adresse_Content1 = (TextView) v.findViewById(R.id.Park_Adresse_Content1);
         Park_Entfernung_Content1 = (TextView) v.findViewById(R.id.Park_Entfernung_Content1);
         Park_Name_Content2 = (TextView) v.findViewById(R.id.Park_Name_Content2);
+        Park_Adresse_Content2 = (TextView) v.findViewById(R.id.Park_Adresse_Content2);
         Park_Entfernung_Content2 = (TextView) v.findViewById(R.id.Park_Entfernung_Content2);
 
         //UI-Elemente für Stadiums zuweisen
         Stadium_Name_Content1 = (TextView) v.findViewById(R.id.Stadium_Name_Content1);
+        Stadium_Adresse_Content1 = (TextView) v.findViewById(R.id.Stadium_Adresse_Content1);
         Stadium_Entfernung_Content1 = (TextView) v.findViewById(R.id.Stadium_Entfernung_Content1);
         Stadium_Name_Content2 = (TextView) v.findViewById(R.id.Stadium_Name_Content2);
+        Stadium_Adresse_Content2 = (TextView) v.findViewById(R.id.Stadium_Adresse_Content2);
         Stadium_Entfernung_Content2 = (TextView) v.findViewById(R.id.Stadium_Entfernung_Content2);
 
 
@@ -87,11 +99,9 @@ public class GymFragment extends Fragment {
         mat.doInBackground();
 
         GPSBestimmung gps = new GPSBestimmung(this.getContext());
-
-        Log.i("GymFragment", "setPosition gestartet");
         gps.setPosition();
 
-        GooglePlacesWebserviceAufruf aufruf = new GooglePlacesWebserviceAufruf("gym", gps);
+        GooglePlacesWebserviceAufruf aufruf = new GooglePlacesWebserviceAufruf(gps);
         aufruf.execute();
 
 
@@ -126,40 +136,14 @@ public class GymFragment extends Fragment {
             }
             return null;
         }
-
-
-
-         /**
-         *
-         * Diese Methode parsed die Http Antwort der RecipeSearch Methode
-         *
-         * @param jsonString RecipeSearch Http Antwort als String parsen
-         * @return
-         * @throws JSONException
-         */
-        protected ArrayList parseRecipe(String jsonString) throws JSONException {
-            try{
-
-            } catch (Exception e) {
-                //Fehler Exception
-
-                return new ArrayList();
-            }
-
-            return null;
-        }
-
-
     }
 
     public static class GooglePlacesWebserviceAufruf extends AsyncTask<String, GPSBestimmung, ArrayList> {
 
-        String typ;
         GPSBestimmung gps;
         ArrayList erg;
 
-        GooglePlacesWebserviceAufruf(String typ, GPSBestimmung gps) {
-            this.typ = typ;
+        GooglePlacesWebserviceAufruf(GPSBestimmung gps) {
             this.gps = gps;
         }
 
@@ -191,8 +175,12 @@ public class GymFragment extends Fragment {
                 ArrayList ergStadium = parseGooglePlaces(jsonResponsePlacesStadium);
                 Log.i("GooglePlacesWebserviceAufruf: ","Request  für " + stadium + " geparst und Ergebnis: " + ergStadium);
 
+                ArrayList erg = new ArrayList();
+                erg.add(0, ergGym);
+                erg.add(1, ergPark);
+                erg.add(2, ergStadium);
 
-
+                return erg;
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -201,9 +189,40 @@ public class GymFragment extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(ArrayList o) {
-            super.onPostExecute(o);
+        protected void onPostExecute(ArrayList ergebnis) {
+            Log.i("onPostExecute: ","Methode begonnen " + ergebnis);
+
+            ArrayList gymListe = (ArrayList) ergebnis.get(0);
+            Gym_Name_Content1.setText( (String) gymListe.get(0));
+            Gym_Adresse_Content1.setText((String) gymListe.get(1));
+            Gym_Entfernung_Content1.setText((String) gymListe.get(2));
+            Gym_Name_Content2.setText( (String) gymListe.get(3));
+            Gym_Adresse_Content2.setText((String) gymListe.get(4));
+            Gym_Entfernung_Content2.setText((String) gymListe.get(5));
+
+            ArrayList parkListe = (ArrayList) ergebnis.get(1);
+            Park_Name_Content1.setText( (String) parkListe.get(0));
+            Park_Adresse_Content1.setText((String) parkListe.get(1));
+            Park_Entfernung_Content1.setText((String) parkListe.get(2));
+            Park_Name_Content2.setText( (String) parkListe.get(3));
+            Park_Adresse_Content2.setText((String) parkListe.get(4));
+            Park_Entfernung_Content2.setText((String) parkListe.get(5));
+
+            ArrayList stadiumListe = (ArrayList) ergebnis.get(2);
+            Stadium_Name_Content1.setText( (String) stadiumListe.get(0));
+            Stadium_Adresse_Content1.setText((String) stadiumListe.get(1));
+            Stadium_Entfernung_Content1.setText((String) stadiumListe.get(2));
+            Stadium_Name_Content2.setText( (String) stadiumListe.get(3));
+            Stadium_Adresse_Content2.setText((String) stadiumListe.get(4));
+            Stadium_Entfernung_Content2.setText((String) stadiumListe.get(5));
+
+
+
+            super.onPostExecute(ergebnis);
+
         }
+
+
         /**
          *
          * Die Methode macht die HTTP Anfrage an die API
@@ -250,6 +269,7 @@ public class GymFragment extends Fragment {
                 Log.i("placesAPIAufrufen: ","API Aufruf beendet");
                 Log.i("placesAPIAufrufen: ","Erhaltene JSON: " + jsonResponseString);
                 return jsonResponseString;
+
             } catch (Exception e) {
                 Log.i("Fehler placesAPIAufrufen", "Request absetzen fehlgeschlagen. Fehlermeldung " + e);
                 return "error";
