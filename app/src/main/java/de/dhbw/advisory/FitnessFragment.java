@@ -82,7 +82,7 @@ public class FitnessFragment extends Fragment implements IYoutubeCardView {
         alertDialog.setCancelable(false);
         alertDialog.show();
         AsyncTask<String, Void, AsyncTaskResult> task = new YoutubeSearch(getContext(), this);
-        task.execute("Bizeps Übungen");
+        task.execute("sexy strip");
 
         return inflater.inflate(R.layout.fragment_fitness, container, false);
     }
