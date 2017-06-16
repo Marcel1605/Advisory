@@ -42,6 +42,11 @@ import java.util.ArrayList;
 
 public class GymFragment extends Fragment {
 
+    //UI-Elemente für MyPlace initialisieren
+    static TextView MyPlace_Header_Content;
+    static TextView MyPlace_Adresse_Content;
+
+
     //UI-Elemente für Gyms initialisieren
     static TextView Gym_Name_Content1;
     static TextView Gym_Adresse_Content1;
@@ -71,50 +76,66 @@ public class GymFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_gym, container, false);
+        GPSBestimmung gps = new GPSBestimmung(this.getContext());
+        gps.setPosition();
 
-        //UI-Elemente für Gyms zuweisen
-        Gym_Name_Content1 = (TextView) v.findViewById(R.id.Gym_Name_Content1);
-        Gym_Adresse_Content1 = (TextView) v.findViewById(R.id.Gym_Adresse_Content1);
-        Gym_Entfernung_Content1 = (TextView) v.findViewById(R.id.Gym_Entfernung_Content1);
-        Gym_Name_Content2 = (TextView) v.findViewById(R.id.Gym_Name_Content2);
-        Gym_Adresse_Content2 = (TextView) v.findViewById(R.id.Gym_Adresse_Content2);
-        Gym_Entfernung_Content2 = (TextView) v.findViewById(R.id.Gym_Entfernung_Content2);
+        View v = null;
+        if (gps.GPSaktiv) {
+            v = inflater.inflate(R.layout.fragment_gym, container, false);
 
-        //UI-Elemente für Parks zuweisen
-        Park_Name_Content1 = (TextView) v.findViewById(R.id.Park_Name_Content1);
-        Park_Adresse_Content1 = (TextView) v.findViewById(R.id.Park_Adresse_Content1);
-        Park_Entfernung_Content1 = (TextView) v.findViewById(R.id.Park_Entfernung_Content1);
-        Park_Name_Content2 = (TextView) v.findViewById(R.id.Park_Name_Content2);
-        Park_Adresse_Content2 = (TextView) v.findViewById(R.id.Park_Adresse_Content2);
-        Park_Entfernung_Content2 = (TextView) v.findViewById(R.id.Park_Entfernung_Content2);
+            //UI-Elemente für MyPlace zuweisen
+            MyPlace_Adresse_Content = (TextView) v.findViewById(R.id.MyPlace_Adresse_Content);
+            MyPlace_Header_Content = (TextView) v.findViewById(R.id.MyPlace_Header_Content);
 
-        //UI-Elemente für Stadiums zuweisen
-        Stadium_Name_Content1 = (TextView) v.findViewById(R.id.Stadium_Name_Content1);
-        Stadium_Adresse_Content1 = (TextView) v.findViewById(R.id.Stadium_Adresse_Content1);
-        Stadium_Entfernung_Content1 = (TextView) v.findViewById(R.id.Stadium_Entfernung_Content1);
-        Stadium_Name_Content2 = (TextView) v.findViewById(R.id.Stadium_Name_Content2);
-        Stadium_Adresse_Content2 = (TextView) v.findViewById(R.id.Stadium_Adresse_Content2);
-        Stadium_Entfernung_Content2 = (TextView) v.findViewById(R.id.Stadium_Entfernung_Content2);
+            //UI-Elemente für Gyms zuweisen
+            Gym_Name_Content1 = (TextView) v.findViewById(R.id.Gym_Name_Content1);
+            Gym_Adresse_Content1 = (TextView) v.findViewById(R.id.Gym_Adresse_Content1);
+            Gym_Entfernung_Content1 = (TextView) v.findViewById(R.id.Gym_Entfernung_Content1);
+            Gym_Name_Content2 = (TextView) v.findViewById(R.id.Gym_Name_Content2);
+            Gym_Adresse_Content2 = (TextView) v.findViewById(R.id.Gym_Adresse_Content2);
+            Gym_Entfernung_Content2 = (TextView) v.findViewById(R.id.Gym_Entfernung_Content2);
 
+            //UI-Elemente für Parks zuweisen
+            Park_Name_Content1 = (TextView) v.findViewById(R.id.Park_Name_Content1);
+            Park_Adresse_Content1 = (TextView) v.findViewById(R.id.Park_Adresse_Content1);
+            Park_Entfernung_Content1 = (TextView) v.findViewById(R.id.Park_Entfernung_Content1);
+            Park_Name_Content2 = (TextView) v.findViewById(R.id.Park_Name_Content2);
+            Park_Adresse_Content2 = (TextView) v.findViewById(R.id.Park_Adresse_Content2);
+            Park_Entfernung_Content2 = (TextView) v.findViewById(R.id.Park_Entfernung_Content2);
+
+            //UI-Elemente für Stadiums zuweisen
+            Stadium_Name_Content1 = (TextView) v.findViewById(R.id.Stadium_Name_Content1);
+            Stadium_Adresse_Content1 = (TextView) v.findViewById(R.id.Stadium_Adresse_Content1);
+            Stadium_Entfernung_Content1 = (TextView) v.findViewById(R.id.Stadium_Entfernung_Content1);
+            Stadium_Name_Content2 = (TextView) v.findViewById(R.id.Stadium_Name_Content2);
+            Stadium_Adresse_Content2 = (TextView) v.findViewById(R.id.Stadium_Adresse_Content2);
+            Stadium_Entfernung_Content2 = (TextView) v.findViewById(R.id.Stadium_Entfernung_Content2);
+
+        } else {
+            v = inflater.inflate(R.layout.fragment_gym_nogps, container, false);
+
+            //UI-Elemente für MyPlace zuweisen
+            MyPlace_Adresse_Content = (TextView) v.findViewById(R.id.MyPlace_Adresse_Content);
+            MyPlace_Header_Content = (TextView) v.findViewById(R.id.MyPlace_Header_Content);
+        }
+
+
+        //Warten-Dialog erstellen und anzeigen
         alertDialog = new ProgressDialog(getContext());
         alertDialog.setMessage(getResources().getString(R.string.loader));
         alertDialog.setCancelable(false);
         alertDialog.show();
 
 
-
         GymAPI mat = new GymAPI(this.getContext());
         mat.doInBackground();
 
-        GPSBestimmung gps = new GPSBestimmung(this.getContext());
-        gps.setPosition();
 
         GooglePlacesWebserviceAufruf aufruf = new GooglePlacesWebserviceAufruf(gps);
         aufruf.execute();
 
 
-    return v;
+        return v;
     }
 
     @Override
@@ -204,29 +225,40 @@ public class GymFragment extends Fragment {
 
                 Log.i("onPostExecute: ","Methode begonnen " + ergebnis);
 
-                ArrayList gymListe = (ArrayList) ergebnis.get(0);
-                Gym_Name_Content1.setText( (String) gymListe.get(0));
-                Gym_Adresse_Content1.setText((String) gymListe.get(1));
-                Gym_Entfernung_Content1.setText((String) gymListe.get(2));
-                Gym_Name_Content2.setText( (String) gymListe.get(3));
-                Gym_Adresse_Content2.setText((String) gymListe.get(4));
-                Gym_Entfernung_Content2.setText((String) gymListe.get(5));
+                if (gps.GPSaktiv)
+                {
+                    ArrayList gymListe = (ArrayList) ergebnis.get(0);
+                    Gym_Name_Content1.setText( (String) gymListe.get(0));
+                    Gym_Adresse_Content1.setText((String) gymListe.get(1));
+                    Gym_Entfernung_Content1.setText((String) gymListe.get(2));
+                    Gym_Name_Content2.setText( (String) gymListe.get(3));
+                    Gym_Adresse_Content2.setText((String) gymListe.get(4));
+                    Gym_Entfernung_Content2.setText((String) gymListe.get(5));
 
-                ArrayList parkListe = (ArrayList) ergebnis.get(1);
-                Park_Name_Content1.setText( (String) parkListe.get(0));
-                Park_Adresse_Content1.setText((String) parkListe.get(1));
-                Park_Entfernung_Content1.setText((String) parkListe.get(2));
-                Park_Name_Content2.setText( (String) parkListe.get(3));
-                Park_Adresse_Content2.setText((String) parkListe.get(4));
-                Park_Entfernung_Content2.setText((String) parkListe.get(5));
+                    ArrayList parkListe = (ArrayList) ergebnis.get(1);
+                    Park_Name_Content1.setText( (String) parkListe.get(0));
+                    Park_Adresse_Content1.setText((String) parkListe.get(1));
+                    Park_Entfernung_Content1.setText((String) parkListe.get(2));
+                    Park_Name_Content2.setText( (String) parkListe.get(3));
+                    Park_Adresse_Content2.setText((String) parkListe.get(4));
+                    Park_Entfernung_Content2.setText((String) parkListe.get(5));
 
-                ArrayList stadiumListe = (ArrayList) ergebnis.get(2);
-                Stadium_Name_Content1.setText( (String) stadiumListe.get(0));
-                Stadium_Adresse_Content1.setText((String) stadiumListe.get(1));
-                Stadium_Entfernung_Content1.setText((String) stadiumListe.get(2));
-                Stadium_Name_Content2.setText( (String) stadiumListe.get(3));
-                Stadium_Adresse_Content2.setText((String) stadiumListe.get(4));
-                Stadium_Entfernung_Content2.setText((String) stadiumListe.get(5));
+                    ArrayList stadiumListe = (ArrayList) ergebnis.get(2);
+                    Stadium_Name_Content1.setText( (String) stadiumListe.get(0));
+                    Stadium_Adresse_Content1.setText((String) stadiumListe.get(1));
+                    Stadium_Entfernung_Content1.setText((String) stadiumListe.get(2));
+                    Stadium_Name_Content2.setText( (String) stadiumListe.get(3));
+                    Stadium_Adresse_Content2.setText((String) stadiumListe.get(4));
+                    Stadium_Entfernung_Content2.setText((String) stadiumListe.get(5));
+
+                    MyPlace_Header_Content.setText("Ihre aktuelle Position ist");
+                    MyPlace_Adresse_Content.setText( (String) stadiumListe.get(6));
+                } else {
+                    MyPlace_Header_Content.setText("Fehler in der Ortung");
+                    MyPlace_Adresse_Content.setText("Bitte schalten Sie Ihre GPS-Ortung ein.");
+                }
+
+
 
 
                 alertDialog.hide();
@@ -361,6 +393,15 @@ public class GymFragment extends Fragment {
                 String destination_address1 = (String) destination_address1_array.get(0);
                 Log.i("parseGooglePlaces:", "destination_address1 gesetzt "+ destination_address1);
 
+                //origin_addresses selektieren und parsen
+                Log.i("parseGooglePlaces:", "marcel test " + distanceObject1);
+
+                JSONArray origin_address_array = distanceObject1.getJSONArray("origin_addresses");
+                Log.i("parseGooglePlaces:", "marcel test "+ origin_address_array);
+
+                String origin_address = (String) origin_address_array.get(0);
+                Log.i("parseGooglePlaces:", "origin_address gesetzt "+ origin_address);
+
 
                 //destination_address2 selektieren und parsen
                 JSONArray destination_address2_array = distanceObject2.getJSONArray("destination_addresses");
@@ -379,6 +420,7 @@ public class GymFragment extends Fragment {
                 information.add(3, name2);
                 information.add(4, destination_address2);
                 information.add(5, distance2);
+                information.add(6, origin_address);
 
                 Log.i("parseGooglePlaces:", "Parsen beendet: " + information);
 

@@ -20,15 +20,14 @@
             android:orientation="vertical" >
 
 
-            <RelativeLayout
+            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:cardview="http://schemas.android.com/apk/res-auto"
-                xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
                 <android.support.v7.widget.CardView
-                    android:id="@+id/Gym_Card1"
+                    android:id="@+id/MyPlace_Card"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
@@ -42,7 +41,68 @@
 
                     <RelativeLayout
                         android:layout_width="fill_parent"
-                        android:layout_height="64dp"
+                        android:layout_height="wrap_content"
+                        android:background="@color/card_action_ripple"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/MyPlace_Header_Content"
+                            android:layout_width="250dp"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentTop="true"
+                            android:layout_gravity="left"
+                            android:layout_marginLeft="5dp"
+                            android:layout_toEndOf="@+id/MyPlace_icon"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:padding="2dp"
+                            android:paddingRight="4dp"
+                            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                        <TextView
+                            android:id="@+id/MyPlace_Adresse_Content"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/MyPlace_Header_Content"
+                            android:layout_gravity="left"
+                            android:layout_marginLeft="5dp"
+                            android:layout_toEndOf="@+id/MyPlace_icon"
+                            android:ellipsize="end"
+                            android:fontFamily="sans-serif-medium"
+                            android:maxLines="1"
+                            android:padding="2dp"
+                            android:paddingRight="4dp"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:textColor="#000000" />
+
+                        <ImageView
+                            android:id="@+id/MyPlace_icon"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/ic_location_on_black_48dp" />
+                    </RelativeLayout>
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/Gym_Card1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/MyPlace_Card"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="8dp"
+                    android:paddingTop="3dp"
+                    cardview:cardBackgroundColor="@color/white"
+                    cardview:cardCornerRadius="0dp"
+                    cardview:cardElevation="8dp">
+
+                    <RelativeLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="60dp"
+                        android:layout_marginTop="6dp"
                         android:orientation="vertical">
 
                         <TextView
@@ -99,10 +159,10 @@
                             android:layout_width="50dp"
                             android:layout_height="50dp"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/gym" />
-
+                            android:src="@drawable/ic_fitness_center_black_48dp" />
                     </RelativeLayout>
                 </android.support.v7.widget.CardView>
+
                 <android.support.v7.widget.CardView
                     android:id="@+id/Gym_Card2"
                     android:layout_width="match_parent"
@@ -110,13 +170,15 @@
                     android:layout_below="@id/Gym_Card1"
                     android:layout_gravity="center_horizontal"
                     android:layout_margin="8dp"
+                    android:paddingTop="3dp"
                     cardview:cardBackgroundColor="@color/white"
                     cardview:cardCornerRadius="0dp"
                     cardview:cardElevation="8dp">
 
                     <RelativeLayout
                         android:layout_width="fill_parent"
-                        android:layout_height="64dp"
+                        android:layout_height="60dp"
+                        android:layout_marginTop="6dp"
                         android:orientation="vertical">
 
                         <TextView
@@ -173,27 +235,30 @@
                             android:layout_width="50dp"
                             android:layout_height="50dp"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/gym" />
-
+                            android:src="@drawable/ic_fitness_center_black_48dp" />
                     </RelativeLayout>
                 </android.support.v7.widget.CardView>
 
                 <android.support.v7.widget.CardView
-                    android:layout_below="@id/Gym_Card2"
                     android:id="@+id/Park_Card1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/Gym_Card2"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
                     android:layout_marginTop="8dp"
+                    android:paddingTop="3dp"
                     cardview:cardBackgroundColor="@color/white"
                     cardview:cardCornerRadius="0dp"
                     cardview:cardElevation="8dp">
+
                     <RelativeLayout
                         android:layout_width="fill_parent"
-                        android:layout_height="64dp"
+                        android:layout_height="60dp"
+                        android:layout_marginTop="6dp"
                         android:orientation="vertical">
+
                         <TextView
                             android:id="@+id/Park_Entfernung_Content1"
                             android:layout_width="match_parent"
@@ -210,6 +275,7 @@
                             android:paddingRight="4dp"
                             android:textAppearance="?android:attr/textAppearanceSmall"
                             android:textColor="#000000" />
+
                         <TextView
                             android:id="@+id/Park_Name_Content1"
                             android:layout_width="250dp"
@@ -225,6 +291,7 @@
                             android:paddingRight="4dp"
                             android:textAppearance="?android:attr/textAppearanceMedium"
                             android:textColor="#000000" />
+
                         <TextView
                             android:id="@+id/Park_Adresse_Content1"
                             android:layout_width="match_parent"
@@ -240,28 +307,34 @@
                             android:paddingRight="4dp"
                             android:textAppearance="?android:attr/textAppearanceSmall"
                             android:textColor="#000000" />
+
                         <ImageView
                             android:id="@+id/Park_icon1"
                             android:layout_width="50dp"
                             android:layout_height="50dp"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/park" />
+                            android:src="@drawable/ic_nature_people_black_48dp" />
                     </RelativeLayout>
                 </android.support.v7.widget.CardView>
+
                 <android.support.v7.widget.CardView
-                    android:layout_below="@id/Park_Card1"
                     android:id="@+id/Park_Card2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/Park_Card1"
                     android:layout_gravity="center_horizontal"
                     android:layout_margin="8dp"
+                    android:paddingTop="3dp"
                     cardview:cardBackgroundColor="@color/white"
                     cardview:cardCornerRadius="0dp"
                     cardview:cardElevation="8dp">
+
                     <RelativeLayout
                         android:layout_width="fill_parent"
-                        android:layout_height="64dp"
+                        android:layout_height="60dp"
+                        android:layout_marginTop="6dp"
                         android:orientation="vertical">
+
                         <TextView
                             android:id="@+id/Park_Entfernung_Content2"
                             android:layout_width="match_parent"
@@ -278,6 +351,7 @@
                             android:paddingRight="4dp"
                             android:textAppearance="?android:attr/textAppearanceSmall"
                             android:textColor="#000000" />
+
                         <TextView
                             android:id="@+id/Park_Name_Content2"
                             android:layout_width="250dp"
@@ -293,6 +367,7 @@
                             android:paddingRight="4dp"
                             android:textAppearance="?android:attr/textAppearanceMedium"
                             android:textColor="#000000" />
+
                         <TextView
                             android:id="@+id/Park_Adresse_Content2"
                             android:layout_width="match_parent"
@@ -308,31 +383,36 @@
                             android:paddingRight="4dp"
                             android:textAppearance="?android:attr/textAppearanceSmall"
                             android:textColor="#000000" />
+
                         <ImageView
                             android:id="@+id/Park_icon2"
                             android:layout_width="50dp"
                             android:layout_height="50dp"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/park" />
+                            android:src="@drawable/ic_nature_people_black_48dp" />
                     </RelativeLayout>
                 </android.support.v7.widget.CardView>
 
                 <android.support.v7.widget.CardView
-                    android:layout_below="@id/Park_Card2"
                     android:id="@+id/Stadium_Card1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/Park_Card2"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
                     android:layout_marginTop="8dp"
+                    android:paddingTop="3dp"
                     cardview:cardBackgroundColor="@color/white"
                     cardview:cardCornerRadius="0dp"
                     cardview:cardElevation="8dp">
+
                     <RelativeLayout
                         android:layout_width="fill_parent"
-                        android:layout_height="64dp"
+                        android:layout_height="60dp"
+                        android:layout_marginTop="6dp"
                         android:orientation="vertical">
+
                         <TextView
                             android:id="@+id/Stadium_Entfernung_Content1"
                             android:layout_width="match_parent"
@@ -349,6 +429,7 @@
                             android:paddingRight="4dp"
                             android:textAppearance="?android:attr/textAppearanceSmall"
                             android:textColor="#000000" />
+
                         <TextView
                             android:id="@+id/Stadium_Name_Content1"
                             android:layout_width="250dp"
@@ -364,6 +445,7 @@
                             android:paddingRight="4dp"
                             android:textAppearance="?android:attr/textAppearanceMedium"
                             android:textColor="#000000" />
+
                         <TextView
                             android:id="@+id/Stadium_Adresse_Content1"
                             android:layout_width="match_parent"
@@ -379,6 +461,7 @@
                             android:paddingRight="4dp"
                             android:textAppearance="?android:attr/textAppearanceSmall"
                             android:textColor="#000000" />
+
                         <ImageView
                             android:id="@+id/Stadium_icon1"
                             android:layout_width="50dp"
@@ -387,20 +470,24 @@
                             android:src="@drawable/stadium" />
                     </RelativeLayout>
                 </android.support.v7.widget.CardView>
+
                 <android.support.v7.widget.CardView
-                    android:layout_below="@id/Stadium_Card1"
                     android:id="@+id/Stadium_Card2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/Stadium_Card1"
                     android:layout_gravity="center_horizontal"
                     android:layout_margin="8dp"
                     cardview:cardBackgroundColor="@color/white"
                     cardview:cardCornerRadius="0dp"
                     cardview:cardElevation="8dp">
+
                     <RelativeLayout
                         android:layout_width="fill_parent"
-                        android:layout_height="64dp"
+                        android:layout_height="60dp"
+                        android:layout_marginTop="6dp"
                         android:orientation="vertical">
+
                         <TextView
                             android:id="@+id/Stadium_Entfernung_Content2"
                             android:layout_width="match_parent"
@@ -417,6 +504,7 @@
                             android:paddingRight="4dp"
                             android:textAppearance="?android:attr/textAppearanceSmall"
                             android:textColor="#000000" />
+
                         <TextView
                             android:id="@+id/Stadium_Name_Content2"
                             android:layout_width="250dp"
@@ -432,6 +520,7 @@
                             android:paddingRight="4dp"
                             android:textAppearance="?android:attr/textAppearanceMedium"
                             android:textColor="#000000" />
+
                         <TextView
                             android:id="@+id/Stadium_Adresse_Content2"
                             android:layout_width="match_parent"
@@ -447,6 +536,7 @@
                             android:paddingRight="4dp"
                             android:textAppearance="?android:attr/textAppearanceSmall"
                             android:textColor="#000000" />
+
                         <ImageView
                             android:id="@+id/Stadium_icon2"
                             android:layout_width="50dp"
@@ -455,10 +545,6 @@
                             android:src="@drawable/stadium" />
                     </RelativeLayout>
                 </android.support.v7.widget.CardView>
-
-
-
-
 
 
             </RelativeLayout>

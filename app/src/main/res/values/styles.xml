@@ -75,20 +75,14 @@
 
     <style name="CardActionNeutral" parent="@style/CardAction">
         <item name="android:background">@drawable/card_action_bg</item>
-        <item name="android:drawableStart">@drawable/card_action_icon_neutral</item>
-        <item name="android:textColor">@drawable/card_action_text</item>
     </style>
 
     <style name="CardActionNegative" parent="@style/CardAction">
         <item name="android:background">@drawable/card_action_bg_negative</item>
-        <item name="android:drawableStart">@drawable/card_action_icon_negative</item>
-        <item name="android:textColor">@drawable/card_action_text_negative</item>
     </style>
 
     <style name="CardActionPositive" parent="@style/CardAction">
         <item name="android:background">@drawable/card_action_bg_positive</item>
-        <item name="android:drawableStart">@drawable/card_action_icon_positive</item>
-        <item name="android:textColor">@drawable/card_action_text_positive</item>
     </style>
 
     <!-- Card Action Progress -->
