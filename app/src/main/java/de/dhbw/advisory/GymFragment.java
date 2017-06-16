@@ -1,6 +1,7 @@
 package de.dhbw.advisory;
 
 
+import android.app.ProgressDialog;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -15,7 +16,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequest;
@@ -63,7 +66,8 @@ public class GymFragment extends Fragment {
     static TextView Stadium_Adresse_Content2;
     static TextView Stadium_Entfernung_Content2;
 
-
+    //sonstige Variablen initialisieren
+    private static ProgressDialog alertDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -93,6 +97,10 @@ public class GymFragment extends Fragment {
         Stadium_Adresse_Content2 = (TextView) v.findViewById(R.id.Stadium_Adresse_Content2);
         Stadium_Entfernung_Content2 = (TextView) v.findViewById(R.id.Stadium_Entfernung_Content2);
 
+        alertDialog = new ProgressDialog(getContext());
+        alertDialog.setMessage(getResources().getString(R.string.loader));
+        alertDialog.setCancelable(false);
+        alertDialog.show();
 
 
 
@@ -221,13 +229,13 @@ public class GymFragment extends Fragment {
                 Stadium_Entfernung_Content2.setText((String) stadiumListe.get(5));
 
 
-
+                alertDialog.hide();
                 super.onPostExecute(ergebnis);
 
 
             } catch (Exception e) {
                 Log.i("Fehler onPostExecute","" + e);
-
+                alertDialog.hide();
             }
         }
 
