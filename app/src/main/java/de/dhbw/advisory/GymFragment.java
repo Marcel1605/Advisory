@@ -3,6 +3,7 @@ package de.dhbw.advisory;
 
 import android.app.ProgressDialog;
 import android.app.Service;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
@@ -141,60 +142,100 @@ public class GymFragment extends Fragment {
                       new View.OnClickListener() {
                           @Override
                           public void onClick(View v) {
-                              Uri gmmIntentUri = Uri.parse("https://www.google.de/maps/place/" + Gym_Adresse_Content1.getText());
-                              Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-                              mapIntent.setPackage("com.google.android.apps.maps");
-                              startActivity(mapIntent);
+                              try{
+                                  Uri gmmIntentUri = Uri.parse("https://www.google.de/maps/place/" + Gym_Adresse_Content1.getText());
+                                  Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                                  mapIntent.setPackage("com.google.android.apps.maps");
+                                  startActivity(mapIntent);
+                              } catch (ActivityNotFoundException omg){
+                                  String url = "https://www.google.de/maps/place/" + Gym_Adresse_Content1.getText();
+                                  Intent browserIntent = new Intent(Intent.ACTION_VIEW);
+                                  browserIntent.setData(Uri.parse(url));
+                                  startActivity(browserIntent);
+                              }
                           }
                       }
               );
              Gym_Card2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Uri gmmIntentUri = Uri.parse("https://www.google.de/maps/place/" + Gym_Adresse_Content2.getText());
-                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-                    mapIntent.setPackage("com.google.android.apps.maps");
-                    startActivity(mapIntent);
+                    try{
+                        Uri gmmIntentUri = Uri.parse("https://www.google.de/maps/place/" + Gym_Adresse_Content2.getText());
+                        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                        mapIntent.setPackage("com.google.android.apps.maps");
+                        startActivity(mapIntent);
+                    } catch (ActivityNotFoundException omg){
+                        String url = "https://www.google.de/maps/place/" + Gym_Adresse_Content2.getText();
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW);
+                        browserIntent.setData(Uri.parse(url));
+                        startActivity(browserIntent);
+                    }
                 }
              });
               Park_Card1.setOnClickListener(new View.OnClickListener() {
                   @Override
                   public void onClick(View v) {
+                      try{
                       Uri gmmIntentUri = Uri.parse("https://www.google.de/maps/place/" + Park_Adresse_Content1.getText());
                       Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                       mapIntent.setPackage("com.google.android.apps.maps");
                       startActivity(mapIntent);
+                      } catch (ActivityNotFoundException omg){
+                          String url = "https://www.google.de/maps/place/" + Park_Adresse_Content1.getText();
+                          Intent browserIntent = new Intent(Intent.ACTION_VIEW);
+                          browserIntent.setData(Uri.parse(url));
+                          startActivity(browserIntent);
+                      }
                   }
               });
               Park_Card2.setOnClickListener(new View.OnClickListener() {
                   @Override
                   public void onClick(View v) {
-                      Uri gmmIntentUri = Uri.parse("https://www.google.de/maps/place/" + Park_Adresse_Content2.getText());
-                      Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-                      mapIntent.setPackage("com.google.android.apps.maps");
-                      startActivity(mapIntent);
+                      try{
+                          Uri gmmIntentUri = Uri.parse("https://www.google.de/maps/place/" + Park_Adresse_Content2.getText());
+                          Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                          mapIntent.setPackage("com.google.android.apps.maps");
+                          startActivity(mapIntent);
+                      } catch (ActivityNotFoundException omg){
+                          String url = "https://www.google.de/maps/place/" + Park_Adresse_Content2.getText();
+                          Intent browserIntent = new Intent(Intent.ACTION_VIEW);
+                          browserIntent.setData(Uri.parse(url));
+                          startActivity(browserIntent);
+                      }
                   }
               });
               Stadium_Card1.setOnClickListener(new View.OnClickListener() {
                   @Override
                   public void onClick(View v) {
-                      Uri gmmIntentUri = Uri.parse("https://www.google.de/maps/place/" + Stadium_Adresse_Content1.getText());
-                      Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-                      mapIntent.setPackage("com.google.android.apps.maps");
-                      startActivity(mapIntent);
+                      try{
+                          Uri gmmIntentUri = Uri.parse("https://www.google.de/maps/place/" + Stadium_Adresse_Content1.getText());
+                          Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                          mapIntent.setPackage("com.google.android.apps.maps");
+                          startActivity(mapIntent);
+                      } catch (ActivityNotFoundException omg){
+                          String url = "https://www.google.de/maps/place/" + Stadium_Adresse_Content1.getText();
+                          Intent browserIntent = new Intent(Intent.ACTION_VIEW);
+                          browserIntent.setData(Uri.parse(url));
+                          startActivity(browserIntent);
+                      }
                   }
               });
               Stadium_Card2.setOnClickListener(new View.OnClickListener() {
                   @Override
                   public void onClick(View v) {
-                      Uri gmmIntentUri = Uri.parse("https://www.google.de/maps/place/" + Stadium_Adresse_Content2.getText());
-                      Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-                      mapIntent.setPackage("com.google.android.apps.maps");
-                      startActivity(mapIntent);
+                      try{
+                          Uri gmmIntentUri = Uri.parse("https://www.google.de/maps/place/" + Stadium_Adresse_Content2.getText());
+                          Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                          mapIntent.setPackage("com.google.android.apps.maps");
+                          startActivity(mapIntent);
+                      } catch (ActivityNotFoundException omg){
+                          String url = "https://www.google.de/maps/place/" + Stadium_Adresse_Content2.getText();
+                          Intent browserIntent = new Intent(Intent.ACTION_VIEW);
+                          browserIntent.setData(Uri.parse(url));
+                          startActivity(browserIntent);
+                      }
                   }
               });
-
-
         } else {
             v = inflater.inflate(R.layout.fragment_gym_nogps, container, false);
 
@@ -214,7 +255,8 @@ public class GymFragment extends Fragment {
     public void onPause(){
        //The system calls this method as the first indication that the user is leaving the fragment (though it does not always mean the fragment is being destroyed). This is usually where you should commit any changes that should be persisted beyond the current user session (because the user might not come back).
        Log.e("DEBUG", "OnPause of RezepteFragment");
-       super.onPause();
+        alertDialog.hide();
+        super.onPause();
     }
 
     public static class GooglePlacesWebserviceAufruf extends AsyncTask<String, GPSBestimmung, ArrayList> {
