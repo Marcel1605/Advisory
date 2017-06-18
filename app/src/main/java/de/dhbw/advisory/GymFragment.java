@@ -8,10 +8,12 @@ import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,6 +43,15 @@ import java.util.ArrayList;
 
 
 public class GymFragment extends Fragment {
+
+    //Card UI-Elemente initialisieren
+    static CardView Gym_Card1;
+    static CardView Gym_Card2;
+    static CardView Park_Card1;
+    static CardView Park_Card2;
+    static CardView Stadium_Card1;
+    static CardView Stadium_Card2;
+
 
     //UI-Elemente für MyPlace initialisieren
     static TextView MyPlace_Header_Content;
@@ -78,8 +89,14 @@ public class GymFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         GPSBestimmung gps = new GPSBestimmung(this.getContext());
         gps.setPosition();
-
         View v = null;
+
+        //Warten-Dialog erstellen und anzeigen
+        alertDialog = new ProgressDialog(getContext());
+        alertDialog.setMessage(getResources().getString(R.string.loader));
+        alertDialog.setCancelable(false);
+        alertDialog.show();
+
         if (gps.GPSaktiv) {
             v = inflater.inflate(R.layout.fragment_gym, container, false);
 
@@ -111,6 +128,73 @@ public class GymFragment extends Fragment {
             Stadium_Adresse_Content2 = (TextView) v.findViewById(R.id.Stadium_Adresse_Content2);
             Stadium_Entfernung_Content2 = (TextView) v.findViewById(R.id.Stadium_Entfernung_Content2);
 
+            //Cards UI-Elemente zuweisen
+            Gym_Card1 = (CardView) v.findViewById(R.id.Gym_Card1);
+            Gym_Card2 = (CardView) v.findViewById(R.id.Gym_Card2);
+            Park_Card1  = (CardView) v.findViewById(R.id.Park_Card1);
+            Park_Card2 = (CardView) v.findViewById(R.id.Park_Card2);
+            Stadium_Card1 = (CardView) v.findViewById(R.id.Stadium_Card1);
+            Stadium_Card2 = (CardView) v.findViewById(R.id.Stadium_Card2);
+
+            //OnClickListener auf Cards setzen
+              Gym_Card1.setOnClickListener(
+                      new View.OnClickListener() {
+                          @Override
+                          public void onClick(View v) {
+                              Uri gmmIntentUri = Uri.parse("https://www.google.de/maps/place/" + Gym_Adresse_Content1.getText());
+                              Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                              mapIntent.setPackage("com.google.android.apps.maps");
+                              startActivity(mapIntent);
+                          }
+                      }
+              );
+             Gym_Card2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Uri gmmIntentUri = Uri.parse("https://www.google.de/maps/place/" + Gym_Adresse_Content2.getText());
+                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                    mapIntent.setPackage("com.google.android.apps.maps");
+                    startActivity(mapIntent);
+                }
+             });
+              Park_Card1.setOnClickListener(new View.OnClickListener() {
+                  @Override
+                  public void onClick(View v) {
+                      Uri gmmIntentUri = Uri.parse("https://www.google.de/maps/place/" + Park_Adresse_Content1.getText());
+                      Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                      mapIntent.setPackage("com.google.android.apps.maps");
+                      startActivity(mapIntent);
+                  }
+              });
+              Park_Card2.setOnClickListener(new View.OnClickListener() {
+                  @Override
+                  public void onClick(View v) {
+                      Uri gmmIntentUri = Uri.parse("https://www.google.de/maps/place/" + Park_Adresse_Content2.getText());
+                      Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                      mapIntent.setPackage("com.google.android.apps.maps");
+                      startActivity(mapIntent);
+                  }
+              });
+              Stadium_Card1.setOnClickListener(new View.OnClickListener() {
+                  @Override
+                  public void onClick(View v) {
+                      Uri gmmIntentUri = Uri.parse("https://www.google.de/maps/place/" + Stadium_Adresse_Content1.getText());
+                      Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                      mapIntent.setPackage("com.google.android.apps.maps");
+                      startActivity(mapIntent);
+                  }
+              });
+              Stadium_Card2.setOnClickListener(new View.OnClickListener() {
+                  @Override
+                  public void onClick(View v) {
+                      Uri gmmIntentUri = Uri.parse("https://www.google.de/maps/place/" + Stadium_Adresse_Content2.getText());
+                      Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                      mapIntent.setPackage("com.google.android.apps.maps");
+                      startActivity(mapIntent);
+                  }
+              });
+
+
         } else {
             v = inflater.inflate(R.layout.fragment_gym_nogps, container, false);
 
@@ -118,18 +202,6 @@ public class GymFragment extends Fragment {
             MyPlace_Adresse_Content = (TextView) v.findViewById(R.id.MyPlace_Adresse_Content);
             MyPlace_Header_Content = (TextView) v.findViewById(R.id.MyPlace_Header_Content);
         }
-
-
-        //Warten-Dialog erstellen und anzeigen
-        alertDialog = new ProgressDialog(getContext());
-        alertDialog.setMessage(getResources().getString(R.string.loader));
-        alertDialog.setCancelable(false);
-        alertDialog.show();
-
-
-        GymAPI mat = new GymAPI(this.getContext());
-        mat.doInBackground();
-
 
         GooglePlacesWebserviceAufruf aufruf = new GooglePlacesWebserviceAufruf(gps);
         aufruf.execute();
@@ -143,29 +215,6 @@ public class GymFragment extends Fragment {
        //The system calls this method as the first indication that the user is leaving the fragment (though it does not always mean the fragment is being destroyed). This is usually where you should commit any changes that should be persisted beyond the current user session (because the user might not come back).
        Log.e("DEBUG", "OnPause of RezepteFragment");
        super.onPause();
-    }
-
-    /**
-     * Klasse für den Hintergrund Thread
-     */
-    public static class GymAPI extends AsyncTask<Object, Object, Void> {
-
-        protected Context context;
-
-        GymAPI(Context context) {
-            this.context = context;
-        }
-
-        @Override
-        protected Void doInBackground(Object... params) {
-            try{
-
-
-            } catch(Exception e) {
-               Log.i("GymFragment:","doInBackground Test");
-            }
-            return null;
-        }
     }
 
     public static class GooglePlacesWebserviceAufruf extends AsyncTask<String, GPSBestimmung, ArrayList> {
@@ -262,6 +311,7 @@ public class GymFragment extends Fragment {
 
 
                 alertDialog.hide();
+                gps.stopGPSposition();
                 super.onPostExecute(ergebnis);
 
 
