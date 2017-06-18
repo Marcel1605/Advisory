@@ -41,14 +41,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         }
         _bottomNavigation.setOnNavigationItemSelectedListener(this);
 
-        //Holt die fehlende Permission beim Nutzer ein
-        boolean permissionGranted = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
 
-        if(permissionGranted) {
-            // {Some Code}
-        } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 200);
-        }
     }
 
     @Override
