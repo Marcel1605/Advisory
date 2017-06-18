@@ -255,8 +255,13 @@ public class GymFragment extends Fragment {
     public void onPause(){
        //The system calls this method as the first indication that the user is leaving the fragment (though it does not always mean the fragment is being destroyed). This is usually where you should commit any changes that should be persisted beyond the current user session (because the user might not come back).
        Log.e("DEBUG", "OnPause of RezepteFragment");
-        alertDialog.hide();
         super.onPause();
+    }
+
+    @Override
+    public void onResume(){
+        Log.e("DEBUG", "OnResume of RezepteFragment");
+        super.onResume();
     }
 
     public static class GooglePlacesWebserviceAufruf extends AsyncTask<String, GPSBestimmung, ArrayList> {
@@ -486,11 +491,7 @@ public class GymFragment extends Fragment {
                 Log.i("parseGooglePlaces:", "destination_address1 gesetzt "+ destination_address1);
 
                 //origin_addresses selektieren und parsen
-                Log.i("parseGooglePlaces:", "marcel test " + distanceObject1);
-
                 JSONArray origin_address_array = distanceObject1.getJSONArray("origin_addresses");
-                Log.i("parseGooglePlaces:", "marcel test "+ origin_address_array);
-
                 String origin_address = (String) origin_address_array.get(0);
                 Log.i("parseGooglePlaces:", "origin_address gesetzt "+ origin_address);
 
