@@ -125,6 +125,7 @@ public class GymFragment extends Fragment {
 
             GPSBestimmung gps = new GPSBestimmung(this.getContext());
             gps.setPosition();
+            gps.stopGPSposition();
 
             //Warten-Dialog erstellen und anzeigen
             alertDialog = new ProgressDialog(getContext());

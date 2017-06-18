@@ -44,17 +44,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case 200: {
-                if(grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // {Some Code}
-                }
-            }
-        }
-    }
-
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
