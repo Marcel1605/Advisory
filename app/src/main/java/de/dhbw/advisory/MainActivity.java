@@ -8,7 +8,6 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.content.pm.PackageManager;
-import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -35,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         //Beim initialen Activity-Start Fitness Fragment als erstes Fragment hinzufügen
         if (savedInstanceState == null) {
-            _fragment = new FitnessFragment();
+            _fragment = new FitnessFragmentOverview();
             FragmentTransaction transaction = _fragmentManager.beginTransaction();
             transaction.replace(R.id.main_container, _fragment).commit();
         }
@@ -46,11 +45,11 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
 
         @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
             case R.id.fitness:
-                _fragment = new FitnessFragment();
+                _fragment = new FitnessFragmentOverview();
                 break;
             case R.id.rezepte:
                 _fragment = new RezepteFragment();
