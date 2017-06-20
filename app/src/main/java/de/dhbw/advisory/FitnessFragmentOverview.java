@@ -41,7 +41,7 @@ public class FitnessFragmentOverview extends Fragment {
         List<DemoItem> items = new ArrayList<>();
         DemoItem item_bauch = new DemoItem(2, 1, ITEM_BAUCH, "https://www.foodspring.de/magazine/wp-content/uploads/2015/03/shutterstock_252795637-800x500.jpg", "Bauch");
         DemoItem item_bizeps = new DemoItem(1, 1, ITEM_BIZEPS, "http://gangsterreport.com/wp-content/uploads/2017/02/12-rep_arms_main_4.jpg", "Bizeps");
-        DemoItem item_trizeps = new DemoItem(1, 1, ITEM_TRIZEPS, "http://img.gentside.de/trizeps/dips_10789_w460.jpg", "Trizeps");
+        DemoItem item_trizeps = new DemoItem(1, 1, ITEM_TRIZEPS, "http://www.gymlivet.com/wp-content/uploads/2016/06/triceps%C3%B6vningar.jpg", "Trizeps");
         DemoItem item_brust = new DemoItem(1, 1, ITEM_BRUST, "http://www.thebetterdays.de/wp-content/uploads/2014/09/brustmuskulatur.jpg", "Brust");
         DemoItem item_beine = new DemoItem(1, 1, ITEM_BEINE, "http://brachiale-fitness.de/wp-content/uploads/2015/08/Fotolia_85931103_S.jpg", "Beine");
 
