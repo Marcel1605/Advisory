@@ -10,14 +10,13 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:fillViewport="true"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="fill_parent"
-            android:paddingTop="8dp"
             android:layout_height="fill_parent"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
 
             <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -32,17 +31,19 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="8dp"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
                     android:layout_marginTop="8dp"
+                    android:paddingTop="4dp"
                     cardview:cardBackgroundColor="@color/white"
-                    cardview:cardCornerRadius="0dp"
+                    cardview:cardCornerRadius="2dp"
                     cardview:cardElevation="8dp">
 
                     <RelativeLayout
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/card_action_ripple"
+                        android:background="@color/colorAccent"
                         android:orientation="vertical">
 
                         <TextView
@@ -53,10 +54,10 @@
                             android:layout_alignParentTop="true"
                             android:layout_gravity="left"
                             android:layout_marginLeft="5dp"
+                            android:layout_marginTop="4dp"
                             android:layout_toEndOf="@+id/MyPlace_icon"
                             android:ellipsize="end"
                             android:maxLines="1"
-                            android:padding="2dp"
                             android:paddingRight="4dp"
                             android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -80,6 +81,9 @@
                             android:id="@+id/MyPlace_icon"
                             android:layout_width="50dp"
                             android:layout_height="50dp"
+                            android:layout_marginBottom="4dp"
+                            android:layout_marginLeft="4dp"
+                            android:layout_marginTop="4dp"
                             android:scaleType="centerCrop"
                             android:src="@drawable/ic_location_on_black_48dp" />
                     </RelativeLayout>
@@ -96,8 +100,8 @@
                     android:layout_marginTop="8dp"
                     android:paddingTop="3dp"
                     cardview:cardBackgroundColor="@color/white"
-                    cardview:cardCornerRadius="0dp"
-                    cardview:cardElevation="8dp">
+                    cardview:cardCornerRadius="2dp"
+                    cardview:cardElevation="2dp">
 
                     <RelativeLayout
                         android:layout_width="fill_parent"
@@ -172,8 +176,8 @@
                     android:layout_margin="8dp"
                     android:paddingTop="3dp"
                     cardview:cardBackgroundColor="@color/white"
-                    cardview:cardCornerRadius="0dp"
-                    cardview:cardElevation="8dp">
+                    cardview:cardCornerRadius="2dp"
+                    cardview:cardElevation="2dp">
 
                     <RelativeLayout
                         android:layout_width="fill_parent"
@@ -250,8 +254,8 @@
                     android:layout_marginTop="8dp"
                     android:paddingTop="3dp"
                     cardview:cardBackgroundColor="@color/white"
-                    cardview:cardCornerRadius="0dp"
-                    cardview:cardElevation="8dp">
+                    cardview:cardCornerRadius="2dp"
+                    cardview:cardElevation="2dp">
 
                     <RelativeLayout
                         android:layout_width="fill_parent"
@@ -326,8 +330,8 @@
                     android:layout_margin="8dp"
                     android:paddingTop="3dp"
                     cardview:cardBackgroundColor="@color/white"
-                    cardview:cardCornerRadius="0dp"
-                    cardview:cardElevation="8dp">
+                    cardview:cardCornerRadius="2dp"
+                    cardview:cardElevation="2dp">
 
                     <RelativeLayout
                         android:layout_width="fill_parent"
@@ -404,8 +408,8 @@
                     android:layout_marginTop="8dp"
                     android:paddingTop="3dp"
                     cardview:cardBackgroundColor="@color/white"
-                    cardview:cardCornerRadius="0dp"
-                    cardview:cardElevation="8dp">
+                    cardview:cardCornerRadius="2dp"
+                    cardview:cardElevation="2dp">
 
                     <RelativeLayout
                         android:layout_width="fill_parent"
@@ -479,8 +483,8 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_margin="8dp"
                     cardview:cardBackgroundColor="@color/white"
-                    cardview:cardCornerRadius="0dp"
-                    cardview:cardElevation="8dp">
+                    cardview:cardCornerRadius="2dp"
+                    cardview:cardElevation="2dp">
 
                     <RelativeLayout
                         android:layout_width="fill_parent"

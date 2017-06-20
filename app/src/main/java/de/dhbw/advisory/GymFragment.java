@@ -122,10 +122,6 @@ public class GymFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-
-
-
-
             View v = null;
             //Warten-Dialog erstellen und anzeigen
             alertDialog = new ProgressDialog(getContext());
@@ -298,14 +294,7 @@ public class GymFragment extends Fragment {
 
                 alertDialog.hide();
             }
-
-
-
             return v;
-
-
-
-
     }
 
 
@@ -722,7 +711,7 @@ public class GymFragment extends Fragment {
 
 
                     Log.i("GPSBestimmung", "LocationManager ausgeführt: " + locationManager);
-
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 10, this);
                     if (locationManager != null) {
                         Log.i("GPSBestimmung", "setPosition: Speicherung wird durchgeführt");
 
@@ -733,7 +722,7 @@ public class GymFragment extends Fragment {
                                 onPositionDetected.run();
                             }
                         } else {
-                            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 10, this);
+                           //donothing
                         }
 
                     }
