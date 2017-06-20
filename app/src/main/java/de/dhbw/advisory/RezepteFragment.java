@@ -411,18 +411,26 @@ public class RezepteFragment extends Fragment {
                 JSONObject i = jsonArray.getJSONObject(0);
                 Log.i("parseRecipe:", "Recipes geparst");
 
-                int servings = i.getInt("servings");
+                //Rezept parsen (aus den verschiedenen Schritten des Rezepts
+                JSONArray recipe = i.getJSONArray("analyzedInstructions").getJSONObject(0).getJSONArray("steps");
+                String recipeString = "";
+
+                for(int l = 0; l < recipe.length(); l++) {
+                    recipeString = recipeString + recipe.getJSONObject(l).getString("step");
+                    recipeString = recipeString + "\n";
+                }
+
                 Log.i("parseRecipe:", "Servings geparst");
 
                 JSONArray ingredients = i.getJSONArray("extendedIngredients");
                 int length = ingredients.length();
-                //[][0] = aisle
+                //[][0] = name
                 //[][1] = amount
                 //[][2] = unit
                 String[][] ing = new String[length][3];
 
                 for(int x = 0; x < length; x++){
-                    ing [x][0] = ingredients.getJSONObject(x).getString("aisle");
+                    ing [x][0] = ingredients.getJSONObject(x).getString("name");
                     ing [x][1] = ingredients.getJSONObject(x).getString("amount");
                     ing [x][2] = ingredients.getJSONObject(x).getString("unit");
                 }
@@ -434,10 +442,6 @@ public class RezepteFragment extends Fragment {
                 String img_url = i.getString("image");
 
                 Log.i("parseRecipe:", "title und img_url gesetzt");
-                //Instructions verschönern
-                String newinstructions = i.getString("instructions");
-                String teiler = "                         ";
-                String instructions = newinstructions.replaceAll(teiler, "\n");
 
                 //TODO durch eine Map ersetzen
                 ArrayList<Object> information = new ArrayList<>();
@@ -445,11 +449,11 @@ public class RezepteFragment extends Fragment {
                 Log.i("parseRecipe:", "Parsen fast beendet");
                 Log.i("parseRecipe:", "title: " + title);
                 Log.i("parseRecipe:", "ing: " + ing.toString());
-                Log.i("parseRecipe:", "instructions: " + instructions);
+                Log.i("parseRecipe:", "instructions: " + recipeString);
 
                 information.add(0,title);
                 information.add(1, ing);
-                information.add(2,instructions);
+                information.add(2,recipeString);
                 information.add(3, img_url);
 
                 return information;
