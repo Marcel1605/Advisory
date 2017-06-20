@@ -373,7 +373,7 @@ public class RezepteFragment extends Fragment {
                 Log.i("onPostExecute","Views aktualisiert");
                 Log.i("onPostExecute", "Methode beendet");
             } else {
-                _rezepteTitel.setText("ERROR: " + asyncTaskResult.getError().getMessage());
+                _rezepteTitel.setText("Bitte versuchen sie es später erneut! :)");
                 cancelProgressDialog();
             }
 
