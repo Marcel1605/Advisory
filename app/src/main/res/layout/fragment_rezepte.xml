@@ -9,20 +9,25 @@
 
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:layout_height="fill_parent"
+        android:layout_marginBottom="?attr/actionBarSize"
+        >
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <TableLayout
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:stretchColumns="1">
 
                 <TableRow
-                    android:layout_marginBottom="20dp"
-                    android:layout_marginTop="10dp">
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:background="#AED581"
+                    android:alpha="300"
+                    >
 
                     <TextView
                         android:id="@+id/Rezepte_Überschrift"
@@ -30,9 +35,13 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
+                        android:layout_marginBottom="20dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
                         android:text="Hier ihr Mittagessen!"
                         android:textColor="@color/black"
-                        android:textSize="32dp"
+                        android:textSize="34sp"
                         android:textStyle="bold" />
                 </TableRow>
 
@@ -46,25 +55,23 @@
                         android:gravity="center"
                         android:textColor="@color/black"
                         android:textSize="20dp"
-                        android:textStyle="italic" />
+                        android:textStyle="italic"
+                        />
                 </TableRow>
 
                 <TableRow
                     android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_marginBottom="20dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
                     android:gravity="center_horizontal">
 
                     <ImageView
                         android:id="@+id/rezepte_Icon"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginRight="20dp"
-
-                        android:layout_gravity="center_horizontal"
-                        android:scaleType="fitXY" />
+                        android:layout_gravity="center"
+                        android:adjustViewBounds="true"
+                        android:scaleType="centerCrop"/>
 
                 </TableRow>
 
@@ -113,11 +120,11 @@
                         android:id="@+id/rezepte_Rezept_Text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="50dp"
+                        android:layout_marginBottom="15dp"
                         android:layout_weight="1"
                         android:gravity="left"
                         android:textColor="@color/black"
-                        android:textSize="10dp" />
+                        android:textSize="12dp" />
                 </TableRow>
 
             </TableLayout>

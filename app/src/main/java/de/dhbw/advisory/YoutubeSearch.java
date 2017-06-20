@@ -29,7 +29,7 @@ package de.dhbw.advisory;
  * Ausgabe einer Liste von Videos, die einer Sucheingabe entsprechen.
  */
 
-public class YoutubeSearch extends AsyncTask<String, Void, AsyncTaskResult> {
+public class YoutubeSearch extends AsyncTask<String, Void, AsyncTaskResult<SearchResult>> {
     private static final String PROPERTIES_FILENAME = "youtube.properties";
 
     private static final long NUMBER_OF_VIDEOS_RETURNED = 25;
@@ -56,7 +56,7 @@ public class YoutubeSearch extends AsyncTask<String, Void, AsyncTaskResult> {
     /*
      * Diese Methode vollzieht den Aufruf der YouTube-API um Videos und dazugehörige Informationen abzurufen
      */
-    private AsyncTaskResult searchVideo(Context context, String queryTerm) {
+    private AsyncTaskResult<SearchResult> searchVideo(Context context, String queryTerm) {
         // Der developer key wird später aus der properties-Datei ausgelesen
         Properties properties = new Properties();
 
@@ -141,12 +141,12 @@ public class YoutubeSearch extends AsyncTask<String, Void, AsyncTaskResult> {
 
     //Auslagern des Aufrufs
     @Override
-    protected AsyncTaskResult doInBackground(String... params) {
+    protected AsyncTaskResult<SearchResult> doInBackground(String... params) {
         return searchVideo(this.context, params[0]);
     }
 
     @Override
-    protected void onPostExecute(AsyncTaskResult asyncTaskResult) {
+    protected void onPostExecute(AsyncTaskResult<SearchResult> asyncTaskResult) {
         ////Sobald Videos gefunden wurden, wird zunächst der Ladebildschirm entfernt
         resultView.cancelProgressDialog();
 

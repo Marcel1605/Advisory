@@ -6,11 +6,11 @@ import com.google.api.services.youtube.model.SearchResult;
 import java.util.Collection;
 import java.util.List;
 
-public class AsyncTaskResult {
+public class AsyncTaskResult <T> {
     private Throwable error;
-    private Collection<SearchResult> result;
+    private List<T> result;
 
-    public AsyncTaskResult(List<SearchResult> items) {
+    public AsyncTaskResult(List<T> items) {
         this.result = items;
     }
 
@@ -26,7 +26,7 @@ public class AsyncTaskResult {
         return error;
     }
 
-    public Collection<SearchResult> getResult() {
+    public List<T> getResult() {
         return result;
     }
 }

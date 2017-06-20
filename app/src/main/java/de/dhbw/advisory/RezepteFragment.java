@@ -3,6 +3,7 @@ package de.dhbw.advisory;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
@@ -19,6 +20,8 @@ import android.content.Context;
 import android.widget.TableRow.LayoutParams;
 import java.io.InputStream;
 import android.graphics.BitmapFactory;
+import android.app.ProgressDialog;
+
 
 
 import com.google.api.client.http.GenericUrl;
@@ -28,6 +31,7 @@ import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.common.io.CharStreams;
 
 
 import org.json.JSONArray;
@@ -35,14 +39,21 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.io.InputStreamReader;
+import java.io.StringWriter;
+import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by Magnus on 30.05.17.
  */
 public class RezepteFragment extends Fragment {
+    //Ladebildschirm
+    private ProgressDialog alertDialog;
 
     //Mittagessen, Lunch, Frühstück, Mitternachtssnach, Abendessen,...
     private String essenTyp;
@@ -79,6 +90,12 @@ public class RezepteFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_rezepte, container, false);
 
+        //Ladebildschirm einfügen
+        alertDialog = new ProgressDialog(getContext());
+        alertDialog.setMessage(getResources().getString(R.string.loader));
+        alertDialog.setCancelable(false);
+        alertDialog.show();
+
         //Referenzen der Textviews abfragen
         _rezepteTitel = (TextView) view.findViewById(R.id.Rezepte_Titel);
         _rezepteÜberschrift = (TextView) view.findViewById(R.id.Rezepte_Überschrift);
@@ -109,7 +126,12 @@ public class RezepteFragment extends Fragment {
         super.onPause();
     }
 
-
+    /**
+     * Diese Methode hidet den Progress Dialog
+     */
+    public void cancelProgressDialog() {
+        alertDialog.dismiss();
+    }
 
 
     /**
@@ -146,7 +168,7 @@ public class RezepteFragment extends Fragment {
             typ = "ihre Suppe";
         } else if (hh >= 6 && hh <= 9) {
             //Bread
-            typ = "ihr Brot";
+            typ = "ihr Rezept für ein Brot";
         } else if (hh >= 10 && hh <= 11) {
             //Appetizer
             typ = "ihr Appetizer";
@@ -155,7 +177,7 @@ public class RezepteFragment extends Fragment {
             typ = "ihr Hauptgericht";
         } else if (hh == 15) {
             //side dish
-            typ = "ihr Kleiner Happen";
+            typ = "ihr kleiner Happen";
         } else if (hh == 16) {
             //Dessert
             typ = "ihr Dessert";
@@ -240,7 +262,10 @@ public class RezepteFragment extends Fragment {
         @Override
         protected void onPostExecute(Bitmap icon) {
 
+            //_rezepteTitel.setBackground(new BitmapDrawable(getResources(), icon));
+
             _rezepteIcon.setImageBitmap(icon);
+            cancelProgressDialog();
         }
 
 
@@ -249,7 +274,7 @@ public class RezepteFragment extends Fragment {
     /**
      * Klasse für den Hintergrund Thread
      */
-    public class RecipeAPI extends AsyncTask<String, String, ArrayList> {
+    public class RecipeAPI extends AsyncTask<String, String, AsyncTaskResult<?>> {
 
         protected Context context;
 
@@ -259,7 +284,7 @@ public class RezepteFragment extends Fragment {
         }
 
         @Override
-        protected ArrayList doInBackground(String... params) {
+        protected AsyncTaskResult<?> doInBackground(String... params) {
             try{
                 //Zu untersuchende ID via API herausfinden
                 Log.i("doInBackground: ", "Methode begonnen");
@@ -269,24 +294,19 @@ public class RezepteFragment extends Fragment {
                 Log.i("doInBackground: ", "parsen beendet");
 
                 Log.i("doInBackground: ", "Methode beendet");
-                return erg;
+                return new AsyncTaskResult(erg);
             } catch (Exception e){
                 Log.i("doInBackground: ", "Fehler doInBackground");
-                return new ArrayList();
+                return new AsyncTaskResult(e);
             }
 
         }
 
-
         @Override
-        protected void onPostExecute(ArrayList ergebnis) {
+        protected void onPostExecute(AsyncTaskResult asyncTaskResult) {
             Log.i("onPostExecute", "Methode begonnen");
-
-            if (ergebnis.isEmpty()) {
-                //Zurückgegebenes Ergebnis ist leer; Fehler
-                _rezepteTitel.setText("ERROR");
-                Log.i("onPostExecute","Fehler: Zurückgegebene Arraylist ist leer.");
-            } else {
+            if (asyncTaskResult.isSuccessful()) {
+                List ergebnis = asyncTaskResult.getResult();
                 Log.i("onPostExecute","Methode begonnen");
                 //Titel setzten
                 _rezepteTitel.setText(ergebnis.get(0).toString());
@@ -308,35 +328,37 @@ public class RezepteFragment extends Fragment {
                 params.weight = 1f;
 
                 //Zutaten in die Liste setzen
-               for (int i = 0; i < zutaten.length; i++) {
-                   tr[i] = new TableRow(context);
-                   tv_ing[i] = new TextView(context);
-                   tv_amount[i] = new TextView(context);
+                for (int i = 0; i < zutaten.length; i++) {
+                    tr[i] = new TableRow(context);
+                    tv_ing[i] = new TextView(context);
+                    tv_amount[i] = new TextView(context);
 
-                   tv_ing[i].setLayoutParams(params);
-                   tv_ing[i].setTextColor(Color.BLACK);
-                   tv_ing[i].setTextSize(TypedValue.COMPLEX_UNIT_DIP, 10);
-                   tv_ing[i].setText("" + zutaten[i][0] + ":");
+                    tv_ing[i].setLayoutParams(params);
+                    tv_ing[i].setTextColor(Color.BLACK);
+                    tv_ing[i].setTextSize(TypedValue.COMPLEX_UNIT_DIP, 10);
+                    tv_ing[i].setText("" + zutaten[i][0] + ":");
 
-                   tv_amount[i].setLayoutParams(params);
-                   tv_amount[i].setTextColor(Color.BLACK);
-                   tv_amount[i].setTextSize(TypedValue.COMPLEX_UNIT_DIP, 10);
-                   tv_amount[i].setText("" + zutaten[i][1] + " " + zutaten[i][2]);
+                    tv_amount[i].setLayoutParams(params);
+                    tv_amount[i].setTextColor(Color.BLACK);
+                    tv_amount[i].setTextSize(TypedValue.COMPLEX_UNIT_DIP, 10);
+                    tv_amount[i].setText("" + zutaten[i][1] + " " + zutaten[i][2]);
 
-                   tr[i].addView(tv_ing[i]);
-                   tr[i].addView(tv_amount[i]);
-                   _rezepteZutatenliste.addView(tr[i]);
-               }
+                    tr[i].addView(tv_ing[i]);
+                    tr[i].addView(tv_amount[i]);
+                    _rezepteZutatenliste.addView(tr[i]);
+                }
 
                 _rezepteRezepte.setText("Rezepte:");
-               _rezepteZutaten.setText("Zutaten:");
+                _rezepteZutaten.setText("Zutaten:");
 
                 _rezepteZutatenliste.refreshDrawableState();
                 Log.i("onPostExecute","Views aktualisiert");
-
+                Log.i("onPostExecute", "Methode beendet");
+            } else {
+                _rezepteTitel.setText("ERROR: " + asyncTaskResult.getError().getMessage());
+                cancelProgressDialog();
             }
 
-            Log.i("onPostExecute", "Methode beendet");
         }
 
         /**
@@ -348,7 +370,6 @@ public class RezepteFragment extends Fragment {
          * @throws Exception
          */
         protected String getRecipe(String typ) throws Exception {
-            try {
                 Log.i("getRecipe: ","Methode begonnen");
                 Log.i("getRecipe: ","Übergebener Wert: " + typ);
                 Log.i("getRecipe: ","Starte API Aufruf");
@@ -372,6 +393,8 @@ public class RezepteFragment extends Fragment {
                 Log.i("getRecipe: ","Request absetzen begonnen");
                 HttpHeaders httpHeaders = new HttpHeaders();
                 httpHeaders.set("X-Mashape-Key", "knWwtaM7bHmshY9d7wMYMZJd8AS3p1xbRHvjsnq4NKZcfVsSiP");
+                httpHeaders.setContentType("application/json; charset=UTF-8");
+                httpHeaders.setAccept("application/json; charset=UTF-8");
                 HttpRequest request = requestFactory.buildGetRequest(url);
                 request.setHeaders(httpHeaders);
                 Log.i("getRecipe: ","Request absetzen Daten Header hinzugefügt");
@@ -379,16 +402,20 @@ public class RezepteFragment extends Fragment {
                 Log.i("getRecipe: ","Request absetzen beendet");
 
                 Log.i("getRecipe: ","Request parsen");
-                String jsonResponseString = httpResponse.parseAsString();
-
-                Log.i("getRecipe: ","API Aufruf beendet");
-                Log.i("getRecipe: ","Erhaltene JSON: " + jsonResponseString);
-                return jsonResponseString;
-            } catch (Exception e) {
-                //! Fehler Exception unspeziefisch
-                Log.i("Fehler getRecipeSearch", "Request absetzen fehlgeschlagen");
-                return "error";
+                Log.i("getRecipe: ","Content Charset" +  httpResponse.getContentCharset());
+            String jsonResponseString ="";
+            try{
+                InputStream inputStream = httpResponse.getContent();
+                jsonResponseString = CharStreams.toString( new InputStreamReader( inputStream, "UTF-8" ) );
             }
+                finally {
+                httpResponse.disconnect();
+            }
+
+            Log.i("getRecipe: ","API Aufruf beendet");
+            Log.i("getRecipe: ","Erhaltene JSON: " + jsonResponseString);
+            return jsonResponseString;
+
         }
 
         /**
@@ -400,7 +427,6 @@ public class RezepteFragment extends Fragment {
          * @throws JSONException
          */
         protected ArrayList parseRecipe(String jsonString) throws JSONException {
-            try{
                 Log.i("parseRecipe:", "Beginnt das parsen");
                 Log.i("parseRecipe:", "Übergebenes Objekt: " + jsonString);
                 //Eigentliches parsen
@@ -457,11 +483,6 @@ public class RezepteFragment extends Fragment {
                 information.add(3, img_url);
 
                 return information;
-            } catch (Exception e) {
-                //Fehler Exception
-                Log.i("parseRecipeSearch","Parsen ReipeSearch fehlgeschlagen");
-                return new ArrayList();
-            }
 
         }
     }
