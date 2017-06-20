@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         //Beim initialen Activity-Start Fitness Fragment als erstes Fragment hinzufügen
         if (savedInstanceState == null) {
-            _fragment = new de.dhbw.advisory.FitnessFragmentOverview();
+            _fragment = new de.dhbw.advisory.fitness.FitnessFragmentOverview();
             FragmentTransaction transaction = _fragmentManager.beginTransaction();
             transaction.replace(R.id.main_container, _fragment).commit();
         }
@@ -60,8 +60,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             } else if (grantResults[0] == PackageManager.PERMISSION_DENIED){
                 Toast.makeText(this, "Bitte akzeptiere die Permission", Toast.LENGTH_LONG);
             }
-
-
         }
 
 
@@ -71,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         int id = item.getItemId();
         switch (id) {
             case R.id.fitness:
-                _fragment = new de.dhbw.advisory.FitnessFragmentOverview();
+                _fragment = new de.dhbw.advisory.fitness.FitnessFragmentOverview();
                 transaction = _fragmentManager.beginTransaction();
                 transaction.replace(R.id.main_container, _fragment).commit();
                 break;
@@ -98,6 +96,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     @Override
     public void onFragmentChangeRequest(Fragment fragment) {
-
+        _fragment = fragment;
+        transaction = _fragmentManager.beginTransaction();
+        transaction.replace(R.id.main_container, _fragment).commit();
     }
 }

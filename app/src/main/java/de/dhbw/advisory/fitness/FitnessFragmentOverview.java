@@ -1,5 +1,6 @@
-package de.dhbw.advisory;
+package de.dhbw.advisory.fitness;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,6 +17,8 @@ import com.felipecsl.asymmetricgridview.library.widget.AsymmetricGridViewAdapter
 import java.util.ArrayList;
 import java.util.List;
 
+import de.dhbw.advisory.R;
+import de.dhbw.advisory.common.FragmentChangeListener;
 import de.dhbw.advisory.fitness.component.custom.DefaultListAdapter;
 import de.dhbw.advisory.fitness.component.custom.DemoAdapter;
 import de.dhbw.advisory.fitness.component.custom.DemoItem;
@@ -23,7 +26,19 @@ import de.dhbw.advisory.fitness.component.custom.DemoItem;
 public class FitnessFragmentOverview extends Fragment {
     private AsymmetricGridView listView;
     private DemoAdapter adapter;
-    private ViewGroup container;;
+    private ViewGroup container;
+    private FragmentChangeListener fragmentChangeListener;
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        try {
+            fragmentChangeListener = (FragmentChangeListener) activity;
+        } catch (ClassCastException e) {
+            throw new RuntimeException("Activity must implement FragmentChangeListener");
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -44,7 +59,7 @@ public class FitnessFragmentOverview extends Fragment {
         List<DemoItem> items = new ArrayList<>();
         DemoItem item_bauch = new DemoItem(2, 1, ITEM_BAUCH, "https://www.foodspring.de/magazine/wp-content/uploads/2015/03/shutterstock_252795637-800x500.jpg", "Bauch");
         DemoItem item_bizeps = new DemoItem(1, 1, ITEM_BIZEPS, "http://gangsterreport.com/wp-content/uploads/2017/02/12-rep_arms_main_4.jpg", "Bizeps");
-        DemoItem item_trizeps = new DemoItem(1, 1, ITEM_TRIZEPS, "http://www.gymlivet.com/wp-content/uploads/2016/06/triceps%C3%B6vningar.jpg", "Trizeps");
+        DemoItem item_trizeps = new DemoItem(1, 1, ITEM_TRIZEPS, "http://www.menshealth.com/sites/menshealth.com/files/styles/slideshow-desktop/public/images/slideshow2/1-triceps-intro_0.jpg?itok=SD8SWyJz", "Trizeps");
         DemoItem item_brust = new DemoItem(1, 1, ITEM_BRUST, "http://www.thebetterdays.de/wp-content/uploads/2014/09/brustmuskulatur.jpg", "Brust");
         DemoItem item_beine = new DemoItem(1, 1, ITEM_BEINE, "http://brachiale-fitness.de/wp-content/uploads/2015/08/Fotolia_85931103_S.jpg", "Beine");
 
@@ -54,7 +69,7 @@ public class FitnessFragmentOverview extends Fragment {
         items.add(item_brust);
         items.add(item_beine);
 
-        adapter = new DefaultListAdapter(getContext(), items);
+        adapter = new DefaultListAdapter(getContext(), items, fragmentChangeListener);
         listView.setRequestedColumnCount(2);
         listView.setRequestedHorizontalSpacing(0);
         listView.setAdapter(getNewAdapter());

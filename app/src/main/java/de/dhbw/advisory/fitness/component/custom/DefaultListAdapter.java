@@ -2,6 +2,7 @@ package de.dhbw.advisory.fitness.component.custom;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +17,9 @@ import com.squareup.picasso.Target;
 
 import java.util.List;
 
-import de.dhbw.advisory.FitnessFragmentOverview;
+import de.dhbw.advisory.fitness.FitnessFragmentOverview;
+import de.dhbw.advisory.common.FragmentChangeListener;
+import de.dhbw.advisory.fitness.FitnessFragment;
 
 /**
  * Sample adapter implementation extending from AsymmetricGridViewAdapter<DemoItem> This is the
@@ -25,15 +28,18 @@ import de.dhbw.advisory.FitnessFragmentOverview;
 public class DefaultListAdapter extends ArrayAdapter<DemoItem> implements DemoAdapter {
 
     private final LayoutInflater layoutInflater;
+    private final FragmentChangeListener fragmentChangeListener;
 
-    public DefaultListAdapter(Context context, List<DemoItem> items) {
+    public DefaultListAdapter(Context context, List<DemoItem> items, FragmentChangeListener fragmentChangeListener) {
         super(context, 0, items);
         layoutInflater = LayoutInflater.from(context);
+        this.fragmentChangeListener = fragmentChangeListener;
     }
 
     public DefaultListAdapter(Context context) {
         super(context, 0);
         layoutInflater = LayoutInflater.from(context);
+        this.fragmentChangeListener = null;
     }
 
     @Override
@@ -54,23 +60,29 @@ public class DefaultListAdapter extends ArrayAdapter<DemoItem> implements DemoAd
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                FitnessFragment fitnessFragment = new FitnessFragment();
+                Bundle bundle = new Bundle();
+                fitnessFragment.setArguments(bundle);
+
                 switch(item.getPosition()) {
                     case FitnessFragmentOverview.ITEM_BAUCH:
-
+                        bundle.putString("url", "bauch übungen zuhause");
                         break;
                     case FitnessFragmentOverview.ITEM_BIZEPS:
-
+                        bundle.putString("url", "bizeps übungen zuhause");
                         break;
                     case FitnessFragmentOverview.ITEM_TRIZEPS:
-
+                        bundle.putString("url", "trizeps übungen zuhause");
                         break;
                     case FitnessFragmentOverview.ITEM_BRUST:
-
+                        bundle.putString("url", "brust übungen zuhause");
                         break;
                     case FitnessFragmentOverview.ITEM_BEINE:
-
+                        bundle.putString("url", "bein übungen zuhause");
                         break;
                 }
+
+                fragmentChangeListener.onFragmentChangeRequest(fitnessFragment);
             }
         });
 

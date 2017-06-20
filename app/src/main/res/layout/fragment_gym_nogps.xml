@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/contentBackground"
-    tools:context="de.dhbw.advisory.GymFragment">
+    tools:context="de.dhbw.advisory.gym.GymFragment">
 
 
     <ScrollView
