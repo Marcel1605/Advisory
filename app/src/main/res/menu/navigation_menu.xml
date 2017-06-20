@@ -18,9 +18,9 @@
         app:actionLayout="@layout/switch_item" />
     <item
         android:id="@+id/gym"
-        android:title="Gym"
+        android:title="Orte"
         app:showAsAction="ifRoom"
         android:enabled="true"
-        android:icon="@drawable/karten_stecknadel"
+        android:icon="@drawable/ic_orte"
         app:actionLayout="@layout/switch_item" />
 </menu>

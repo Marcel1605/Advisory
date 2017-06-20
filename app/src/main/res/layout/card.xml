@@ -11,8 +11,8 @@
         android:layout_height="220dp"
         android:layout_margin="8dp"
         android:layout_gravity="center_horizontal"
-        cardview:cardElevation="8dp"
-        cardview:cardCornerRadius="0dp"
+        cardview:cardElevation="2dp"
+        cardview:cardCornerRadius="2dp"
         cardview:cardBackgroundColor="@color/white">
         <LinearLayout
             android:layout_width="fill_parent"

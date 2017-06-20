@@ -113,25 +113,34 @@ public class GymFragment extends Fragment {
     public static ProgressDialog alertDialog;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
         //Holt die fehlende Permission beim Nutzer ein
-        boolean permissionGranted = ActivityCompat.checkSelfPermission(this.getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
 
-        View v = null;
-        if (permissionGranted) {
+    }
 
-            v = null;
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-
-            GPSBestimmung gps = new GPSBestimmung(this.getContext());
-            gps.setPosition();
-            gps.stopGPSposition();
-
+            View v = null;
             //Warten-Dialog erstellen und anzeigen
             alertDialog = new ProgressDialog(getContext());
             alertDialog.setMessage(getResources().getString(R.string.loader));
             alertDialog.setCancelable(false);
             alertDialog.show();
+
+            final GPSBestimmung gps = new GPSBestimmung(this.getContext());
+            gps.setPosition(new Runnable(){
+
+                @Override
+                public void run() {
+                    GooglePlacesWebserviceAufruf aufruf = new GooglePlacesWebserviceAufruf(gps);
+                    aufruf.execute();
+                }
+            });
+            //gps.stopGPSposition();
+
+
 
             if (gps.GPSaktiv) {
                 v = inflater.inflate(R.layout.fragment_gym, container, false);
@@ -272,24 +281,20 @@ public class GymFragment extends Fragment {
                     }
                 });
             } else {
+
                 v = inflater.inflate(R.layout.fragment_gym_nogps, container, false);
 
                 //UI-Elemente für MyPlace zuweisen
                 MyPlace_Adresse_Content = (TextView) v.findViewById(R.id.MyPlace_Adresse_Content);
                 MyPlace_Header_Content = (TextView) v.findViewById(R.id.MyPlace_Header_Content);
+
+                //UI-Elemente für MyPlace beschreiben
+                MyPlace_Header_Content.setText("Fehler in der Ortung");
+                MyPlace_Adresse_Content.setText("Bitte schalten Sie Ihre GPS-Ortung ein.");
+
+                alertDialog.hide();
             }
-
-            GooglePlacesWebserviceAufruf aufruf = new GooglePlacesWebserviceAufruf(gps);
-            aufruf.execute();
-
             return v;
-        } else {
-            ActivityCompat.requestPermissions(this.getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 200);
-
-        }
-
-
-        return v;
     }
 
 
@@ -388,12 +393,8 @@ public class GymFragment extends Fragment {
                     MyPlace_Header_Content.setText("Ihre aktuelle Position ist");
                     MyPlace_Adresse_Content.setText( (String) stadiumListe.get(6));
                 } else {
-                    MyPlace_Header_Content.setText("Fehler in der Ortung");
-                    MyPlace_Adresse_Content.setText("Bitte schalten Sie Ihre GPS-Ortung ein.");
+
                 }
-
-
-
 
                 alertDialog.hide();
                 gps.stopGPSposition();
@@ -644,6 +645,12 @@ public class GymFragment extends Fragment {
         //Die Variable LocationManager wird später benötigt und ermöglicht die Positionsbestimmung
         protected LocationManager locationManager;
 
+        //
+        private Runnable onPositionDetected;
+
+        //
+        int counter = 0;
+
         /**
          * Creates an IntentService.  Invoked by your subclass's constructor.
          *
@@ -664,6 +671,12 @@ public class GymFragment extends Fragment {
         @Override
         public void onLocationChanged(Location location) {
             position = location;
+            synchronized (this){
+                if(counter == 0){
+                    onPositionDetected.run();
+                    counter ++;
+                }
+            }
         }
 
 
@@ -682,7 +695,8 @@ public class GymFragment extends Fragment {
             return this.GPSaktiv;
         }
 
-        public void setPosition() {
+        public void setPosition(Runnable onPositionDetected) {
+            this.onPositionDetected = onPositionDetected;
             try {
                 Log.i("GPSBestimmung", "setPosition gestartet");
 
@@ -695,13 +709,22 @@ public class GymFragment extends Fragment {
                     Log.i("GPSBestimmung", "setPosition: GPSaktiv erkannt");
                     //Bestimmung der GPS Position, sofern GPS eingeschaltet ist. Die daten werden in der Variable "position" gespeichert.
 
-                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 60000, 10, this);
-                    Log.i("GPSBestimmung", "LocationManager ausgeführt: " + locationManager);
 
+                    Log.i("GPSBestimmung", "LocationManager ausgeführt: " + locationManager);
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 10, this);
                     if (locationManager != null) {
                         Log.i("GPSBestimmung", "setPosition: Speicherung wird durchgeführt");
 
                         position = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                        if (position != null){
+                            synchronized (this) {
+                                counter++;
+                                onPositionDetected.run();
+                            }
+                        } else {
+                           //donothing
+                        }
+
                     }
                 }
             } catch (SecurityException s) {
