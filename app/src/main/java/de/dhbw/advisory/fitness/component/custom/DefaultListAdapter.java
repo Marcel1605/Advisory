@@ -1,4 +1,4 @@
-package de.dhbw.advisory;
+package de.dhbw.advisory.fitness.component.custom;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -9,11 +9,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import de.dhbw.advisory.R;
 
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.util.List;
+
+import de.dhbw.advisory.FitnessFragmentOverview;
 
 /**
  * Sample adapter implementation extending from AsymmetricGridViewAdapter<DemoItem> This is the
@@ -51,23 +54,23 @@ public class DefaultListAdapter extends ArrayAdapter<DemoItem> implements DemoAd
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               switch(item.getPosition()) {
-                   case FitnessFragmentOverview.ITEM_BAUCH:
+                switch(item.getPosition()) {
+                    case FitnessFragmentOverview.ITEM_BAUCH:
 
-                       break;
-                   case FitnessFragmentOverview.ITEM_BIZEPS:
+                        break;
+                    case FitnessFragmentOverview.ITEM_BIZEPS:
 
-                       break;
-                   case FitnessFragmentOverview.ITEM_TRIZEPS:
+                        break;
+                    case FitnessFragmentOverview.ITEM_TRIZEPS:
 
-                       break;
-                   case FitnessFragmentOverview.ITEM_BRUST:
+                        break;
+                    case FitnessFragmentOverview.ITEM_BRUST:
 
-                       break;
-                   case FitnessFragmentOverview.ITEM_BEINE:
+                        break;
+                    case FitnessFragmentOverview.ITEM_BEINE:
 
-                       break;
-               }
+                        break;
+                }
             }
         });
 

@@ -1,4 +1,4 @@
-package de.dhbw.advisory;
+package de.dhbw.advisory.fitness;
 
 import com.google.api.services.youtube.model.SearchResult;
 

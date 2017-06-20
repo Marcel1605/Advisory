@@ -1,29 +1,20 @@
-package de.dhbw.advisory;
+package de.dhbw.advisory.gym;
 
 
-import android.*;
-import android.Manifest;
 import android.app.ProgressDialog;
-import android.app.Service;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
+import android.content.res.AssetManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,35 +30,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Properties;
 
-import static de.dhbw.advisory.GymFragment.Gym_Adresse_Content1;
-import static de.dhbw.advisory.GymFragment.Gym_Adresse_Content2;
-import static de.dhbw.advisory.GymFragment.Gym_Entfernung_Content1;
-import static de.dhbw.advisory.GymFragment.Gym_Entfernung_Content2;
-import static de.dhbw.advisory.GymFragment.Gym_Name_Content1;
-import static de.dhbw.advisory.GymFragment.Gym_Name_Content2;
-import static de.dhbw.advisory.GymFragment.MyPlace_Adresse_Content;
-import static de.dhbw.advisory.GymFragment.MyPlace_Header_Content;
-import static de.dhbw.advisory.GymFragment.Park_Adresse_Content1;
-import static de.dhbw.advisory.GymFragment.Park_Adresse_Content2;
-import static de.dhbw.advisory.GymFragment.Park_Entfernung_Content1;
-import static de.dhbw.advisory.GymFragment.Park_Entfernung_Content2;
-import static de.dhbw.advisory.GymFragment.Park_Name_Content1;
-import static de.dhbw.advisory.GymFragment.Park_Name_Content2;
-import static de.dhbw.advisory.GymFragment.Stadium_Adresse_Content1;
-import static de.dhbw.advisory.GymFragment.Stadium_Adresse_Content2;
-import static de.dhbw.advisory.GymFragment.Stadium_Entfernung_Content1;
-import static de.dhbw.advisory.GymFragment.Stadium_Entfernung_Content2;
-import static de.dhbw.advisory.GymFragment.Stadium_Name_Content1;
-import static de.dhbw.advisory.GymFragment.Stadium_Name_Content2;
-import static de.dhbw.advisory.GymFragment.alertDialog;
-
-
-/**
- * Created by Magnus on 30.05.17.
- */
-
+import de.dhbw.advisory.R;
 
 public class GymFragment extends Fragment {
 
@@ -111,6 +78,23 @@ public class GymFragment extends Fragment {
 
     //sonstige Variablen initialisieren
     public static ProgressDialog alertDialog;
+    private String apiKey;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        // Der developer key wird später aus der properties-Datei ausgelesen
+        Properties properties = new Properties();
+
+        try {
+            AssetManager assetManager = context.getAssets();
+            InputStream inputStream = assetManager.open("apikey.properties");
+            properties.load(inputStream);
+            apiKey = properties.getProperty("maps.apikey");
+        } catch (IOException e) {
+            Toast.makeText(context, "Fragment konnte nicht geladen werden", Toast.LENGTH_SHORT).show();
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -129,7 +113,7 @@ public class GymFragment extends Fragment {
             alertDialog.setCancelable(false);
             alertDialog.show();
 
-            final GPSBestimmung gps = new GPSBestimmung(this.getContext());
+            final GPSDetection gps = new GPSDetection(this.getContext());
             gps.setPosition(new Runnable(){
 
                 @Override
@@ -297,9 +281,6 @@ public class GymFragment extends Fragment {
             return v;
     }
 
-
-
-
     @Override
     public void onPause(){
        //The system calls this method as the first indication that the user is leaving the fragment (though it does not always mean the fragment is being destroyed). This is usually where you should commit any changes that should be persisted beyond the current user session (because the user might not come back).
@@ -307,12 +288,12 @@ public class GymFragment extends Fragment {
         super.onPause();
     }
 
-    class GooglePlacesWebserviceAufruf extends AsyncTask<String, GPSBestimmung, ArrayList> {
+    class GooglePlacesWebserviceAufruf extends AsyncTask<String, GPSDetection, ArrayList<ArrayList<String>>> {
 
-        GPSBestimmung gps;
+        GPSDetection gps;
         ArrayList erg;
 
-        GooglePlacesWebserviceAufruf(GPSBestimmung gps) {
+        GooglePlacesWebserviceAufruf(GPSDetection gps) {
             this.gps = gps;
         }
 
@@ -358,7 +339,7 @@ public class GymFragment extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(ArrayList ergebnis) {
+        protected void onPostExecute(ArrayList<ArrayList<String>> ergebnis) {
 
             try{
 
@@ -366,32 +347,32 @@ public class GymFragment extends Fragment {
 
                 if (gps.GPSaktiv)
                 {
-                    ArrayList gymListe = (ArrayList) ergebnis.get(0);
-                    Gym_Name_Content1.setText( (String) gymListe.get(0));
-                    Gym_Adresse_Content1.setText((String) gymListe.get(1));
-                    Gym_Entfernung_Content1.setText((String) gymListe.get(2));
-                    Gym_Name_Content2.setText( (String) gymListe.get(3));
-                    Gym_Adresse_Content2.setText((String) gymListe.get(4));
-                    Gym_Entfernung_Content2.setText((String) gymListe.get(5));
+                    ArrayList<String> gymListe = ergebnis.get(0);
+                    Gym_Name_Content1.setText(gymListe.get(0));
+                    Gym_Adresse_Content1.setText(gymListe.get(1));
+                    Gym_Entfernung_Content1.setText(gymListe.get(2));
+                    Gym_Name_Content2.setText(gymListe.get(3));
+                    Gym_Adresse_Content2.setText(gymListe.get(4));
+                    Gym_Entfernung_Content2.setText(gymListe.get(5));
 
-                    ArrayList parkListe = (ArrayList) ergebnis.get(1);
-                    Park_Name_Content1.setText( (String) parkListe.get(0));
-                    Park_Adresse_Content1.setText((String) parkListe.get(1));
-                    Park_Entfernung_Content1.setText((String) parkListe.get(2));
-                    Park_Name_Content2.setText( (String) parkListe.get(3));
-                    Park_Adresse_Content2.setText((String) parkListe.get(4));
-                    Park_Entfernung_Content2.setText((String) parkListe.get(5));
+                    ArrayList<String> parkListe = ergebnis.get(1);
+                    Park_Name_Content1.setText(parkListe.get(0));
+                    Park_Adresse_Content1.setText(parkListe.get(1));
+                    Park_Entfernung_Content1.setText(parkListe.get(2));
+                    Park_Name_Content2.setText(parkListe.get(3));
+                    Park_Adresse_Content2.setText(parkListe.get(4));
+                    Park_Entfernung_Content2.setText(parkListe.get(5));
 
-                    ArrayList stadiumListe = (ArrayList) ergebnis.get(2);
-                    Stadium_Name_Content1.setText( (String) stadiumListe.get(0));
-                    Stadium_Adresse_Content1.setText((String) stadiumListe.get(1));
-                    Stadium_Entfernung_Content1.setText((String) stadiumListe.get(2));
-                    Stadium_Name_Content2.setText( (String) stadiumListe.get(3));
-                    Stadium_Adresse_Content2.setText((String) stadiumListe.get(4));
-                    Stadium_Entfernung_Content2.setText((String) stadiumListe.get(5));
+                    ArrayList<String> stadiumListe = ergebnis.get(2);
+                    Stadium_Name_Content1.setText(stadiumListe.get(0));
+                    Stadium_Adresse_Content1.setText(stadiumListe.get(1));
+                    Stadium_Entfernung_Content1.setText(stadiumListe.get(2));
+                    Stadium_Name_Content2.setText(stadiumListe.get(3));
+                    Stadium_Adresse_Content2.setText(stadiumListe.get(4));
+                    Stadium_Entfernung_Content2.setText(stadiumListe.get(5));
 
                     MyPlace_Header_Content.setText("Ihre aktuelle Position ist");
-                    MyPlace_Adresse_Content.setText( (String) stadiumListe.get(6));
+                    MyPlace_Adresse_Content.setText(stadiumListe.get(6));
                 } else {
 
                 }
@@ -417,7 +398,7 @@ public class GymFragment extends Fragment {
          * @return gibt den HTTP Request zurück
          * @throws Exception
          */
-        protected String placesAPIAufrufen(String typ, GPSBestimmung gps) throws Exception {
+        protected String placesAPIAufrufen(String typ, GPSDetection gps) throws Exception {
             try {
                 Log.i("placesAPIAufrufen: ","Methode begonnen");
                 Log.i("placesAPIAufrufen: ","Übergebener Wert: " + typ);
@@ -436,7 +417,7 @@ public class GymFragment extends Fragment {
                 url.put("location", + gps.getBreitengrad() + "," + gps.getLaengengrad());
                 url.put("rankby", "distance");
                 url.put("type", typ);
-                url.put("key", "AIzaSyDXzj9XCSY5FtsEyvtKaOtxctEX7ybzrpU");
+                url.put("key", apiKey);
                 Log.i("placesAPIAufrufen: ","URL hinzufügen beendet: " + url);
 
 
@@ -545,7 +526,7 @@ public class GymFragment extends Fragment {
                 Log.i("parseGooglePlaces:", "destination_address2 gesetzt "+ destination_address2);
 
                 //Informationen speichern
-                ArrayList<Object> information = new ArrayList<>();
+                ArrayList<String> information = new ArrayList<>();
 
                 Log.i("parseGooglePlaces:", "Parsen fast beendet");
 
@@ -598,7 +579,7 @@ public class GymFragment extends Fragment {
                 url.put("destinations", + lat + "," + lng);
                 url.put("origins", + gps.getBreitengrad() + "," + gps.getLaengengrad());
                 url.put("units", "metric");
-                url.put("key", "AIzaSyDXzj9XCSY5FtsEyvtKaOtxctEX7ybzrpU");
+                url.put("key", apiKey);
                 Log.i("placesAPIAufrufen: ","URL hinzufügen beendet: " + url);
 
 
@@ -622,152 +603,6 @@ public class GymFragment extends Fragment {
                 return "error";
             }
         }
-
-
-
-
-    }
-
-    /**
-     * Created by NEU PC on 13.06.2017.
-     */
-
-    public static class GPSBestimmung extends Service implements LocationListener {
-
-        private final Context c;
-
-        //Variable, zum speichern, ob GPS aktiv ist
-        public boolean GPSaktiv = false;
-
-        //Die Variable Location wird später benötigt und beinhaltet den Längen- und Breitengrad
-        Location position;
-
-        //Die Variable LocationManager wird später benötigt und ermöglicht die Positionsbestimmung
-        protected LocationManager locationManager;
-
-        //
-        private Runnable onPositionDetected;
-
-        //
-        int counter = 0;
-
-        /**
-         * Creates an IntentService.  Invoked by your subclass's constructor.
-         *
-         * @param c
-         */
-        public GPSBestimmung(Context c) {
-            this.c = c;
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-        }
-
-        @Override
-        public void onLocationChanged(Location location) {
-            position = location;
-            synchronized (this){
-                if(counter == 0){
-                    onPositionDetected.run();
-                    counter ++;
-                }
-            }
-        }
-
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-        }
-
-        @Override
-        public IBinder onBind(Intent arg0) {
-            return null;
-        }
-
-
-        //Gibt zurück, ob GPS eingeschaltet ist (true oder false)
-        public boolean istGPSaktiv() {
-            return this.GPSaktiv;
-        }
-
-        public void setPosition(Runnable onPositionDetected) {
-            this.onPositionDetected = onPositionDetected;
-            try {
-                Log.i("GPSBestimmung", "setPosition gestartet");
-
-                locationManager = (LocationManager) c.getSystemService(LOCATION_SERVICE);
-
-                //ließt den GPS Status aus (Aktiv = Ja/Nein)
-                GPSaktiv = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-
-                if (GPSaktiv) {
-                    Log.i("GPSBestimmung", "setPosition: GPSaktiv erkannt");
-                    //Bestimmung der GPS Position, sofern GPS eingeschaltet ist. Die daten werden in der Variable "position" gespeichert.
-
-
-                    Log.i("GPSBestimmung", "LocationManager ausgeführt: " + locationManager);
-                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 10, this);
-                    if (locationManager != null) {
-                        Log.i("GPSBestimmung", "setPosition: Speicherung wird durchgeführt");
-
-                        position = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                        if (position != null){
-                            synchronized (this) {
-                                counter++;
-                                onPositionDetected.run();
-                            }
-                        } else {
-                           //donothing
-                        }
-
-                    }
-                }
-            } catch (SecurityException s) {
-                s.printStackTrace();
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-
-        //Beendet GPS Bestimmung
-        public void stopGPSposition(){
-            if(locationManager != null){
-                locationManager.removeUpdates(GPSBestimmung.this);
-            }
-        }
-
-        //Gibt den Breitengrad als Double zurück
-        public double getBreitengrad() {
-            Log.i("GPSBestimmung", "getBreitengrad gestartet");
-            if (position != null) {
-                Log.i("GPSBestimmung", "getBreitengrad position != null");
-                return position.getLatitude();
-            } else {
-                Log.i("GPSBestimmung", "getBreitengrad: position leer");
-                return 0;
-            }
-        }
-
-        //Gibt den Längengrad als double zurück
-        public double getLaengengrad() {
-            Log.i("GPSBestimmung", "getLaengengrad gestartet");
-            if (position != null) {
-                Log.i("GPSBestimmung", "getLaengengrad position != null");
-                return position.getLongitude();
-            } else {
-                Log.i("GPSBestimmung", "getLaengengrad: position leer");
-                return 0;
-            }
-        }
-
-
     }
 }
 

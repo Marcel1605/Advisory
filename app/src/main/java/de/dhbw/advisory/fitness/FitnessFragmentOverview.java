@@ -16,11 +16,14 @@ import com.felipecsl.asymmetricgridview.library.widget.AsymmetricGridViewAdapter
 import java.util.ArrayList;
 import java.util.List;
 
+import de.dhbw.advisory.fitness.component.custom.DefaultListAdapter;
+import de.dhbw.advisory.fitness.component.custom.DemoAdapter;
+import de.dhbw.advisory.fitness.component.custom.DemoItem;
+
 public class FitnessFragmentOverview extends Fragment {
     private AsymmetricGridView listView;
     private DemoAdapter adapter;
-    private ViewGroup container;
-    private final DemoUtils demoUtils = new DemoUtils();
+    private ViewGroup container;;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

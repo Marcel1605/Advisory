@@ -20,8 +20,12 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import de.dhbw.advisory.common.FragmentChangeListener;
+import de.dhbw.advisory.gym.GymFragment;
+import de.dhbw.advisory.recipe.RezepteFragment;
 
-public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
+
+public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, FragmentChangeListener{
 
     protected BottomNavigationView _bottomNavigation = null;
     protected Fragment _fragment;
@@ -38,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         //Beim initialen Activity-Start Fitness Fragment als erstes Fragment hinzufügen
         if (savedInstanceState == null) {
-            _fragment = new FitnessFragmentOverview();
+            _fragment = new de.dhbw.advisory.FitnessFragmentOverview();
             FragmentTransaction transaction = _fragmentManager.beginTransaction();
             transaction.replace(R.id.main_container, _fragment).commit();
         }
@@ -67,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         int id = item.getItemId();
         switch (id) {
             case R.id.fitness:
-                _fragment = new FitnessFragmentOverview();
+                _fragment = new de.dhbw.advisory.FitnessFragmentOverview();
                 transaction = _fragmentManager.beginTransaction();
                 transaction.replace(R.id.main_container, _fragment).commit();
                 break;
@@ -90,5 +94,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         }
 
         return true;
+    }
+
+    @Override
+    public void onFragmentChangeRequest(Fragment fragment) {
+
     }
 }

@@ -1,9 +1,9 @@
-package de.dhbw.advisory;
+package de.dhbw.advisory.recipe;
 
 
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
@@ -18,10 +18,12 @@ import android.widget.TextView;
 import android.os.AsyncTask;
 import android.content.Context;
 import android.widget.TableRow.LayoutParams;
+
+import java.io.IOException;
 import java.io.InputStream;
 import android.graphics.BitmapFactory;
 import android.app.ProgressDialog;
-
+import android.widget.Toast;
 
 
 import com.google.api.client.http.GenericUrl;
@@ -37,20 +39,17 @@ import com.google.common.io.CharStreams;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.InputStreamReader;
-import java.io.StringWriter;
-import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.List;
+import java.util.Properties;
 
-/**
- * Created by Magnus on 30.05.17.
- */
+import de.dhbw.advisory.R;
+import de.dhbw.advisory.common.AsyncTaskResult;
+
 public class RezepteFragment extends Fragment {
     //Ladebildschirm
     private ProgressDialog alertDialog;
@@ -84,6 +83,25 @@ public class RezepteFragment extends Fragment {
     protected ImageView _rezepteIcon = null;
     protected TextView _rezepteZutaten = null;
     protected TextView _rezepteRezepte = null;
+
+    //Apikey
+    private String apiKey;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        // Der developer key wird später aus der properties-Datei ausgelesen
+        Properties properties = new Properties();
+
+        try {
+            AssetManager assetManager = context.getAssets();
+            InputStream inputStream = assetManager.open("apikey.properties");
+            properties.load(inputStream);
+            apiKey = properties.getProperty("spoonacular.apikey");
+        } catch (IOException e) {
+            Toast.makeText(context, "Fragment konnte nicht geladen werden", Toast.LENGTH_SHORT).show();
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -392,7 +410,7 @@ public class RezepteFragment extends Fragment {
                 //3. Request absetzen
                 Log.i("getRecipe: ","Request absetzen begonnen");
                 HttpHeaders httpHeaders = new HttpHeaders();
-                httpHeaders.set("X-Mashape-Key", "knWwtaM7bHmshY9d7wMYMZJd8AS3p1xbRHvjsnq4NKZcfVsSiP");
+                httpHeaders.set("X-Mashape-Key", apiKey);
                 httpHeaders.setContentType("application/json; charset=UTF-8");
                 httpHeaders.setAccept("application/json; charset=UTF-8");
                 HttpRequest request = requestFactory.buildGetRequest(url);

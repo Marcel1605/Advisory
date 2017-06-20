@@ -1,4 +1,4 @@
-package de.dhbw.advisory;
+package de.dhbw.advisory.fitness.component.custom;
 
 import android.widget.ListAdapter;
 

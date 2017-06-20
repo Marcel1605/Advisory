@@ -1,4 +1,4 @@
-package de.dhbw.advisory;
+package de.dhbw.advisory.fitness;
         import android.content.Context;
         import android.content.res.AssetManager;
         import android.os.AsyncTask;
@@ -6,9 +6,7 @@ package de.dhbw.advisory;
         import com.google.api.client.googleapis.json.GoogleJsonResponseException;
         import com.google.api.client.http.HttpRequest;
         import com.google.api.client.http.HttpRequestInitializer;
-        import com.google.api.client.http.HttpTransport;
         import com.google.api.client.http.javanet.NetHttpTransport;
-        import com.google.api.client.json.JsonFactory;
         import com.google.api.client.json.jackson2.JacksonFactory;
         import com.google.api.services.youtube.YouTube;
         import com.google.api.services.youtube.model.ResourceId;
@@ -16,21 +14,19 @@ package de.dhbw.advisory;
         import com.google.api.services.youtube.model.SearchResult;
         import com.google.api.services.youtube.model.Thumbnail;
 
-        import java.io.BufferedReader;
         import java.io.IOException;
         import java.io.InputStream;
-        import java.io.InputStreamReader;
-        import java.util.Collection;
         import java.util.Iterator;
-        import java.util.List;
         import java.util.Properties;
+
+        import de.dhbw.advisory.common.AsyncTaskResult;
 
 /**
  * Ausgabe einer Liste von Videos, die einer Sucheingabe entsprechen.
  */
 
 public class YoutubeSearch extends AsyncTask<String, Void, AsyncTaskResult<SearchResult>> {
-    private static final String PROPERTIES_FILENAME = "youtube.properties";
+    private static final String PROPERTIES_FILENAME = "apikey.properties";
 
     private static final long NUMBER_OF_VIDEOS_RETURNED = 25;
 
@@ -62,7 +58,7 @@ public class YoutubeSearch extends AsyncTask<String, Void, AsyncTaskResult<Searc
 
         try {
             AssetManager assetManager = context.getAssets();
-            InputStream inputStream = assetManager.open("youtube.properties");
+            InputStream inputStream = assetManager.open("apikey.properties");
             properties.load(inputStream);
 
         } catch (IOException e) {

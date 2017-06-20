@@ -1,4 +1,4 @@
-package de.dhbw.advisory;
+package de.dhbw.advisory.fitness;
 
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
@@ -6,9 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +18,9 @@ import android.widget.TextView;
 import com.google.api.services.youtube.model.SearchResult;
 import com.google.api.services.youtube.model.Thumbnail;
 import com.squareup.picasso.Picasso;
+
+import de.dhbw.advisory.R;
+import de.dhbw.advisory.common.AsyncTaskResult;
 
 public class FitnessFragment extends Fragment implements IYoutubeCardView {
     private ProgressDialog alertDialog;
