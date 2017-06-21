@@ -4,7 +4,9 @@ package de.dhbw.advisory.recipe;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -41,6 +43,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.InputStreamReader;
+import java.text.DecimalFormat;
+import java.text.FieldPosition;
+import java.text.NumberFormat;
+import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -87,6 +93,9 @@ public class RezepteFragment extends Fragment {
     //Apikey
     private String apiKey;
 
+    public DisplayMetrics metrics;
+
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -107,6 +116,8 @@ public class RezepteFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_rezepte, container, false);
+
+        metrics = this.getResources().getDisplayMetrics();
 
         //Ladebildschirm einfügen
         alertDialog = new ProgressDialog(getContext());
@@ -280,9 +291,32 @@ public class RezepteFragment extends Fragment {
         @Override
         protected void onPostExecute(Bitmap icon) {
 
-            //_rezepteTitel.setBackground(new BitmapDrawable(getResources(), icon));
+            int width = metrics.widthPixels;
 
-            _rezepteIcon.setImageBitmap(icon);
+            int bildbreite = width;
+
+
+            int breite_alt = icon.getWidth();
+            int hoehe_alt = icon.getHeight();
+
+            double skalierung = ((double)hoehe_alt) / ((double)breite_alt);
+
+            int bildhoehe = (int) (bildbreite * skalierung);
+
+            float scaleWidth = ((float) bildbreite) / breite_alt;
+
+            float scaleHeight = ((float) bildhoehe) / hoehe_alt;
+
+            Matrix matrix = new Matrix();
+            matrix.postScale(scaleWidth, scaleHeight);
+
+            Log.d("bildhoehe/breite", String.valueOf(bildhoehe) + "|" + String.valueOf(bildbreite));
+
+            Bitmap resizedImage = Bitmap.createBitmap(icon, 0, 0, breite_alt, hoehe_alt, matrix, false);
+
+            _rezepteIcon.setImageBitmap(resizedImage);
+            _rezepteIcon.setImageAlpha(90);
+
             cancelProgressDialog();
         }
 
@@ -345,6 +379,7 @@ public class RezepteFragment extends Fragment {
                 LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
                 params.weight = 1f;
 
+
                 //Zutaten in die Liste setzen
                 for (int i = 0; i < zutaten.length; i++) {
                     tr[i] = new TableRow(context);
@@ -403,6 +438,7 @@ public class RezepteFragment extends Fragment {
                 url.put("limitLicense", "false");
                 url.put("number", "1");
                 url.put("tags", "" + typ);
+                url.put("measure", "metric");
                 Log.i("getRecipe","URL hinzufügen, typ: " + typ);
                 Log.i("getRecipe: ","URL hinzufügen beendet");
 
