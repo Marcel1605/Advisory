@@ -52,7 +52,7 @@ public class GPSDetection extends Service implements LocationListener {
         synchronized (this){
             if(counter == 0){
                 onPositionDetected.run();
-                counter ++;
+                //counter ++;
             }
         }
     }
@@ -96,7 +96,7 @@ public class GPSDetection extends Service implements LocationListener {
                     position = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                     if (position != null){
                         synchronized (this) {
-                            counter++;
+                            //counter++;
                             onPositionDetected.run();
                         }
                     } else {
