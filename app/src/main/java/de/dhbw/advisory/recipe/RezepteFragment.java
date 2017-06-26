@@ -284,38 +284,38 @@ public class RezepteFragment extends Fragment {
             } catch (Exception e ) {
                 Log.e("Error", e.getMessage());
             }
-
+            Log.i("imageDoInBackground", "Beendet");
             return icon;
         }
 
         @Override
         protected void onPostExecute(Bitmap icon) {
 
-            int width = metrics.widthPixels;
+           // int width = metrics.widthPixels;
 
-            int bildbreite = width;
+//            int bildbreite = width;
 
 
-            int breite_alt = icon.getWidth();
-            int hoehe_alt = icon.getHeight();
+  //          int breite_alt = icon.getWidth();
+    //        int hoehe_alt = icon.getHeight();
 
-            double skalierung = ((double)hoehe_alt) / ((double)breite_alt);
+      //      double skalierung = ((double)hoehe_alt) / ((double)breite_alt);
 
-            int bildhoehe = (int) (bildbreite * skalierung);
+        //    int bildhoehe = (int) (bildbreite * skalierung);
 
-            float scaleWidth = ((float) bildbreite) / breite_alt;
+          //  float scaleWidth = ((float) bildbreite) / breite_alt;
 
-            float scaleHeight = ((float) bildhoehe) / hoehe_alt;
+            //float scaleHeight = ((float) bildhoehe) / hoehe_alt;
 
-            Matrix matrix = new Matrix();
-            matrix.postScale(scaleWidth, scaleHeight);
+//            Matrix matrix = new Matrix();
+  //          matrix.postScale(scaleWidth, scaleHeight);
 
-            Log.d("bildhoehe/breite", String.valueOf(bildhoehe) + "|" + String.valueOf(bildbreite));
+//            Log.d("bildhoehe/breite", String.valueOf(bildhoehe) + "|" + String.valueOf(bildbreite));
 
-            Bitmap resizedImage = Bitmap.createBitmap(icon, 0, 0, breite_alt, hoehe_alt, matrix, false);
+  //          Bitmap resizedImage = Bitmap.createBitmap(icon, 0, 0, breite_alt, hoehe_alt, matrix, false);
 
-            _rezepteIcon.setImageBitmap(resizedImage);
-            _rezepteIcon.setImageAlpha(90);
+            _rezepteIcon.setImageBitmap(icon);
+            //_rezepteIcon.setImageAlpha(90);
 
             cancelProgressDialog();
         }
@@ -339,16 +339,16 @@ public class RezepteFragment extends Fragment {
         protected AsyncTaskResult<?> doInBackground(String... params) {
             try{
                 //Zu untersuchende ID via API herausfinden
-                Log.i("doInBackground: ", "Methode begonnen");
+                Log.i("doInBackground ", "Methode getRecipe begonnen");
                 String jsonResponseRecipeSearch = getRecipe(params[0]);
-                Log.i("doInBackground: ", "API Aufruf beendet");
+                Log.i("doInBackground ", "API Aufruf beendet");
                 ArrayList erg = parseRecipe(jsonResponseRecipeSearch);
-                Log.i("doInBackground: ", "parsen beendet");
+                Log.i("doInBackground ", "parsen beendet");
 
-                Log.i("doInBackground: ", "Methode beendet");
+                Log.i("doInBackground ", "Methode beendet");
                 return new AsyncTaskResult(erg);
             } catch (Exception e){
-                Log.i("doInBackground: ", "Fehler doInBackground");
+                Log.i("doInBackground", "Fehler doInBackground: " + e.getMessage());
                 return new AsyncTaskResult(e);
             }
 
@@ -423,14 +423,14 @@ public class RezepteFragment extends Fragment {
          * @throws Exception
          */
         protected String getRecipe(String typ) throws Exception {
-                Log.i("getRecipe: ","Methode begonnen");
-                Log.i("getRecipe: ","Übergebener Wert: " + typ);
-                Log.i("getRecipe: ","Starte API Aufruf");
+                Log.i("getRecipe ","Methode begonnen");
+                Log.i("getRecipe ","Übergebener Wert: " + typ);
+                Log.i("getRecipe ","Starte API Aufruf");
                 //1. Request Factory holen
-                Log.i("getRecipe: ","Request Factory holen begonnen");
+                Log.i("getRecipe ","Request Factory holen begonnen");
                 HttpTransport httpTransport = new NetHttpTransport();
                 HttpRequestFactory requestFactory = httpTransport.createRequestFactory();
-                Log.i("getRecipe: ","Request Factory holen beendet");
+                Log.i("getRecipe ","Request Factory holen beendet");
 
                 //2. Url hinzufügen
                 Log.i("getRecipe: ","URL hinzufügen begonnen");
@@ -439,7 +439,7 @@ public class RezepteFragment extends Fragment {
                 url.put("number", "1");
                 url.put("tags", "" + typ);
                 url.put("measure", "metric");
-                Log.i("getRecipe","URL hinzufügen, typ: " + typ);
+                Log.i("getRecipe","URL hinzufügen: " + url + ", typ: " + typ);
                 Log.i("getRecipe: ","URL hinzufügen beendet");
 
 
@@ -447,13 +447,13 @@ public class RezepteFragment extends Fragment {
                 Log.i("getRecipe: ","Request absetzen begonnen");
                 HttpHeaders httpHeaders = new HttpHeaders();
                 httpHeaders.set("X-Mashape-Key", apiKey);
-                httpHeaders.setContentType("application/json; charset=UTF-8");
-                httpHeaders.setAccept("application/json; charset=UTF-8");
+                //httpHeaders.setContentType("application/json; charset=UTF-8");
+                //httpHeaders.setAccept("application/json; charset=UTF-8");
                 HttpRequest request = requestFactory.buildGetRequest(url);
                 request.setHeaders(httpHeaders);
-                Log.i("getRecipe: ","Request absetzen Daten Header hinzugefügt");
+                Log.i("getRecipe","Request absetzen Daten Header hinzugefügt");
                 HttpResponse httpResponse = request.execute();
-                Log.i("getRecipe: ","Request absetzen beendet");
+                Log.i("getRecipe","Request absetzen beendet");
 
                 Log.i("getRecipe: ","Request parsen");
                 Log.i("getRecipe: ","Content Charset" +  httpResponse.getContentCharset());
