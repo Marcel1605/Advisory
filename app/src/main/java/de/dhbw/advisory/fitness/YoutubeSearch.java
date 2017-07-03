@@ -80,8 +80,7 @@ public class YoutubeSearch extends AsyncTask<String, Void, AsyncTaskResult<Searc
             search.setType("video");
 
             // Um die Abfrage zu beschleunigen werden nur die Infos abgerufen, die in der Applikation benötigt werden:
-            //Später soll der Titel des Videos und das Vorschaubild abgebildet werden
-            //Beim Klick auf das Video soll dieses abgespielt werden
+            //Später soll der Titel des Videos und das Vorschaubild abgebildet werden.
             search.setFields("items(id/kind,id/videoId,snippet/title,snippet/thumbnails/high/url)");
             search.setMaxResults(NUMBER_OF_VIDEOS_RETURNED);
 
@@ -95,43 +94,6 @@ public class YoutubeSearch extends AsyncTask<String, Void, AsyncTaskResult<Searc
             return new AsyncTaskResult(e);
         } catch (Throwable t) {
             return new AsyncTaskResult(t);
-        }
-    }
-
-    /*
-     * Prints out all results in the Iterator. For each result, print the
-     * title, video ID, and thumbnail.
-     *
-     * @param iteratorSearchResults Iterator of SearchResults to print
-     *
-     * @param query Search query (String)
-     */
-    public static void prettyPrint(Iterator<SearchResult> iteratorSearchResults, String query) {
-
-        System.out.println("\n=============================================================");
-        System.out.println(
-                "   First " + NUMBER_OF_VIDEOS_RETURNED + " videos for search on \"" + query + "\".");
-        System.out.println("=============================================================\n");
-
-        if (!iteratorSearchResults.hasNext()) {
-            System.out.println(" There aren't any results for your query.");
-        }
-
-        while (iteratorSearchResults.hasNext()) {
-
-            SearchResult singleVideo = iteratorSearchResults.next();
-            ResourceId rId = singleVideo.getId();
-
-            // Confirm that the result represents a video. Otherwise, the
-            // item will not contain a video ID.
-            if (rId.getKind().equals("youtube#video")) {
-                Thumbnail thumbnail = singleVideo.getSnippet().getThumbnails().getDefault();
-
-                System.out.println(" Video Id" + rId.getVideoId());
-                System.out.println(" Title: " + singleVideo.getSnippet().getTitle());
-                System.out.println(" Thumbnail: " + thumbnail.getUrl());
-                System.out.println("\n-------------------------------------------------------------\n");
-            }
         }
     }
 

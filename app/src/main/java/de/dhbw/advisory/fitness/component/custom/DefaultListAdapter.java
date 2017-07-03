@@ -55,6 +55,7 @@ public class DefaultListAdapter extends ArrayAdapter<DemoItem> implements DemoAd
             v = convertView;
         }
 
+        //Grid mit motivierenden Bilder füllen
         ImageView imageView= (ImageView) v.findViewById(R.id.imageView);
         Picasso.with(getContext()).load(item.getImageUrl()).into(imageView);
         imageView.setOnClickListener(new View.OnClickListener() {
