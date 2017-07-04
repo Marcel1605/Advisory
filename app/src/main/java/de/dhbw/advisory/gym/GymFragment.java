@@ -97,13 +97,6 @@ public class GymFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState){
-        super.onCreate(savedInstanceState);
-        //Holt die fehlende Permission beim Nutzer ein
-
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
             View v = null;
@@ -116,8 +109,8 @@ public class GymFragment extends Fragment {
             final GPSDetection gps = new GPSDetection(this.getContext());
             gps.setPosition(new Runnable(){
 
-                @Override
-                public void run() {
+                    @Override
+                    public void run() {
                     GooglePlacesWebserviceAufruf aufruf = new GooglePlacesWebserviceAufruf(gps);
                     aufruf.execute();
                 }
@@ -164,6 +157,7 @@ public class GymFragment extends Fragment {
                 Park_Card2 = (CardView) v.findViewById(R.id.Park_Card2);
                 Stadium_Card1 = (CardView) v.findViewById(R.id.Stadium_Card1);
                 Stadium_Card2 = (CardView) v.findViewById(R.id.Stadium_Card2);
+
 
                 //OnClickListener auf Cards setzen
                 Gym_Card1.setOnClickListener(

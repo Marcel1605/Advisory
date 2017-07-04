@@ -1,13 +1,17 @@
 package de.dhbw.advisory.fitness;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.felipecsl.asymmetricgridview.library.Utils;
@@ -69,7 +73,7 @@ public class FitnessFragmentOverview extends Fragment {
         items.add(item_brust);
         items.add(item_beine);
 
-        adapter = new DefaultListAdapter(getContext(), items, fragmentChangeListener);
+        adapter = new DefaultListAdapter(getContext(), items, fragmentChangeListener, this.container);
         listView.setRequestedColumnCount(2);
         listView.setRequestedHorizontalSpacing(0);
         listView.setAdapter(getNewAdapter());
@@ -77,5 +81,15 @@ public class FitnessFragmentOverview extends Fragment {
 
     private AsymmetricGridViewAdapter getNewAdapter() {
         return new AsymmetricGridViewAdapter(getContext(), listView, adapter);
+    }
+
+    public static void showSnackbar(View container) {
+        Snackbar snackbar = Snackbar.make(container, "Internetverbindung herstellen", Snackbar.LENGTH_LONG);
+
+        // Changing action button text color
+        View sbView = snackbar.getView();
+        TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+        textView.setTextColor(Color.WHITE);
+        snackbar.show();
     }
 }

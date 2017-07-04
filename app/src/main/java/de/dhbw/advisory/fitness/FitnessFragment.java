@@ -1,5 +1,6 @@
 package de.dhbw.advisory.fitness;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -21,13 +22,28 @@ import com.squareup.picasso.Picasso;
 
 import de.dhbw.advisory.R;
 import de.dhbw.advisory.common.AsyncTaskResult;
+import de.dhbw.advisory.common.FragmentChangeListener;
 
 public class FitnessFragment extends Fragment implements IYoutubeCardView {
     private ProgressDialog alertDialog;
     private ViewGroup container;
     private LayoutInflater inflater;
+    private FragmentChangeListener fragmentChangeListener;
 
     public FitnessFragment(){ }
+
+
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        try {
+            fragmentChangeListener = (FragmentChangeListener) activity;
+        } catch (ClassCastException e) {
+            throw new RuntimeException("Activity must implement FragmentChangeListener");
+        }
+    }
 
     public void cancelProgressDialog() {
         alertDialog.dismiss();
@@ -82,7 +98,7 @@ public class FitnessFragment extends Fragment implements IYoutubeCardView {
         alertDialog.setMessage(getResources().getString(R.string.loader));
         alertDialog.setCancelable(false);
         alertDialog.show();
-        AsyncTask<String, Void, AsyncTaskResult<SearchResult>> task = new YoutubeSearch(getContext(), this);
+        AsyncTask<String, Void, AsyncTaskResult<SearchResult>> task = new YoutubeSearch(getContext(), this, fragmentChangeListener);
         task.execute(getArguments().getString("url"));
 
         return inflater.inflate(R.layout.fragment_fitness, container, false);

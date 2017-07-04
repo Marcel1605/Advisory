@@ -2,6 +2,7 @@ package de.dhbw.advisory.fitness;
         import android.content.Context;
         import android.content.res.AssetManager;
         import android.os.AsyncTask;
+        import android.widget.Toast;
 
         import com.google.api.client.googleapis.json.GoogleJsonResponseException;
         import com.google.api.client.http.HttpRequest;
@@ -20,6 +21,7 @@ package de.dhbw.advisory.fitness;
         import java.util.Properties;
 
         import de.dhbw.advisory.common.AsyncTaskResult;
+        import de.dhbw.advisory.common.FragmentChangeListener;
 
 /**
  * Ausgabe einer Liste von Videos, die einer Sucheingabe entsprechen.
@@ -36,8 +38,10 @@ public class YoutubeSearch extends AsyncTask<String, Void, AsyncTaskResult<Searc
     private final YouTube youtube;
     private Context context;
     private final IYoutubeCardView resultView;
+    private final FragmentChangeListener fragmentChangeListener;
 
-    public YoutubeSearch(Context context, IYoutubeCardView resultView) {
+    public YoutubeSearch(Context context, IYoutubeCardView resultView, FragmentChangeListener fragmentChangeListener) {
+        this.fragmentChangeListener = fragmentChangeListener;
         this.context = context;
         this.resultView = resultView;
         //Dieses Objekt wird dazu verwendet die Datenanfrage mit der YouTube API zu machen
@@ -115,7 +119,9 @@ public class YoutubeSearch extends AsyncTask<String, Void, AsyncTaskResult<Searc
             }
 
         } else {
-            System.err.println(asyncTaskResult.getError().getMessage());
+            if(asyncTaskResult.getError() instanceof IOException) {
+                fragmentChangeListener.onFragmentChangeRequest(new FitnessFragmentOverview(), false);
+            }
         }
     }
 }

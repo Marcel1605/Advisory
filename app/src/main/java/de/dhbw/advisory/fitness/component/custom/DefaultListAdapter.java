@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import de.dhbw.advisory.R;
 
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -29,9 +30,11 @@ public class DefaultListAdapter extends ArrayAdapter<DemoItem> implements DemoAd
 
     private final LayoutInflater layoutInflater;
     private final FragmentChangeListener fragmentChangeListener;
+    private final View container;
 
-    public DefaultListAdapter(Context context, List<DemoItem> items, FragmentChangeListener fragmentChangeListener) {
+    public DefaultListAdapter(Context context, List<DemoItem> items, FragmentChangeListener fragmentChangeListener, View container) {
         super(context, 0, items);
+        this.container = container;
         layoutInflater = LayoutInflater.from(context);
         this.fragmentChangeListener = fragmentChangeListener;
     }
@@ -40,6 +43,7 @@ public class DefaultListAdapter extends ArrayAdapter<DemoItem> implements DemoAd
         super(context, 0);
         layoutInflater = LayoutInflater.from(context);
         this.fragmentChangeListener = null;
+        this.container = null;
     }
 
     @Override
@@ -55,9 +59,17 @@ public class DefaultListAdapter extends ArrayAdapter<DemoItem> implements DemoAd
             v = convertView;
         }
 
-        //Grid mit motivierenden Bilder füllen
+        //Grid mit motivierenden Bildern füllen
         ImageView imageView= (ImageView) v.findViewById(R.id.imageView);
-        Picasso.with(getContext()).load(item.getImageUrl()).into(imageView);
+        Picasso.with(getContext()).load(item.getImageUrl()).error(R.drawable.ic_error_black_24dp).into(imageView, new Callback() {
+            @Override
+            public void onSuccess() {}
+
+            @Override
+            public void onError() {
+                FitnessFragmentOverview.showSnackbar(DefaultListAdapter.this.container);
+            }
+        });
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,7 +95,7 @@ public class DefaultListAdapter extends ArrayAdapter<DemoItem> implements DemoAd
                         break;
                 }
 
-                fragmentChangeListener.onFragmentChangeRequest(fitnessFragment);
+                fragmentChangeListener.onFragmentChangeRequest(fitnessFragment, true);
             }
         });
 
