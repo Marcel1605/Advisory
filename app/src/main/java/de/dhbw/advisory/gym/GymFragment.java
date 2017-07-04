@@ -1,14 +1,17 @@
 package de.dhbw.advisory.gym;
 
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.util.Log;
@@ -32,53 +35,58 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import de.dhbw.advisory.R;
+import de.dhbw.advisory.common.AsyncTaskResult;
+import de.dhbw.advisory.common.FragmentChangeListener;
+import de.dhbw.advisory.fitness.FitnessFragmentOverview;
 
 public class GymFragment extends Fragment {
 
     //Card UI-Elemente initialisieren
-    static CardView Gym_Card1;
-    static CardView Gym_Card2;
-    static CardView Park_Card1;
-    static CardView Park_Card2;
-    static CardView Stadium_Card1;
-    static CardView Stadium_Card2;
-
+    private CardView Gym_Card1;
+    private CardView Gym_Card2;
+    private CardView Park_Card1;
+    private CardView Park_Card2;
+    private CardView Stadium_Card1;
+    private CardView Stadium_Card2;
 
     //UI-Elemente für MyPlace initialisieren
-    static TextView MyPlace_Header_Content;
-    static TextView MyPlace_Adresse_Content;
-
+    private TextView MyPlace_Header_Content;
+    private TextView MyPlace_Adresse_Content;
 
     //UI-Elemente für Gyms initialisieren
-    static TextView Gym_Name_Content1;
-    static TextView Gym_Adresse_Content1;
-    static TextView Gym_Entfernung_Content1;
-    static TextView Gym_Name_Content2;
-    static TextView Gym_Adresse_Content2;
-    static TextView Gym_Entfernung_Content2;
+    private TextView Gym_Name_Content1;
+    private TextView Gym_Adresse_Content1;
+    private TextView Gym_Entfernung_Content1;
+    private TextView Gym_Name_Content2;
+    private TextView Gym_Adresse_Content2;
+    private TextView Gym_Entfernung_Content2;
 
     //UI-Elemente für Parks initialisieren
-    static TextView Park_Name_Content1;
-    static TextView Park_Adresse_Content1;
-    static TextView Park_Entfernung_Content1;
-    static TextView Park_Name_Content2;
-    static TextView Park_Adresse_Content2;
-    static TextView Park_Entfernung_Content2;
+    private TextView Park_Name_Content1;
+    private TextView Park_Adresse_Content1;
+    private TextView Park_Entfernung_Content1;
+    private TextView Park_Name_Content2;
+    private TextView Park_Adresse_Content2;
+    private TextView Park_Entfernung_Content2;
 
     //UI-Elemente für Stadiums initialisieren
-    static TextView Stadium_Name_Content1;
-    static TextView Stadium_Adresse_Content1;
-    static TextView Stadium_Entfernung_Content1;
-    static TextView Stadium_Name_Content2;
-    static TextView Stadium_Adresse_Content2;
-    static TextView Stadium_Entfernung_Content2;
+    private TextView Stadium_Name_Content1;
+    private TextView Stadium_Adresse_Content1;
+    private TextView Stadium_Entfernung_Content1;
+    private TextView Stadium_Name_Content2;
+    private TextView Stadium_Adresse_Content2;
+    private TextView Stadium_Entfernung_Content2;
 
     //sonstige Variablen initialisieren
-    public static ProgressDialog alertDialog;
+    private ProgressDialog alertDialog;
     private String apiKey;
+    private FragmentChangeListener fragmentChangeListener;
+    private ViewGroup container;
+    private Snackbar snackbar;
 
     @Override
     public void onAttach(Context context) {
@@ -94,253 +102,192 @@ public class GymFragment extends Fragment {
         } catch (IOException e) {
             Toast.makeText(context, "Fragment konnte nicht geladen werden", Toast.LENGTH_SHORT).show();
         }
+
+        try {
+            fragmentChangeListener = (FragmentChangeListener) context;
+        } catch (ClassCastException e) {
+            throw new RuntimeException("Activity must implement FragmentChangeListener");
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View v = null;
+        alertDialog = new ProgressDialog(getContext());
+        this.container = container;
+        alertDialog.setMessage(getResources().getString(R.string.loader));
+        alertDialog.setCancelable(false);
+        alertDialog.show();
 
-            View v = null;
-            //Warten-Dialog erstellen und anzeigen
-            alertDialog = new ProgressDialog(getContext());
-            alertDialog.setMessage(getResources().getString(R.string.loader));
-            alertDialog.setCancelable(false);
-            alertDialog.show();
+        final GPSDetection gps = new GPSDetection(this.getContext());
+        gps.setPosition(new Runnable(){
 
-            final GPSDetection gps = new GPSDetection(this.getContext());
-            gps.setPosition(new Runnable(){
+                @Override
+                public void run() {
+                   GooglePlacesWebserviceAufruf aufruf = new GooglePlacesWebserviceAufruf(gps);
+                   aufruf.execute();
+                }
+        });
 
-                    @Override
-                    public void run() {
-                    GooglePlacesWebserviceAufruf aufruf = new GooglePlacesWebserviceAufruf(gps);
-                    aufruf.execute();
+        if (gps.GPSaktiv) {
+            v = inflater.inflate(R.layout.fragment_gym, container, false);
+
+            //UI-Elemente für MyPlace zuweisen
+            MyPlace_Adresse_Content = (TextView) v.findViewById(R.id.MyPlace_Adresse_Content);
+            MyPlace_Header_Content = (TextView) v.findViewById(R.id.MyPlace_Header_Content);
+
+            //UI-Elemente für Gyms zuweisen
+            Gym_Name_Content1 = (TextView) v.findViewById(R.id.Gym_Name_Content1);
+            Gym_Adresse_Content1 = (TextView) v.findViewById(R.id.Gym_Adresse_Content1);
+            Gym_Entfernung_Content1 = (TextView) v.findViewById(R.id.Gym_Entfernung_Content1);
+            Gym_Name_Content2 = (TextView) v.findViewById(R.id.Gym_Name_Content2);
+            Gym_Adresse_Content2 = (TextView) v.findViewById(R.id.Gym_Adresse_Content2);
+            Gym_Entfernung_Content2 = (TextView) v.findViewById(R.id.Gym_Entfernung_Content2);
+
+            //UI-Elemente für Parks zuweisen
+            Park_Name_Content1 = (TextView) v.findViewById(R.id.Park_Name_Content1);
+            Park_Adresse_Content1 = (TextView) v.findViewById(R.id.Park_Adresse_Content1);
+            Park_Entfernung_Content1 = (TextView) v.findViewById(R.id.Park_Entfernung_Content1);
+            Park_Name_Content2 = (TextView) v.findViewById(R.id.Park_Name_Content2);
+            Park_Adresse_Content2 = (TextView) v.findViewById(R.id.Park_Adresse_Content2);
+            Park_Entfernung_Content2 = (TextView) v.findViewById(R.id.Park_Entfernung_Content2);
+
+            //UI-Elemente für Stadiums zuweisen
+            Stadium_Name_Content1 = (TextView) v.findViewById(R.id.Stadium_Name_Content1);
+            Stadium_Adresse_Content1 = (TextView) v.findViewById(R.id.Stadium_Adresse_Content1);
+            Stadium_Entfernung_Content1 = (TextView) v.findViewById(R.id.Stadium_Entfernung_Content1);
+            Stadium_Name_Content2 = (TextView) v.findViewById(R.id.Stadium_Name_Content2);
+            Stadium_Adresse_Content2 = (TextView) v.findViewById(R.id.Stadium_Adresse_Content2);
+            Stadium_Entfernung_Content2 = (TextView) v.findViewById(R.id.Stadium_Entfernung_Content2);
+
+            //Cards UI-Elemente zuweisen
+            Gym_Card1 = (CardView) v.findViewById(R.id.Gym_Card1);
+            Gym_Card2 = (CardView) v.findViewById(R.id.Gym_Card2);
+            Park_Card1 = (CardView) v.findViewById(R.id.Park_Card1);
+            Park_Card2 = (CardView) v.findViewById(R.id.Park_Card2);
+            Stadium_Card1 = (CardView) v.findViewById(R.id.Stadium_Card1);
+            Stadium_Card2 = (CardView) v.findViewById(R.id.Stadium_Card2);
+
+
+            //OnClickListener auf Cards setzen
+            Gym_Card1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    openMapsOrBrowser(Gym_Adresse_Content1.getText().toString());
                 }
             });
-            //gps.stopGPSposition();
 
+            Gym_Card2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    openMapsOrBrowser(Gym_Adresse_Content2.getText().toString());
+                }
+            });
 
+            Park_Card1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    openMapsOrBrowser(Park_Adresse_Content1.getText().toString());
+                }
+            });
 
-            if (gps.GPSaktiv) {
-                v = inflater.inflate(R.layout.fragment_gym, container, false);
+            Park_Card2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    openMapsOrBrowser(Park_Adresse_Content2.getText().toString());
+                }
+            });
 
-                //UI-Elemente für MyPlace zuweisen
-                MyPlace_Adresse_Content = (TextView) v.findViewById(R.id.MyPlace_Adresse_Content);
-                MyPlace_Header_Content = (TextView) v.findViewById(R.id.MyPlace_Header_Content);
+            Stadium_Card1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    openMapsOrBrowser(Stadium_Adresse_Content1.getText().toString());
+                }
+            });
 
-                //UI-Elemente für Gyms zuweisen
-                Gym_Name_Content1 = (TextView) v.findViewById(R.id.Gym_Name_Content1);
-                Gym_Adresse_Content1 = (TextView) v.findViewById(R.id.Gym_Adresse_Content1);
-                Gym_Entfernung_Content1 = (TextView) v.findViewById(R.id.Gym_Entfernung_Content1);
-                Gym_Name_Content2 = (TextView) v.findViewById(R.id.Gym_Name_Content2);
-                Gym_Adresse_Content2 = (TextView) v.findViewById(R.id.Gym_Adresse_Content2);
-                Gym_Entfernung_Content2 = (TextView) v.findViewById(R.id.Gym_Entfernung_Content2);
+            Stadium_Card2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    openMapsOrBrowser(Stadium_Adresse_Content2.getText().toString());
+                }
+            });
+        } else {
 
-                //UI-Elemente für Parks zuweisen
-                Park_Name_Content1 = (TextView) v.findViewById(R.id.Park_Name_Content1);
-                Park_Adresse_Content1 = (TextView) v.findViewById(R.id.Park_Adresse_Content1);
-                Park_Entfernung_Content1 = (TextView) v.findViewById(R.id.Park_Entfernung_Content1);
-                Park_Name_Content2 = (TextView) v.findViewById(R.id.Park_Name_Content2);
-                Park_Adresse_Content2 = (TextView) v.findViewById(R.id.Park_Adresse_Content2);
-                Park_Entfernung_Content2 = (TextView) v.findViewById(R.id.Park_Entfernung_Content2);
+            v = inflater.inflate(R.layout.fragment_gym_nogps, container, false);
 
-                //UI-Elemente für Stadiums zuweisen
-                Stadium_Name_Content1 = (TextView) v.findViewById(R.id.Stadium_Name_Content1);
-                Stadium_Adresse_Content1 = (TextView) v.findViewById(R.id.Stadium_Adresse_Content1);
-                Stadium_Entfernung_Content1 = (TextView) v.findViewById(R.id.Stadium_Entfernung_Content1);
-                Stadium_Name_Content2 = (TextView) v.findViewById(R.id.Stadium_Name_Content2);
-                Stadium_Adresse_Content2 = (TextView) v.findViewById(R.id.Stadium_Adresse_Content2);
-                Stadium_Entfernung_Content2 = (TextView) v.findViewById(R.id.Stadium_Entfernung_Content2);
+            //UI-Elemente für MyPlace zuweisen
+            MyPlace_Adresse_Content = (TextView) v.findViewById(R.id.MyPlace_Adresse_Content);
+            MyPlace_Header_Content = (TextView) v.findViewById(R.id.MyPlace_Header_Content);
 
-                //Cards UI-Elemente zuweisen
-                Gym_Card1 = (CardView) v.findViewById(R.id.Gym_Card1);
-                Gym_Card2 = (CardView) v.findViewById(R.id.Gym_Card2);
-                Park_Card1 = (CardView) v.findViewById(R.id.Park_Card1);
-                Park_Card2 = (CardView) v.findViewById(R.id.Park_Card2);
-                Stadium_Card1 = (CardView) v.findViewById(R.id.Stadium_Card1);
-                Stadium_Card2 = (CardView) v.findViewById(R.id.Stadium_Card2);
+            //UI-Elemente für MyPlace beschreiben
+            MyPlace_Header_Content.setText("Fehler in der Ortung");
+            MyPlace_Adresse_Content.setText("Bitte schalten Sie Ihre GPS-Ortung ein.");
 
+            alertDialog.hide();
+        }
 
-                //OnClickListener auf Cards setzen
-                Gym_Card1.setOnClickListener(
-                        new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                try {
-                                    Uri gmmIntentUri = Uri.parse("https://www.google.de/maps/place/" + Gym_Adresse_Content1.getText());
-                                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-                                    mapIntent.setPackage("com.google.android.apps.maps");
-                                    startActivity(mapIntent);
-                                } catch (ActivityNotFoundException omg) {
-                                    String url = "https://www.google.de/maps/place/" + Gym_Adresse_Content1.getText();
-                                    Intent browserIntent = new Intent(Intent.ACTION_VIEW);
-                                    browserIntent.setData(Uri.parse(url));
-                                    startActivity(browserIntent);
-                                }
-                            }
-                        }
-                );
-                Gym_Card2.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        try {
-                            Uri gmmIntentUri = Uri.parse("https://www.google.de/maps/place/" + Gym_Adresse_Content2.getText());
-                            Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-                            mapIntent.setPackage("com.google.android.apps.maps");
-                            startActivity(mapIntent);
-                        } catch (ActivityNotFoundException omg) {
-                            String url = "https://www.google.de/maps/place/" + Gym_Adresse_Content2.getText();
-                            Intent browserIntent = new Intent(Intent.ACTION_VIEW);
-                            browserIntent.setData(Uri.parse(url));
-                            startActivity(browserIntent);
-                        }
-                    }
-                });
-                Park_Card1.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        try {
-                            Uri gmmIntentUri = Uri.parse("https://www.google.de/maps/place/" + Park_Adresse_Content1.getText());
-                            Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-                            mapIntent.setPackage("com.google.android.apps.maps");
-                            startActivity(mapIntent);
-                        } catch (ActivityNotFoundException omg) {
-                            String url = "https://www.google.de/maps/place/" + Park_Adresse_Content1.getText();
-                            Intent browserIntent = new Intent(Intent.ACTION_VIEW);
-                            browserIntent.setData(Uri.parse(url));
-                            startActivity(browserIntent);
-                        }
-                    }
-                });
-                Park_Card2.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        try {
-                            Uri gmmIntentUri = Uri.parse("https://www.google.de/maps/place/" + Park_Adresse_Content2.getText());
-                            Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-                            mapIntent.setPackage("com.google.android.apps.maps");
-                            startActivity(mapIntent);
-                        } catch (ActivityNotFoundException omg) {
-                            String url = "https://www.google.de/maps/place/" + Park_Adresse_Content2.getText();
-                            Intent browserIntent = new Intent(Intent.ACTION_VIEW);
-                            browserIntent.setData(Uri.parse(url));
-                            startActivity(browserIntent);
-                        }
-                    }
-                });
-                Stadium_Card1.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        try {
-                            Uri gmmIntentUri = Uri.parse("https://www.google.de/maps/place/" + Stadium_Adresse_Content1.getText());
-                            Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-                            mapIntent.setPackage("com.google.android.apps.maps");
-                            startActivity(mapIntent);
-                        } catch (ActivityNotFoundException omg) {
-                            String url = "https://www.google.de/maps/place/" + Stadium_Adresse_Content1.getText();
-                            Intent browserIntent = new Intent(Intent.ACTION_VIEW);
-                            browserIntent.setData(Uri.parse(url));
-                            startActivity(browserIntent);
-                        }
-                    }
-                });
-                Stadium_Card2.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        try {
-                            Uri gmmIntentUri = Uri.parse("https://www.google.de/maps/place/" + Stadium_Adresse_Content2.getText());
-                            Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-                            mapIntent.setPackage("com.google.android.apps.maps");
-                            startActivity(mapIntent);
-                        } catch (ActivityNotFoundException omg) {
-                            String url = "https://www.google.de/maps/place/" + Stadium_Adresse_Content2.getText();
-                            Intent browserIntent = new Intent(Intent.ACTION_VIEW);
-                            browserIntent.setData(Uri.parse(url));
-                            startActivity(browserIntent);
-                        }
-                    }
-                });
-            } else {
-
-                v = inflater.inflate(R.layout.fragment_gym_nogps, container, false);
-
-                //UI-Elemente für MyPlace zuweisen
-                MyPlace_Adresse_Content = (TextView) v.findViewById(R.id.MyPlace_Adresse_Content);
-                MyPlace_Header_Content = (TextView) v.findViewById(R.id.MyPlace_Header_Content);
-
-                //UI-Elemente für MyPlace beschreiben
-                MyPlace_Header_Content.setText("Fehler in der Ortung");
-                MyPlace_Adresse_Content.setText("Bitte schalten Sie Ihre GPS-Ortung ein.");
-
-                alertDialog.hide();
-            }
-            return v;
+        return v;
     }
 
-    @Override
-    public void onPause(){
-       //The system calls this method as the first indication that the user is leaving the fragment (though it does not always mean the fragment is being destroyed). This is usually where you should commit any changes that should be persisted beyond the current user session (because the user might not come back).
-       Log.e("DEBUG", "OnPause of RezepteFragment");
-        super.onPause();
+    private void openMapsOrBrowser(String place) {
+        try {
+            Uri gmmIntentUri = Uri.parse("https://www.google.de/maps/place/" + place);
+            Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+            mapIntent.setPackage("com.google.android.apps.maps");
+            startActivity(mapIntent);
+        } catch (ActivityNotFoundException omg) {
+            String url = "https://www.google.de/maps/place/" + place;
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW);
+            browserIntent.setData(Uri.parse(url));
+            startActivity(browserIntent);
+        }
     }
 
-    class GooglePlacesWebserviceAufruf extends AsyncTask<String, GPSDetection, ArrayList<ArrayList<String>>> {
+    class GooglePlacesWebserviceAufruf extends AsyncTask<String, GPSDetection, AsyncTaskResult<ArrayList<String>>> {
+        private GPSDetection gps;
 
-        GPSDetection gps;
-        ArrayList erg;
-
-        GooglePlacesWebserviceAufruf(GPSDetection gps) {
+        public GooglePlacesWebserviceAufruf(GPSDetection gps) {
             this.gps = gps;
         }
 
-
         @Override
-        protected ArrayList doInBackground(String... params) {
+        protected AsyncTaskResult<ArrayList<String>> doInBackground(String... params) {
             try {
                 //gym-request
                 String gym = "gym";
-                Log.i("GooglePlacesWebserviceAufruf: ","Request für " + gym + " starten");
                 String jsonResponsePlacesGym = placesAPIAufrufen(gym, gps);
-                Log.i("GooglePlacesWebserviceAufruf: ","Request für " + gym + "  parsen");
-                ArrayList ergGym = parseGooglePlaces(jsonResponsePlacesGym);
-                Log.i("GooglePlacesWebserviceAufruf: ","Request  für " + gym + " geparst und Ergebnis: " + ergGym);
+                ArrayList<String> ergGym = parseGooglePlaces(jsonResponsePlacesGym);
 
                 //park-request
                 String park = "park";
-                Log.i("GooglePlacesWebserviceAufruf: ","Request für " + park + " starten");
                 String jsonResponsePlacesPark = placesAPIAufrufen(park, gps);
-                Log.i("GooglePlacesWebserviceAufruf: ","Request für " + park + " parsen");
-                ArrayList ergPark = parseGooglePlaces(jsonResponsePlacesPark);
-                Log.i("GooglePlacesWebserviceAufruf: ","Request  für " + park + " geparst und Ergebnis: " + ergPark);
+                ArrayList<String> ergPark = parseGooglePlaces(jsonResponsePlacesPark);
 
                 //stadium-request
                 String stadium = "stadium";
-                Log.i("GooglePlacesWebserviceAufruf: ","Request für " + stadium + " starten");
                 String jsonResponsePlacesStadium = placesAPIAufrufen(stadium, gps);
-                Log.i("GooglePlacesWebserviceAufruf: ","Request für " + stadium + " parsen");
-                ArrayList ergStadium = parseGooglePlaces(jsonResponsePlacesStadium);
-                Log.i("GooglePlacesWebserviceAufruf: ","Request  für " + stadium + " geparst und Ergebnis: " + ergStadium);
+                ArrayList<String> ergStadium = parseGooglePlaces(jsonResponsePlacesStadium);
 
-                ArrayList erg = new ArrayList();
+                List<ArrayList<String>> erg = new ArrayList();
                 erg.add(0, ergGym);
                 erg.add(1, ergPark);
                 erg.add(2, ergStadium);
 
-                return erg;
-
-            } catch (Exception e) {
-                e.printStackTrace();
+                return new AsyncTaskResult<ArrayList<String>>(erg);
+            } catch(IOException e) {
+                return new AsyncTaskResult<ArrayList<String>>(e);
+            } catch (JSONException e) {
+                return new AsyncTaskResult<ArrayList<String>>(e);
             }
-            return erg;
         }
 
         @Override
-        protected void onPostExecute(ArrayList<ArrayList<String>> ergebnis) {
+        protected void onPostExecute(AsyncTaskResult<ArrayList<String>> taskResult) {
 
-            try{
+            if(taskResult.isSuccessful()) {
+                List<ArrayList<String>> ergebnis = taskResult.getResult();
 
-                Log.i("onPostExecute: ","Methode begonnen " + ergebnis);
-
-                if (gps.GPSaktiv)
-                {
+                if (gps.GPSaktiv) {
                     ArrayList<String> gymListe = ergebnis.get(0);
                     Gym_Name_Content1.setText(gymListe.get(0));
                     Gym_Adresse_Content1.setText(gymListe.get(1));
@@ -367,181 +314,137 @@ public class GymFragment extends Fragment {
 
                     MyPlace_Header_Content.setText("Ihre aktuelle Position ist");
                     MyPlace_Adresse_Content.setText(stadiumListe.get(6));
-                } else {
-
                 }
 
                 alertDialog.hide();
-                gps.stopGPSposition();
-                super.onPostExecute(ergebnis);
+                hideSnackbar();
+            } else {
 
+                // IOException wird u.a. geworfen falls kein Internet vorhanden ist
+                if(taskResult.getError() instanceof IOException) {
+                    // lösche den loading dialog komplett
+                    alertDialog.dismiss();
 
-            } catch (Exception e) {
-                Log.i("Fehler onPostExecute","" + e);
-                alertDialog.hide();
+                    FitnessFragmentOverview fitnessFragment = new FitnessFragmentOverview();
+
+                    // weise den Startbildschirm an, die Snackbar mit der Meldung für den Benutzer anzuzeigen
+                    Bundle bundle = new Bundle();
+                    bundle.putInt(FitnessFragmentOverview.SNACKBAR_STATE, FitnessFragmentOverview.SNACKBAR_STATE_SHOW);
+                    fitnessFragment.setArguments(bundle);
+
+                    // springe zurück auf den Startbildschirm
+                    fragmentChangeListener.onFragmentChangeRequest(fitnessFragment, false);
+                } else {
+                    // alle anderen exceptions
+                    taskResult.getError().printStackTrace();
+                    Log.e("GpsKomponente", taskResult.getError().toString());
+                    alertDialog.dismiss();
+                    showSnackbar();
+                }
             }
+
+            gps.stopGPSposition();
         }
 
+        protected String placesAPIAufrufen(String typ, GPSDetection gps) throws IOException {
+            //1. Request Factory holen
+            Log.i("placesAPIAufrufen: ","Request Factory holen begonnen");
+            HttpTransport httpTransport = new NetHttpTransport();
+            HttpRequestFactory requestFactory = httpTransport.createRequestFactory();
 
-        /**
-         *
-         * Die Methode macht die HTTP Anfrage an die API
-         *
-         * @param typ
-         * @param gps
-         * @return gibt den HTTP Request zurück
-         * @throws Exception
-         */
-        protected String placesAPIAufrufen(String typ, GPSDetection gps) throws Exception {
-            try {
-                Log.i("placesAPIAufrufen: ","Methode begonnen");
-                Log.i("placesAPIAufrufen: ","Übergebener Wert: " + typ);
-                Log.i("placesAPIAufrufen: ","Starte API Aufruf");
+            //2. Url hinzufügen
+            GenericUrl url = new GenericUrl("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
+            url.put("location", + gps.getBreitengrad() + "," + gps.getLaengengrad());
+            url.put("rankby", "distance");
+            url.put("type", typ);
+            url.put("key", apiKey);
 
-                //1. Request Factory holen
-                Log.i("placesAPIAufrufen: ","Request Factory holen begonnen");
-                HttpTransport httpTransport = new NetHttpTransport();
-                HttpRequestFactory requestFactory = httpTransport.createRequestFactory();
-                Log.i("placesAPIAufrufen: ","Request Factory holen beendet");
+            //3. Request absetzen
+            HttpRequest request = requestFactory.buildGetRequest(url);
 
+            HttpResponse httpResponse = request.execute();
+            String jsonResponseString = httpResponse.parseAsString();
 
-                //2. Url hinzufügen
-                Log.i("placesAPIAufrufen: ","URL hinzufügen begonnen");
-                GenericUrl url = new GenericUrl("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
-                url.put("location", + gps.getBreitengrad() + "," + gps.getLaengengrad());
-                url.put("rankby", "distance");
-                url.put("type", typ);
-                url.put("key", apiKey);
-                Log.i("placesAPIAufrufen: ","URL hinzufügen beendet: " + url);
+            Log.d("placesAPIAufrufen: ","API Aufruf beendet");
+            Log.d("placesAPIAufrufen: ","Erhaltene JSON: " + jsonResponseString);
 
-
-                //3. Request absetzen
-                Log.i("placesAPIAufrufen: ","Request absetzen begonnen");
-                HttpRequest request = requestFactory.buildGetRequest(url);
-                Log.i("placesAPIAufrufen: ","Request absetzen");
-
-                HttpResponse httpResponse = request.execute();
-                Log.i("placesAPIAufrufen: ","Request absetzen beendet");
-
-                Log.i("placesAPIAufrufen: ","Request parsen");
-                String jsonResponseString = httpResponse.parseAsString();
-
-                Log.i("placesAPIAufrufen: ","API Aufruf beendet");
-                Log.i("placesAPIAufrufen: ","Erhaltene JSON: " + jsonResponseString);
-                return jsonResponseString;
-
-            } catch (Exception e) {
-                Log.i("Fehler placesAPIAufrufen", "Request absetzen fehlgeschlagen. Fehlermeldung " + e);
-                return "error";
-            }
+            return jsonResponseString;
         }
 
-        protected ArrayList parseGooglePlaces(String jsonString) throws JSONException {
-            try{
-                Log.i("parseGooglePlaces:", "Beginnt das parsen");
-                Log.i("parseGooglePlaces:", "Übergebenes Objekt: " + jsonString);
-                //Eigentliches parsen
-                JSONObject jsonObject = new JSONObject(jsonString);
+        protected ArrayList parseGooglePlaces(String jsonString) throws JSONException, IOException {
+            Log.i("parseGooglePlaces:", "Beginnt das parsen");
+            Log.i("parseGooglePlaces:", "Übergebenes Objekt: " + jsonString);
+            //Eigentliches parsen
+            JSONObject jsonObject = new JSONObject(jsonString);
 
-                //Wichtigsten Inhalt entnehmen
-                JSONArray jsonArray1 = jsonObject.getJSONArray("results");
-                JSONObject i1 = jsonArray1.getJSONObject(0);
+            //Wichtigsten Inhalt entnehmen
+            JSONArray jsonArray1 = jsonObject.getJSONArray("results");
+            JSONObject i1 = jsonArray1.getJSONObject(0);
 
-                JSONArray jsonArray2 = jsonObject.getJSONArray("results");
-                JSONObject i2 = jsonArray2.getJSONObject(1);
-                Log.i("parseGooglePlaces:", "results geparst");
+            JSONArray jsonArray2 = jsonObject.getJSONArray("results");
+            JSONObject i2 = jsonArray2.getJSONObject(1);
 
-                //name
-                String name1 = i1.getString("name");
-                Log.i("parseGooglePlaces:", "Name geparst " + name1);
-                String name2 = i2.getString("name");
-                Log.i("parseGooglePlaces:", "Name geparst " + name2);
+            //name
+            String name1 = i1.getString("name");
+            String name2 = i2.getString("name");
 
-                //location1 parsen und lat und lng selektieren
-                JSONObject geometry1 = i1.getJSONObject("geometry");
-                JSONObject location1 = geometry1.getJSONObject("location");
-                Double location1_lat = location1.getDouble("lat");
-                Double location1_lng = location1.getDouble("lng");
-                Log.i("parseGooglePlaces:", "location1_lat gesetzt "+ location1_lat);
-                Log.i("parseGooglePlaces:", "location1_lng gesetzt "+ location1_lng);
+            //location1 parsen und lat und lng selektieren
+            JSONObject geometry1 = i1.getJSONObject("geometry");
+            JSONObject location1 = geometry1.getJSONObject("location");
+            Double location1_lat = location1.getDouble("lat");
+            Double location1_lng = location1.getDouble("lng");
 
-                //Entfernung für location1 aufrufen und parsen
-                String ergebnis1 = distanceAPIAufrufen(location1_lat, location1_lng);
-                Log.i("parseGooglePlaces:", "ergenis1 gesetzt "+ ergebnis1);
-                JSONObject distanceObject1 = new JSONObject(ergebnis1);
-                Log.i("parseGooglePlaces:", "distanceObject1 gesetzt "+ distanceObject1);
-                JSONArray distanceArray1 = distanceObject1.getJSONArray("rows");
-                JSONObject distanceObject1_changed = distanceArray1.getJSONObject(0);
-                JSONArray distanceArray1_changend = distanceObject1_changed.getJSONArray("elements");
-                distanceObject1_changed = distanceArray1_changend.getJSONObject(0);
-                distanceObject1_changed = distanceObject1_changed.getJSONObject("distance");
-                String distance1 = distanceObject1_changed.getString("text");
-                Log.i("parseGooglePlaces:", "distance1 gesetzt "+ distance1);
+            //Entfernung für location1 aufrufen und parsen
+            String ergebnis1 = distanceAPIAufrufen(location1_lat, location1_lng);
+            JSONObject distanceObject1 = new JSONObject(ergebnis1);
+            JSONArray distanceArray1 = distanceObject1.getJSONArray("rows");
+            JSONObject distanceObject1_changed = distanceArray1.getJSONObject(0);
+            JSONArray distanceArray1_changend = distanceObject1_changed.getJSONArray("elements");
+            distanceObject1_changed = distanceArray1_changend.getJSONObject(0);
+            distanceObject1_changed = distanceObject1_changed.getJSONObject("distance");
+            String distance1 = distanceObject1_changed.getString("text");
 
-                //location2 parsen und lat und lng selektieren
-                JSONObject geometry2 = i2.getJSONObject("geometry");
-                JSONObject location2 = geometry2.getJSONObject("location");
-                Double location2_lat = location2.getDouble("lat");
-                Double location2_lng = location2.getDouble("lng");
-                Log.i("parseGooglePlaces:", "location2_lat gesetzt "+ location2_lat);
-                Log.i("parseGooglePlaces:", "location2_lng gesetzt "+ location2_lng);
+            //location2 parsen und lat und lng selektieren
+            JSONObject geometry2 = i2.getJSONObject("geometry");
+            JSONObject location2 = geometry2.getJSONObject("location");
+            Double location2_lat = location2.getDouble("lat");
+            Double location2_lng = location2.getDouble("lng");
 
-                //Entfernung für location2 aufrufen und parsen
-                String ergebnis2 = distanceAPIAufrufen(location2_lat, location2_lng);
-                Log.i("parseGooglePlaces:", "ergenis2 gesetzt "+ ergebnis2);
-                JSONObject distanceObject2 = new JSONObject(ergebnis2);
-                Log.i("parseGooglePlaces:", "distanceObject2 gesetzt "+ distanceObject2);
-                JSONArray distanceArray2 = distanceObject2.getJSONArray("rows");
-                JSONObject distanceObject2_changed = distanceArray2.getJSONObject(0);
-                JSONArray distanceArray2_changed = distanceObject2_changed.getJSONArray("elements");
-                distanceObject2_changed = distanceArray2_changed.getJSONObject(0);
-                distanceObject2_changed = distanceObject2_changed.getJSONObject("distance");
-                String distance2 = distanceObject2_changed.getString("text");
-                Log.i("parseGooglePlaces:", "distance2 gesetzt "+ distance2);
+            //Entfernung für location2 aufrufen und parsen
+            String ergebnis2 = distanceAPIAufrufen(location2_lat, location2_lng);
+            JSONObject distanceObject2 = new JSONObject(ergebnis2);
+            JSONArray distanceArray2 = distanceObject2.getJSONArray("rows");
+            JSONObject distanceObject2_changed = distanceArray2.getJSONObject(0);
+            JSONArray distanceArray2_changed = distanceObject2_changed.getJSONArray("elements");
+            distanceObject2_changed = distanceArray2_changed.getJSONObject(0);
+            distanceObject2_changed = distanceObject2_changed.getJSONObject("distance");
+            String distance2 = distanceObject2_changed.getString("text");
 
-                //destination_address1 selektieren und parsen
-                JSONArray destination_address1_array = distanceObject1.getJSONArray("destination_addresses");
-                String destination_address1 = (String) destination_address1_array.get(0);
-                Log.i("parseGooglePlaces:", "destination_address1 gesetzt "+ destination_address1);
-
-                //origin_addresses selektieren und parsen
-                Log.i("parseGooglePlaces:", "marcel test " + distanceObject1);
-
-                JSONArray origin_address_array = distanceObject1.getJSONArray("origin_addresses");
-                Log.i("parseGooglePlaces:", "marcel test "+ origin_address_array);
-
-                String origin_address = (String) origin_address_array.get(0);
-                Log.i("parseGooglePlaces:", "origin_address gesetzt "+ origin_address);
+            //destination_address1 selektieren und parsen
+            JSONArray destination_address1_array = distanceObject1.getJSONArray("destination_addresses");
+            String destination_address1 = (String) destination_address1_array.get(0);
+            JSONArray origin_address_array = distanceObject1.getJSONArray("origin_addresses");
+            String origin_address = (String) origin_address_array.get(0);
 
 
-                //destination_address2 selektieren und parsen
-                JSONArray destination_address2_array = distanceObject2.getJSONArray("destination_addresses");
-                String destination_address2 = (String) destination_address2_array.get(0);
-                Log.i("parseGooglePlaces:", "destination_address2 gesetzt "+ destination_address2);
+            //destination_address2 selektieren und parsen
+            JSONArray destination_address2_array = distanceObject2.getJSONArray("destination_addresses");
+            String destination_address2 = (String) destination_address2_array.get(0);
 
-                //Informationen speichern
-                ArrayList<String> information = new ArrayList<>();
+            //Informationen speichern
+            ArrayList<String> information = new ArrayList<>();
 
-                Log.i("parseGooglePlaces:", "Parsen fast beendet");
+            information.add(0, name1);
+            information.add(1, destination_address1);
+            information.add(2, distance1);
+            information.add(3, name2);
+            information.add(4, destination_address2);
+            information.add(5, distance2);
+            information.add(6, origin_address);
 
+            Log.i("parseGooglePlaces:", "Parsen beendet: " + information);
 
-                information.add(0, name1);
-                information.add(1, destination_address1);
-                information.add(2, distance1);
-                information.add(3, name2);
-                information.add(4, destination_address2);
-                information.add(5, distance2);
-                information.add(6, origin_address);
-
-                Log.i("parseGooglePlaces:", "Parsen beendet: " + information);
-
-                return information;
-            } catch (Exception e) {
-                //Fehler Exception
-                Log.i("parseGooglePlaces","parseGooglePlaces fehlgeschlagen: " + e);
-                return new ArrayList();
-            }
-
+            return information;
         }
 
         /**
@@ -553,49 +456,46 @@ public class GymFragment extends Fragment {
          * @return gibt den HTTP Request zurück
          * @throws Exception
          */
-        protected String distanceAPIAufrufen(Double lat, Double lng) throws Exception {
+        protected String distanceAPIAufrufen(Double lat, Double lng) throws IOException {
+            Log.i("distanceAPIAufrufen: ","Methode begonnen");
+            Log.i("distanceAPIAufrufen: ","Übergebene Werte: " + lat + " und " + lng );
 
-            try {
-                Log.i("distanceAPIAufrufen: ","Methode begonnen");
-                Log.i("distanceAPIAufrufen: ","Übergebene Werte: " + lat + " und " + lng );
-                Log.i("distanceAPIAufrufen: ","Starte API Aufruf");
+            //1. Request Factory holen
+            HttpTransport httpTransport = new NetHttpTransport();
+            HttpRequestFactory requestFactory = httpTransport.createRequestFactory();
 
-                //1. Request Factory holen
-                Log.i("distanceAPIAufrufen: ","Request Factory holen begonnen");
-                HttpTransport httpTransport = new NetHttpTransport();
-                HttpRequestFactory requestFactory = httpTransport.createRequestFactory();
-                Log.i("distanceAPIAufrufen: ","Request Factory holen beendet");
+            //2. Url hinzufügen
+            GenericUrl url = new GenericUrl("https://maps.googleapis.com/maps/api/distancematrix/json?");
+            url.put("destinations", + lat + "," + lng);
+            url.put("origins", + gps.getBreitengrad() + "," + gps.getLaengengrad());
+            url.put("units", "metric");
+            url.put("key", apiKey);
 
+            //3. Request absetzen
+            HttpRequest request = requestFactory.buildGetRequest(url);
+            HttpResponse httpResponse = request.execute();
+            String jsonResponseString = httpResponse.parseAsString();
 
-                //2. Url hinzufügen
-                Log.i("distanceAPIAufrufen: ","URL hinzufügen begonnen");
-                GenericUrl url = new GenericUrl("https://maps.googleapis.com/maps/api/distancematrix/json?");
-                url.put("destinations", + lat + "," + lng);
-                url.put("origins", + gps.getBreitengrad() + "," + gps.getLaengengrad());
-                url.put("units", "metric");
-                url.put("key", apiKey);
-                Log.i("placesAPIAufrufen: ","URL hinzufügen beendet: " + url);
+            Log.i("distanceAPIAufrufen: ","API Aufruf beendet");
+            Log.i("distanceAPIAufrufen: ","Erhaltene JSON: " + jsonResponseString);
 
+            return jsonResponseString;
+        }
+    }
 
-                //3. Request absetzen
-                Log.i("distanceAPIAufrufen: ","Request absetzen begonnen");
-                HttpRequest request = requestFactory.buildGetRequest(url);
-                Log.i("distanceAPIAufrufen: ","Request absetzen");
+    public void showSnackbar() {
+        snackbar = Snackbar.make(container, "Keine Orte in der Umgebung", Snackbar.LENGTH_LONG);
 
-                HttpResponse httpResponse = request.execute();
-                Log.i("distanceAPIAufrufen: ","Request absetzen beendet");
+        // Changing action button text color
+        View sbView = snackbar.getView();
+        TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+        textView.setTextColor(Color.WHITE);
+        snackbar.show();
+    }
 
-                Log.i("distanceAPIAufrufen: ","Request parsen");
-                String jsonResponseString = httpResponse.parseAsString();
-
-                Log.i("distanceAPIAufrufen: ","API Aufruf beendet");
-                Log.i("distanceAPIAufrufen: ","Erhaltene JSON: " + jsonResponseString);
-                return jsonResponseString;
-
-            } catch (Exception e) {
-                Log.i("Fehler distanceAPIAufrufen", "Request absetzen fehlgeschlagen. Fehlermeldung " + e);
-                return "error";
-            }
+    public void hideSnackbar() {
+        if(this.snackbar != null) {
+            this.snackbar.dismiss();
         }
     }
 }

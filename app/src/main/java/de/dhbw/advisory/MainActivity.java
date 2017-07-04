@@ -1,22 +1,15 @@
 package de.dhbw.advisory;
 
-import android.content.Context;
-import android.content.Intent;
 import android.Manifest;
-import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.content.pm.PackageManager;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
+
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -27,6 +20,7 @@ import de.dhbw.advisory.recipe.RezepteFragment;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, FragmentChangeListener{
 
+    private static final int GPS_REQUEST_CODE = 200;
     protected BottomNavigationView _bottomNavigation = null;
     protected Fragment _fragment;
     protected FragmentManager _fragmentManager;
@@ -49,46 +43,32 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         _bottomNavigation.setOnNavigationItemSelectedListener(this);
     }
 
-        @Override
-        public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults){
-            //Wenn Permission vorhanden: GymFragment wird aufgerufen
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+    int id = item.getItemId();
+    switch (id) {
+        case R.id.fitness:
+            _fragment = new de.dhbw.advisory.fitness.FitnessFragmentOverview();
+            transaction = _fragmentManager.beginTransaction();
+            transaction.replace(R.id.main_container, _fragment).addToBackStack("tag").commit();
+            break;
+        case R.id.rezepte:
+            _fragment = new RezepteFragment();
+            transaction = _fragmentManager.beginTransaction();
+            transaction.replace(R.id.main_container, _fragment).addToBackStack("tag").commit();
+            break;
+        case R.id.gym:
+            boolean permissionGranted = ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+            if (permissionGranted) {
                 _fragment = new GymFragment();
                 transaction = _fragmentManager.beginTransaction();
                 transaction.replace(R.id.main_container, _fragment).addToBackStack("tag").commit();
-            //Wenn Permission nicht vorhanden, dann zeige einen Toast
-            } else if (grantResults[0] == PackageManager.PERMISSION_DENIED){
-                Toast.makeText(this, "Bitte akzeptiere die Permission", Toast.LENGTH_LONG).show();
+            } else {
+                //Fenster das User nach Permission fragt. Löst Callback zur Methode onRequestPermissionsResult() aus.
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, GPS_REQUEST_CODE);
             }
-        }
-
-        @Override
-        public boolean onNavigationItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
-            case R.id.fitness:
-                _fragment = new de.dhbw.advisory.fitness.FitnessFragmentOverview();
-                transaction = _fragmentManager.beginTransaction();
-                transaction.replace(R.id.main_container, _fragment).addToBackStack("tag").commit();
-                break;
-            case R.id.rezepte:
-                _fragment = new RezepteFragment();
-                transaction = _fragmentManager.beginTransaction();
-                transaction.replace(R.id.main_container, _fragment).addToBackStack("tag").commit();
-                break;
-            case R.id.gym:
-                boolean permissionGranted = ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-                if (permissionGranted) {
-                    _fragment = new GymFragment();
-                    transaction = _fragmentManager.beginTransaction();
-                    transaction.replace(R.id.main_container, _fragment).addToBackStack("tag").commit();
-                } else {
-                    //Fenster das User nach Permission fragt. Löst Callback zur Methode onRequestPermissionsResult() aus.
-                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 200);
-                }
-
-                break;
-        }
+            break;
+    }
 
         return true;
     }
@@ -103,6 +83,20 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         else {
             transaction.replace(R.id.main_container, _fragment).commit();
         }
+    }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults){
+        if(requestCode == GPS_REQUEST_CODE) {
+            //Wenn Permission vorhanden: GymFragment wird aufgerufen
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                _fragment = new GymFragment();
+                transaction = _fragmentManager.beginTransaction();
+                transaction.replace(R.id.main_container, _fragment).addToBackStack("tag").commit();
+                //Wenn Permission nicht vorhanden, dann zeige einen Toast
+            } else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                Toast.makeText(this, "Bitte akzeptiere die Permission", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 }

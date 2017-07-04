@@ -28,6 +28,9 @@ import de.dhbw.advisory.fitness.component.custom.DemoAdapter;
 import de.dhbw.advisory.fitness.component.custom.DemoItem;
 
 public class FitnessFragmentOverview extends Fragment {
+    public static String SNACKBAR_STATE = "SNACKBAR_STATE_SHOW";
+    public static int SNACKBAR_STATE_SHOW = 1;
+    public static int SNACKBAR_STATE_HIDE = 0;
     private AsymmetricGridView listView;
     private DemoAdapter adapter;
     private ViewGroup container;
@@ -47,6 +50,10 @@ public class FitnessFragmentOverview extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.container = container;
+        if(getArguments() != null && getArguments().getInt(SNACKBAR_STATE, SNACKBAR_STATE_HIDE) == SNACKBAR_STATE_SHOW) {
+            showSnackbar(this.container);
+        }
+
         return inflater.inflate(R.layout.fragment_fitness_overview, container, false);
     }
 

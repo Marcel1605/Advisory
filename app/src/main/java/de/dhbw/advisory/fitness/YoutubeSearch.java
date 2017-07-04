@@ -2,6 +2,7 @@ package de.dhbw.advisory.fitness;
         import android.content.Context;
         import android.content.res.AssetManager;
         import android.os.AsyncTask;
+        import android.os.Bundle;
         import android.widget.Toast;
 
         import com.google.api.client.googleapis.json.GoogleJsonResponseException;
@@ -120,7 +121,11 @@ public class YoutubeSearch extends AsyncTask<String, Void, AsyncTaskResult<Searc
 
         } else {
             if(asyncTaskResult.getError() instanceof IOException) {
-                fragmentChangeListener.onFragmentChangeRequest(new FitnessFragmentOverview(), false);
+                FitnessFragmentOverview fitnessFragment = new FitnessFragmentOverview();
+                Bundle bundle = new Bundle();
+                bundle.putInt(FitnessFragmentOverview.SNACKBAR_STATE, FitnessFragmentOverview.SNACKBAR_STATE_SHOW);
+                fitnessFragment.setArguments(bundle);
+                fragmentChangeListener.onFragmentChangeRequest(fitnessFragment, false);
             }
         }
     }
