@@ -5,6 +5,8 @@ import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -291,31 +293,30 @@ public class RezepteFragment extends Fragment {
         @Override
         protected void onPostExecute(Bitmap icon) {
 
-           // int width = metrics.widthPixels;
 
-//            int bildbreite = width;
+            //Bildbreite so breit wie Auflösung setzen
+            int bildbreite = metrics.widthPixels;
 
+            int breite_alt = icon.getWidth();
+            int hoehe_alt = icon.getHeight();
 
-  //          int breite_alt = icon.getWidth();
-    //        int hoehe_alt = icon.getHeight();
+            double skalierung = ((double)hoehe_alt) / ((double)breite_alt);
 
-      //      double skalierung = ((double)hoehe_alt) / ((double)breite_alt);
+            int bildhoehe = (int) (bildbreite * skalierung);
 
-        //    int bildhoehe = (int) (bildbreite * skalierung);
+            float scaleWidth = ((float) bildbreite) / breite_alt;
 
-          //  float scaleWidth = ((float) bildbreite) / breite_alt;
+            float scaleHeight = ((float) bildhoehe) / hoehe_alt;
 
-            //float scaleHeight = ((float) bildhoehe) / hoehe_alt;
+            Matrix matrix = new Matrix();
+            matrix.postScale(scaleWidth, scaleHeight);
 
-//            Matrix matrix = new Matrix();
-  //          matrix.postScale(scaleWidth, scaleHeight);
+            Log.d("bildhoehe/breite", String.valueOf(bildhoehe) + "|" + String.valueOf(bildbreite));
 
-//            Log.d("bildhoehe/breite", String.valueOf(bildhoehe) + "|" + String.valueOf(bildbreite));
+            Bitmap resizedImage = Bitmap.createBitmap(icon, 0, 0, breite_alt, hoehe_alt, matrix, false);
 
-  //          Bitmap resizedImage = Bitmap.createBitmap(icon, 0, 0, breite_alt, hoehe_alt, matrix, false);
-
-            _rezepteIcon.setImageBitmap(icon);
-            //_rezepteIcon.setImageAlpha(90);
+            _rezepteIcon.setImageBitmap(resizedImage);
+            _rezepteIcon.setImageAlpha(90);
 
             cancelProgressDialog();
         }

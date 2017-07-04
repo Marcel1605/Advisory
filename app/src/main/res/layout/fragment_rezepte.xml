@@ -45,24 +45,9 @@
                         android:textStyle="bold" />
                 </TableRow>
 
-                <TableRow android:layout_marginBottom="20dp">
-
-                    <TextView
-                        android:id="@+id/Rezepte_Titel"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:textColor="@color/black"
-                        android:textSize="20dp"
-                        android:textStyle="italic"
-                        />
-                </TableRow>
-
                 <TableRow
                     android:layout_height="wrap_content"
                     android:layout_width="match_parent"
-                    android:layout_marginBottom="20dp"
                     android:gravity="center_horizontal">
 
                     <ImageView
@@ -73,6 +58,27 @@
                         android:adjustViewBounds="true"
                         android:scaleType="centerCrop"/>
 
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#AED581"
+                    >
+
+                    <TextView
+                        android:id="@+id/Rezepte_Titel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:textColor="@color/black"
+                        android:textSize="20dp"
+                        android:textStyle="italic" />
                 </TableRow>
 
                 <TableRow
@@ -95,32 +101,31 @@
                     android:layout_marginLeft="40dp"
                     android:layout_marginRight="40dp"></TableLayout>
 
-                <TableRow
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="30dp">
+                <TableRow>
 
                     <TextView
                         android:id="@+id/rezepte_Rezept"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="20dp"
                         android:layout_weight="1"
                         android:gravity="left"
                         android:textColor="@color/black"
                         android:textSize="16dp" />
                 </TableRow>
 
-                <TableRow
-                    android:layout_marginLeft="30dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginBottom="20dp">
+                <TableRow>
 
                     <TextView
                         android:id="@+id/rezepte_Rezept_Text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="15dp"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginBottom="20dp"
                         android:layout_weight="1"
                         android:gravity="left"
                         android:textColor="@color/black"
