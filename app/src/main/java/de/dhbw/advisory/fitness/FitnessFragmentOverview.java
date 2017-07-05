@@ -3,7 +3,6 @@ package de.dhbw.advisory.fitness;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -60,7 +59,7 @@ public class FitnessFragmentOverview extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         listView = (AsymmetricGridView) container.findViewById(R.id.listView);
         List<FitnessItem> items = new ArrayList<>();
@@ -86,10 +85,14 @@ public class FitnessFragmentOverview extends Fragment {
         return new AsymmetricGridViewAdapter(getContext(), listView, adapter);
     }
 
+    /**
+     * Öffentliche Methode zum anzeigen der Snackbar
+     * @param container Der View in den die Snackbar reingerendert wird
+     */
     public static void showSnackbar(View container) {
         Snackbar snackbar = Snackbar.make(container, "Internetverbindung herstellen", Snackbar.LENGTH_LONG);
 
-        // Changing action button text color
+        // Farbe des action button ändern
         View sbView = snackbar.getView();
         TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
         textView.setTextColor(Color.WHITE);

@@ -5,11 +5,18 @@ import android.os.Parcelable;
 
 import com.felipecsl.asymmetricgridview.library.model.AsymmetricItem;
 
+/**
+ * Datenmodell für die Grid-Elemente (Items) auf der Startseite (FitnessFragmentOverview)
+ *
+ */
 
 public class FitnessItem implements AsymmetricItem {
+    //Variable die festlegt wo das Item angezeigt wird
     private int columnSpan;
     private int rowSpan;
     private int position;
+
+    //Variable die festlegt was angezeigt wird
     private String imageUrl;
     private String name;
 
@@ -69,7 +76,6 @@ public class FitnessItem implements AsymmetricItem {
         dest.writeInt(position);
     }
 
-    /* Parcelable interface implementation */
     public static final Parcelable.Creator<FitnessItem> CREATOR = new Parcelable.Creator<FitnessItem>() {
         @Override public FitnessItem createFromParcel(Parcel in) {
             return new FitnessItem(in);

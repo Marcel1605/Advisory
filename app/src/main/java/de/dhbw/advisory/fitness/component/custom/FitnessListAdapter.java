@@ -22,7 +22,6 @@ import de.dhbw.advisory.fitness.FitnessFragment;
 
 /**
  * Adapterklasse zur Anzeige des GridView auf der "Startseite" der App (FitnessFragmentOverview)
- *
  */
 public class FitnessListAdapter extends ArrayAdapter<FitnessItem> implements FitnessAdapter {
 

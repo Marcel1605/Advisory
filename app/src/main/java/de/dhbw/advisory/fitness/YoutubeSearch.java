@@ -1,26 +1,27 @@
 package de.dhbw.advisory.fitness;
-        import android.content.Context;
-        import android.content.res.AssetManager;
-        import android.os.AsyncTask;
-        import android.os.Bundle;
+import android.content.Context;
+import android.content.res.AssetManager;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.widget.Toast;
 
 
-        import com.google.api.client.googleapis.json.GoogleJsonResponseException;
-        import com.google.api.client.http.HttpRequest;
-        import com.google.api.client.http.HttpRequestInitializer;
-        import com.google.api.client.http.javanet.NetHttpTransport;
-        import com.google.api.client.json.jackson2.JacksonFactory;
-        import com.google.api.services.youtube.YouTube;
-        import com.google.api.services.youtube.model.SearchListResponse;
-        import com.google.api.services.youtube.model.SearchResult;
+import com.google.api.client.googleapis.json.GoogleJsonResponseException;
+import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpRequestInitializer;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.services.youtube.YouTube;
+import com.google.api.services.youtube.model.SearchListResponse;
+import com.google.api.services.youtube.model.SearchResult;
 
 
-        import java.io.IOException;
-        import java.io.InputStream;
-        import java.util.Properties;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
-        import de.dhbw.advisory.common.AsyncTaskResult;
-        import de.dhbw.advisory.common.FragmentChangeListener;
+import de.dhbw.advisory.common.AsyncTaskResult;
+import de.dhbw.advisory.common.FragmentChangeListener;
 
 /**
  * Ausgabe einer Liste von Videos, die einer Sucheingabe entsprechen.
@@ -52,8 +53,11 @@ public class YoutubeSearch extends AsyncTask<String, Void, AsyncTaskResult<Searc
         }).setApplicationName("advisory").build();
     }
 
-    /*
+    /**
      * Diese Methode vollzieht den Aufruf der YouTube-API um Videos und dazugehörige Informationen abzurufen
+     * @param context Der Kontext
+     * @param queryTerm Die Suchanfrage
+     * @return Die Liste mit den Suchergebnissen oder ein Fehlerobjekt
      */
     private AsyncTaskResult<SearchResult> searchVideo(Context context, String queryTerm) {
         // Der developer key wird später aus der properties-Datei ausgelesen
@@ -70,7 +74,6 @@ public class YoutubeSearch extends AsyncTask<String, Void, AsyncTaskResult<Searc
 
         try {
             // Definition der API-Anfrage für abzurufende Suchergebnisse
-            // Define the API request for retrieving search results.
             YouTube.Search.List search = youtube.search().list("id,snippet");
 
             // Auslesen des developer key
@@ -124,6 +127,10 @@ public class YoutubeSearch extends AsyncTask<String, Void, AsyncTaskResult<Searc
                 bundle.putInt(FitnessFragmentOverview.SNACKBAR_STATE, FitnessFragmentOverview.SNACKBAR_STATE_SHOW);
                 fitnessFragment.setArguments(bundle);
                 fragmentChangeListener.onFragmentChangeRequest(fitnessFragment, false);
+            }
+            else {
+                Toast.makeText(context, "Es ist ein unbekannter Fehler aufgetreten", Toast.LENGTH_LONG).show();
+                asyncTaskResult.getError().printStackTrace();
             }
         }
     }

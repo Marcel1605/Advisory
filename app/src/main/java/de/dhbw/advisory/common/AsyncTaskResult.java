@@ -1,11 +1,12 @@
 package de.dhbw.advisory.common;
 
-import com.google.api.client.googleapis.json.GoogleJsonResponseException;
-import com.google.api.services.youtube.model.SearchResult;
-
-import java.util.Collection;
 import java.util.List;
 
+
+/**
+ * Dies ist ein Wrapper-Objekt, welches entweder ein Eergnis einer API Anfrage oder einen Fehler wrapped
+ * @param <T> Der Typ des Ergebnisses
+ */
 public class AsyncTaskResult <T> {
     private Throwable error;
     private List<T> result;
