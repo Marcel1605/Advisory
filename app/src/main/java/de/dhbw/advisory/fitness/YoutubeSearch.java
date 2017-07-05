@@ -3,7 +3,7 @@ package de.dhbw.advisory.fitness;
         import android.content.res.AssetManager;
         import android.os.AsyncTask;
         import android.os.Bundle;
-        import android.widget.Toast;
+
 
         import com.google.api.client.googleapis.json.GoogleJsonResponseException;
         import com.google.api.client.http.HttpRequest;
@@ -11,14 +11,12 @@ package de.dhbw.advisory.fitness;
         import com.google.api.client.http.javanet.NetHttpTransport;
         import com.google.api.client.json.jackson2.JacksonFactory;
         import com.google.api.services.youtube.YouTube;
-        import com.google.api.services.youtube.model.ResourceId;
         import com.google.api.services.youtube.model.SearchListResponse;
         import com.google.api.services.youtube.model.SearchResult;
-        import com.google.api.services.youtube.model.Thumbnail;
+
 
         import java.io.IOException;
         import java.io.InputStream;
-        import java.util.Iterator;
         import java.util.Properties;
 
         import de.dhbw.advisory.common.AsyncTaskResult;

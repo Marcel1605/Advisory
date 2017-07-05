@@ -21,8 +21,8 @@ import de.dhbw.advisory.common.FragmentChangeListener;
 import de.dhbw.advisory.fitness.FitnessFragment;
 
 /**
- * Sample adapter implementation extending from AsymmetricGridViewAdapter<FitnessItem> This is the
- * easiest way to get started.
+ * Adapterklasse zur Anzeige des GridView auf der "Startseite" der App (FitnessFragmentOverview)
+ *
  */
 public class FitnessListAdapter extends ArrayAdapter<FitnessItem> implements FitnessAdapter {
 
@@ -58,8 +58,8 @@ public class FitnessListAdapter extends ArrayAdapter<FitnessItem> implements Fit
         }
 
         //Grid mit motivierenden Bildern füllen
-        ImageView imageView= (ImageView) v.findViewById(R.id.imageView);
-        Picasso.with(getContext()).load(item.getImageUrl()).error(R.drawable.ic_error_black_24dp).into(imageView, new Callback() {
+        ImageView imageView = (ImageView) v.findViewById(R.id.imageView);
+        Picasso.with(getContext()).load(item.getImageUrl()).error(R.drawable.ic_error_outline_black_48dp).into(imageView, new Callback() {
             @Override
             public void onSuccess() {}
 

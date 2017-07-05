@@ -32,6 +32,12 @@ public class FitnessFragmentOverview extends Fragment {
     private ViewGroup container;
     private FragmentChangeListener fragmentChangeListener;
 
+    public static final int ITEM_BAUCH = 0;
+    public static final int ITEM_BIZEPS = 1;
+    public static final int ITEM_TRIZEPS = 2;
+    public static final int ITEM_BRUST = 3;
+    public static final int ITEM_BEINE = 4;
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -52,12 +58,6 @@ public class FitnessFragmentOverview extends Fragment {
 
         return inflater.inflate(R.layout.fragment_fitness_overview, container, false);
     }
-
-    public static final int ITEM_BAUCH = 0;
-    public static final int ITEM_BIZEPS = 1;
-    public static final int ITEM_TRIZEPS = 2;
-    public static final int ITEM_BRUST = 3;
-    public static final int ITEM_BEINE = 4;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
