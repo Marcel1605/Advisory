@@ -1,7 +1,6 @@
 package de.dhbw.advisory.fitness;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,11 +9,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.felipecsl.asymmetricgridview.library.Utils;
 import com.felipecsl.asymmetricgridview.library.widget.AsymmetricGridView;
 import com.felipecsl.asymmetricgridview.library.widget.AsymmetricGridViewAdapter;
 
@@ -23,16 +19,16 @@ import java.util.List;
 
 import de.dhbw.advisory.R;
 import de.dhbw.advisory.common.FragmentChangeListener;
-import de.dhbw.advisory.fitness.component.custom.DefaultListAdapter;
-import de.dhbw.advisory.fitness.component.custom.DemoAdapter;
-import de.dhbw.advisory.fitness.component.custom.DemoItem;
+import de.dhbw.advisory.fitness.component.custom.FitnessListAdapter;
+import de.dhbw.advisory.fitness.component.custom.FitnessAdapter;
+import de.dhbw.advisory.fitness.component.custom.FitnessItem;
 
 public class FitnessFragmentOverview extends Fragment {
     public static String SNACKBAR_STATE = "SNACKBAR_STATE_SHOW";
     public static int SNACKBAR_STATE_SHOW = 1;
     public static int SNACKBAR_STATE_HIDE = 0;
     private AsymmetricGridView listView;
-    private DemoAdapter adapter;
+    private FitnessAdapter adapter;
     private ViewGroup container;
     private FragmentChangeListener fragmentChangeListener;
 
@@ -67,12 +63,12 @@ public class FitnessFragmentOverview extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         listView = (AsymmetricGridView) container.findViewById(R.id.listView);
-        List<DemoItem> items = new ArrayList<>();
-        DemoItem item_bauch = new DemoItem(2, 1, ITEM_BAUCH, "https://www.foodspring.de/magazine/wp-content/uploads/2015/03/shutterstock_252795637-800x500.jpg", "Bauch");
-        DemoItem item_bizeps = new DemoItem(1, 1, ITEM_BIZEPS, "http://gangsterreport.com/wp-content/uploads/2017/02/12-rep_arms_main_4.jpg", "Bizeps");
-        DemoItem item_trizeps = new DemoItem(1, 1, ITEM_TRIZEPS, "http://www.menshealth.com/sites/menshealth.com/files/styles/slideshow-desktop/public/images/slideshow2/1-triceps-intro_0.jpg?itok=SD8SWyJz", "Trizeps");
-        DemoItem item_brust = new DemoItem(1, 1, ITEM_BRUST, "http://www.thebetterdays.de/wp-content/uploads/2014/09/brustmuskulatur.jpg", "Brust");
-        DemoItem item_beine = new DemoItem(1, 1, ITEM_BEINE, "http://brachiale-fitness.de/wp-content/uploads/2015/08/Fotolia_85931103_S.jpg", "Beine");
+        List<FitnessItem> items = new ArrayList<>();
+        FitnessItem item_bauch = new FitnessItem(2, 1, ITEM_BAUCH, "https://www.foodspring.de/magazine/wp-content/uploads/2015/03/shutterstock_252795637-800x500.jpg", "Bauch");
+        FitnessItem item_bizeps = new FitnessItem(1, 1, ITEM_BIZEPS, "http://gangsterreport.com/wp-content/uploads/2017/02/12-rep_arms_main_4.jpg", "Bizeps");
+        FitnessItem item_trizeps = new FitnessItem(1, 1, ITEM_TRIZEPS, "http://www.menshealth.com/sites/menshealth.com/files/styles/slideshow-desktop/public/images/slideshow2/1-triceps-intro_0.jpg?itok=SD8SWyJz", "Trizeps");
+        FitnessItem item_brust = new FitnessItem(1, 1, ITEM_BRUST, "http://www.thebetterdays.de/wp-content/uploads/2014/09/brustmuskulatur.jpg", "Brust");
+        FitnessItem item_beine = new FitnessItem(1, 1, ITEM_BEINE, "http://brachiale-fitness.de/wp-content/uploads/2015/08/Fotolia_85931103_S.jpg", "Beine");
 
         items.add(item_bauch);
         items.add(item_bizeps);
@@ -80,7 +76,7 @@ public class FitnessFragmentOverview extends Fragment {
         items.add(item_brust);
         items.add(item_beine);
 
-        adapter = new DefaultListAdapter(getContext(), items, fragmentChangeListener, this.container);
+        adapter = new FitnessListAdapter(getContext(), items, fragmentChangeListener, this.container);
         listView.setRequestedColumnCount(2);
         listView.setRequestedHorizontalSpacing(0);
         listView.setAdapter(getNewAdapter());

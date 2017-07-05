@@ -6,18 +6,18 @@ import android.os.Parcelable;
 import com.felipecsl.asymmetricgridview.library.model.AsymmetricItem;
 
 
-public class DemoItem implements AsymmetricItem {
+public class FitnessItem implements AsymmetricItem {
     private int columnSpan;
     private int rowSpan;
     private int position;
     private String imageUrl;
     private String name;
 
-    public DemoItem() {
+    public FitnessItem() {
         this(1, 1, 0, "", "");
     }
 
-    public DemoItem(int columnSpan, int rowSpan, int position, String imageUrl, String name) {
+    public FitnessItem(int columnSpan, int rowSpan, int position, String imageUrl, String name) {
         this.columnSpan = columnSpan;
         this.rowSpan = rowSpan;
         this.position = position;
@@ -25,7 +25,7 @@ public class DemoItem implements AsymmetricItem {
         this.name = name;
     }
 
-    public DemoItem(Parcel in) {
+    public FitnessItem(Parcel in) {
         readFromParcel(in);
     }
 
@@ -70,13 +70,13 @@ public class DemoItem implements AsymmetricItem {
     }
 
     /* Parcelable interface implementation */
-    public static final Parcelable.Creator<DemoItem> CREATOR = new Parcelable.Creator<DemoItem>() {
-        @Override public DemoItem createFromParcel(Parcel in) {
-            return new DemoItem(in);
+    public static final Parcelable.Creator<FitnessItem> CREATOR = new Parcelable.Creator<FitnessItem>() {
+        @Override public FitnessItem createFromParcel(Parcel in) {
+            return new FitnessItem(in);
         }
 
-        @Override public DemoItem[] newArray(int size) {
-            return new DemoItem[size];
+        @Override public FitnessItem[] newArray(int size) {
+            return new FitnessItem[size];
         }
     };
 }

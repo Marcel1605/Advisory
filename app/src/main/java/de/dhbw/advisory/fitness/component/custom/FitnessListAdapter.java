@@ -1,7 +1,6 @@
 package de.dhbw.advisory.fitness.component.custom;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,12 +8,11 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
 import de.dhbw.advisory.R;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import java.util.List;
 
@@ -23,23 +21,23 @@ import de.dhbw.advisory.common.FragmentChangeListener;
 import de.dhbw.advisory.fitness.FitnessFragment;
 
 /**
- * Sample adapter implementation extending from AsymmetricGridViewAdapter<DemoItem> This is the
+ * Sample adapter implementation extending from AsymmetricGridViewAdapter<FitnessItem> This is the
  * easiest way to get started.
  */
-public class DefaultListAdapter extends ArrayAdapter<DemoItem> implements DemoAdapter {
+public class FitnessListAdapter extends ArrayAdapter<FitnessItem> implements FitnessAdapter {
 
     private final LayoutInflater layoutInflater;
     private final FragmentChangeListener fragmentChangeListener;
     private final View container;
 
-    public DefaultListAdapter(Context context, List<DemoItem> items, FragmentChangeListener fragmentChangeListener, View container) {
+    public FitnessListAdapter(Context context, List<FitnessItem> items, FragmentChangeListener fragmentChangeListener, View container) {
         super(context, 0, items);
         this.container = container;
         layoutInflater = LayoutInflater.from(context);
         this.fragmentChangeListener = fragmentChangeListener;
     }
 
-    public DefaultListAdapter(Context context) {
+    public FitnessListAdapter(Context context) {
         super(context, 0);
         layoutInflater = LayoutInflater.from(context);
         this.fragmentChangeListener = null;
@@ -50,7 +48,7 @@ public class DefaultListAdapter extends ArrayAdapter<DemoItem> implements DemoAd
     public View getView(int position, View convertView, ViewGroup parent) {
         View v;
 
-        final DemoItem item = getItem(position);
+        final FitnessItem item = getItem(position);
         boolean isRegular = getItemViewType(position) == 0;
 
         if (convertView == null) {
@@ -67,7 +65,7 @@ public class DefaultListAdapter extends ArrayAdapter<DemoItem> implements DemoAd
 
             @Override
             public void onError() {
-                FitnessFragmentOverview.showSnackbar(DefaultListAdapter.this.container);
+                FitnessFragmentOverview.showSnackbar(FitnessListAdapter.this.container);
             }
         });
         imageView.setOnClickListener(new View.OnClickListener() {
@@ -113,12 +111,12 @@ public class DefaultListAdapter extends ArrayAdapter<DemoItem> implements DemoAd
         return position % 2 == 0 ? 1 : 0;
     }
 
-    public void appendItems(List<DemoItem> newItems) {
+    public void appendItems(List<FitnessItem> newItems) {
         addAll(newItems);
         notifyDataSetChanged();
     }
 
-    public void setItems(List<DemoItem> moreItems) {
+    public void setItems(List<FitnessItem> moreItems) {
         clear();
         appendItems(moreItems);
     }
