@@ -6,6 +6,7 @@ import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -28,6 +29,7 @@ import java.io.InputStream;
 import android.graphics.BitmapFactory;
 import android.app.ProgressDialog;
 import android.widget.Toast;
+import android.net.NetworkInfo;
 
 
 import com.google.api.client.http.GenericUrl;
@@ -138,6 +140,11 @@ public class RezepteFragment extends Fragment {
         //API Aufruf starten und Felder aktualisieren
         RecipeAPI mat = new RecipeAPI(this.getContext());
 
+        if (AppStatus.getInstance(this.getContext()).isOnline() == false) {
+            Toast.makeText(this.getContext(), "Keine Internetverbindung!", Toast.LENGTH_SHORT).show();
+        }
+
+
         mat.execute(getEssensTypAnfrage(h));
 
 
@@ -222,7 +229,6 @@ public class RezepteFragment extends Fragment {
     /**
      * Diese Methode aktualisiert die Überschrift des Fragments
      *
-     *
      * @param hh
      */
     public String getEssensTypAnfrage(int hh) {
@@ -269,49 +275,70 @@ public class RezepteFragment extends Fragment {
 
     public class GetImage extends AsyncTask <String, String, Bitmap> {
 
+        protected Context context;
+
+        GetImage(Context context){
+            super();
+            this.context = context;
+        }
+
         @Override
         protected Bitmap doInBackground(String... url) {
+            Log.i("GetImage - DoInBackground", "Methode gestartet");
+
             Bitmap icon = null;
+            if (AppStatus.getInstance(context).isOnline()) {
+                //Internetverbindung aktiv
+                Log.i("GetImage - DoInBackground", "Internetverbindung aktiv");
 
-            Log.i("imageDoInBackground", "gestartet");
-
-            try {
-                InputStream in = new java.net.URL(url[0]).openStream();
-                icon = BitmapFactory.decodeStream(in);
-            } catch (Exception e ) {
-                Log.e("Error", e.getMessage());
+                try {
+                    InputStream in = new java.net.URL(url[0]).openStream();
+                    icon = BitmapFactory.decodeStream(in);
+                } catch (Exception e ) {
+                    Log.e("Error", e.getMessage());
+                }
+                Log.i("imageDoInBackground", "Beendet");
+                return icon;
+            } else {
+                //Internetverbindung nicht aktiv
+                Log.i("imageDoInBackground", "Beendet");
+                return icon;
             }
-            Log.i("imageDoInBackground", "Beendet");
-            return icon;
+
+
         }
 
         @Override
         protected void onPostExecute(Bitmap icon) {
+            if (icon != null) {
+                //Ein Bild ist angekommen
 
+                //Bildbreite so breit wie Auflösung setzen
+                int bildbreite = metrics.widthPixels;
 
-            //Bildbreite so breit wie Auflösung setzen
-            int bildbreite = metrics.widthPixels;
+                int breite_alt = icon.getWidth();
+                int hoehe_alt = icon.getHeight();
 
-            int breite_alt = icon.getWidth();
-            int hoehe_alt = icon.getHeight();
+                double skalierung = ((double)hoehe_alt) / ((double)breite_alt);
 
-            double skalierung = ((double)hoehe_alt) / ((double)breite_alt);
+                int bildhoehe = (int) (bildbreite * skalierung);
 
-            int bildhoehe = (int) (bildbreite * skalierung);
+                float scaleWidth = ((float) bildbreite) / breite_alt;
 
-            float scaleWidth = ((float) bildbreite) / breite_alt;
+                float scaleHeight = ((float) bildhoehe) / hoehe_alt;
 
-            float scaleHeight = ((float) bildhoehe) / hoehe_alt;
+                Matrix matrix = new Matrix();
+                matrix.postScale(scaleWidth, scaleHeight);
 
-            Matrix matrix = new Matrix();
-            matrix.postScale(scaleWidth, scaleHeight);
+                Log.d("bildhoehe/breite", String.valueOf(bildhoehe) + "|" + String.valueOf(bildbreite));
 
-            Log.d("bildhoehe/breite", String.valueOf(bildhoehe) + "|" + String.valueOf(bildbreite));
+                Bitmap resizedImage = Bitmap.createBitmap(icon, 0, 0, breite_alt, hoehe_alt, matrix, false);
 
-            Bitmap resizedImage = Bitmap.createBitmap(icon, 0, 0, breite_alt, hoehe_alt, matrix, false);
-
-            _rezepteIcon.setImageBitmap(resizedImage);
-            _rezepteIcon.setImageAlpha(90);
+                _rezepteIcon.setImageBitmap(resizedImage);
+                _rezepteIcon.setImageAlpha(90);
+            } else {
+                //Das Bild ist nicht richtig angekommen
+            }
 
             cancelProgressDialog();
         }
@@ -338,9 +365,7 @@ public class RezepteFragment extends Fragment {
                 //Zu untersuchende ID via API herausfinden
                 Log.i("doInBackground ", "Methode getRecipe begonnen");
                 String jsonResponseRecipeSearch = getRecipe(typ);
-                Log.i("doInBackground ", "API Aufruf beendet");
                 erg = parseRecipe(jsonResponseRecipeSearch);
-                Log.i("doInBackground ", "parsen beendet");
 
                 Log.i("doInBackground ", "Methode beendet");
                 return new AsyncTaskResult(erg);
@@ -362,7 +387,7 @@ public class RezepteFragment extends Fragment {
             Log.i("onPostExecute", "Methode begonnen");
             if (asyncTaskResult.isSuccessful()) {
                 final List ergebnis = asyncTaskResult.getResult();
-                Log.i("onPostExecute","Methode begonnen");
+                Log.i("onPostExecute","AsynTaskResult ist successfull");
 
                 //Titel setzten
                 _rezepteTitel.setText(ergebnis.get(0).toString());
@@ -370,7 +395,7 @@ public class RezepteFragment extends Fragment {
                 //Rezeptanleitung setzen
                 _rezepteAnleitung.setText(ergebnis.get(2).toString());
 
-                GetImage img = new GetImage();
+                GetImage img = new GetImage(context);
                 img.execute((String) ergebnis.get(3));
 
 
@@ -383,8 +408,6 @@ public class RezepteFragment extends Fragment {
                         startActivity(i);
                     }
                 });
-
-
 
                 //Zutaten bekommen
                 String[][] zutaten = (String[][]) ergebnis.get(1);
@@ -423,14 +446,17 @@ public class RezepteFragment extends Fragment {
                 _rezepteZutaten.setText("Zutaten:");
 
                 _rezepteZutatenliste.refreshDrawableState();
-                Log.i("onPostExecute","Views aktualisiert");
-                Log.i("onPostExecute", "Methode beendet");
+
+
             } else {
+
+                Log.i("onPostExecute","AsynTaskResult ist nicht successfull");
                 _rezepteTitel.setText("Bitte versuchen sie es später erneut! :)");
 
-                cancelProgressDialog();
-            }
 
+            }
+            Log.i("onPostExecute", "Methode beendet");
+            cancelProgressDialog();
         }
 
         /**
@@ -442,9 +468,10 @@ public class RezepteFragment extends Fragment {
          * @throws Exception
          */
         protected String getRecipe(String typ) throws Exception {
-                Log.i("getRecipe ","Methode begonnen");
-                Log.i("getRecipe ","Übergebener Wert: " + typ);
-                Log.i("getRecipe ","Starte API Aufruf");
+            Log.i("getRecipe ","Methode begonnen");
+            if (AppStatus.getInstance(context).isOnline()) {
+                Log.i("getRecipe ","Internetverbindung vorhanden");
+
                 //1. Request Factory holen
                 Log.i("getRecipe ","Request Factory holen begonnen");
                 HttpTransport httpTransport = new NetHttpTransport();
@@ -452,40 +479,39 @@ public class RezepteFragment extends Fragment {
                 Log.i("getRecipe ","Request Factory holen beendet");
 
                 //2. Url hinzufügen
-                Log.i("getRecipe: ","URL hinzufügen begonnen");
                 GenericUrl url = new GenericUrl("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/random");
                 url.put("limitLicense", "false");
                 url.put("number", "1");
                 url.put("tags", "" + typ);
                 url.put("measure", "metric");
-                Log.i("getRecipe","URL hinzufügen: " + url + ", typ: " + typ);
-                Log.i("getRecipe: ","URL hinzufügen beendet");
 
 
                 //3. Request absetzen
-                Log.i("getRecipe: ","Request absetzen begonnen");
                 HttpHeaders httpHeaders = new HttpHeaders();
                 httpHeaders.set("X-Mashape-Key", apiKey);
                 HttpRequest request = requestFactory.buildGetRequest(url);
                 request.setHeaders(httpHeaders);
-                Log.i("getRecipe","Request absetzen Daten Header hinzugefügt");
+
                 HttpResponse httpResponse = request.execute();
-                Log.i("getRecipe","Request absetzen beendet");
 
-                Log.i("getRecipe: ","Request parsen");
-                Log.i("getRecipe: ","Content Charset" +  httpResponse.getContentCharset());
                 String jsonResponseString ="";
-            try{
-                InputStream inputStream = httpResponse.getContent();
-                jsonResponseString = CharStreams.toString( new InputStreamReader( inputStream, "UTF-8" ) );
-            }
+                try{
+                    InputStream inputStream = httpResponse.getContent();
+                    jsonResponseString = CharStreams.toString( new InputStreamReader( inputStream, "UTF-8" ) );
+                }
                 finally {
-                httpResponse.disconnect();
+                    httpResponse.disconnect();
+                }
+
+
+                return jsonResponseString;
+
+            } else {
+                Log.i("getRecipe ","Internetverbindung NICHT vorhanden");
+                throw new Exception();
+
             }
 
-            Log.i("getRecipe: ","API Aufruf beendet");
-            Log.i("getRecipe: ","Erhaltene JSON: " + jsonResponseString);
-            return jsonResponseString;
 
         }
 
@@ -540,7 +566,6 @@ public class RezepteFragment extends Fragment {
 
                 Log.i("parseRecipe:", "title und img_url gesetzt");
 
-                //TODO durch eine Map ersetzen
                 ArrayList<Object> information = new ArrayList<>();
 
                 Log.i("parseRecipe:", "Parsen fast beendet");
