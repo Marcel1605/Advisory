@@ -332,19 +332,26 @@ public class RezepteFragment extends Fragment {
 
         @Override
         protected AsyncTaskResult<?> doInBackground(String... params) {
+            ArrayList erg;
             try{
                 //Zu untersuchende ID via API herausfinden
                 Log.i("doInBackground ", "Methode getRecipe begonnen");
                 String jsonResponseRecipeSearch = getRecipe(params[0]);
                 Log.i("doInBackground ", "API Aufruf beendet");
-                ArrayList erg = parseRecipe(jsonResponseRecipeSearch);
+                erg = parseRecipe(jsonResponseRecipeSearch);
                 Log.i("doInBackground ", "parsen beendet");
 
                 Log.i("doInBackground ", "Methode beendet");
                 return new AsyncTaskResult(erg);
             } catch (Exception e){
-                Log.i("doInBackground", "Fehler doInBackground: " + e.getMessage());
-                return new AsyncTaskResult(e);
+                try {
+                    RecipeExample example = new RecipeExample();
+                    return new AsyncTaskResult(parseRecipe(example.getExampleJsonString()));
+                } catch (Exception f) {
+                    Log.i("doInBackground", "Fehler doInBackground: " + e.getMessage());
+                    return new AsyncTaskResult(f);
+                }
+
             }
 
         }
@@ -419,6 +426,7 @@ public class RezepteFragment extends Fragment {
                 Log.i("onPostExecute", "Methode beendet");
             } else {
                 _rezepteTitel.setText("Bitte versuchen sie es später erneut! :)");
+
                 cancelProgressDialog();
             }
 
