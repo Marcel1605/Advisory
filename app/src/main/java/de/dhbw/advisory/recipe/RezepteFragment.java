@@ -178,7 +178,7 @@ public class RezepteFragment extends Fragment {
      *
      */
     public String getEssensTyp(int hh){
-        //bread 6-9
+        //breakfast 6-9
         //appetizer 10-11
         //main course 12-14
         //side dish 15
@@ -193,8 +193,8 @@ public class RezepteFragment extends Fragment {
             //Soup
             typ = "ihre Suppe";
         } else if (hh >= 6 && hh <= 9) {
-            //Bread
-            typ = "ihr Rezept für ein Brot";
+            //Breakfast
+            typ = "ihr Frühstück";
         } else if (hh >= 10 && hh <= 11) {
             //Appetizer
             typ = "ihr Appetizer";
@@ -226,7 +226,7 @@ public class RezepteFragment extends Fragment {
      * @param hh
      */
     public String getEssensTypAnfrage(int hh) {
-        //bread 6-9
+        //breakfast 6-9
         //appetizer 10-11
         //main course 12-14
         //side dish 15
@@ -241,8 +241,8 @@ public class RezepteFragment extends Fragment {
             //Soup
             typ = "soup";
         } else if (hh >= 6 && hh <= 9) {
-            //Bread
-            typ = "bread";
+            //Breakfast
+            typ = "breakfast";
         } else if (hh >= 10 && hh <= 11) {
             //Appetizer
             typ = "appetizer";
@@ -333,10 +333,11 @@ public class RezepteFragment extends Fragment {
         @Override
         protected AsyncTaskResult<?> doInBackground(String... params) {
             ArrayList erg;
+            String typ = params[0];
             try{
                 //Zu untersuchende ID via API herausfinden
                 Log.i("doInBackground ", "Methode getRecipe begonnen");
-                String jsonResponseRecipeSearch = getRecipe(params[0]);
+                String jsonResponseRecipeSearch = getRecipe(typ);
                 Log.i("doInBackground ", "API Aufruf beendet");
                 erg = parseRecipe(jsonResponseRecipeSearch);
                 Log.i("doInBackground ", "parsen beendet");
@@ -346,7 +347,7 @@ public class RezepteFragment extends Fragment {
             } catch (Exception e){
                 try {
                     RecipeExample example = new RecipeExample();
-                    return new AsyncTaskResult(parseRecipe(example.getExampleJsonString()));
+                    return new AsyncTaskResult(parseRecipe(example.getExampleJsonString(typ)));
                 } catch (Exception f) {
                     Log.i("doInBackground", "Fehler doInBackground: " + e.getMessage());
                     return new AsyncTaskResult(f);
