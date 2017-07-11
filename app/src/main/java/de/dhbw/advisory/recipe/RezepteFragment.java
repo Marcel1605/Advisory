@@ -1,10 +1,12 @@
 package de.dhbw.advisory.recipe;
 
 
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -265,7 +267,7 @@ public class RezepteFragment extends Fragment {
     }
 
 
-    public class GetImage extends AsyncTask <String, String, Bitmap>{
+    public class GetImage extends AsyncTask <String, String, Bitmap> {
 
         @Override
         protected Bitmap doInBackground(String... url) {
@@ -314,7 +316,6 @@ public class RezepteFragment extends Fragment {
             cancelProgressDialog();
         }
 
-
     }
 
     /**
@@ -352,15 +353,30 @@ public class RezepteFragment extends Fragment {
         protected void onPostExecute(AsyncTaskResult asyncTaskResult) {
             Log.i("onPostExecute", "Methode begonnen");
             if (asyncTaskResult.isSuccessful()) {
-                List ergebnis = asyncTaskResult.getResult();
+                final List ergebnis = asyncTaskResult.getResult();
                 Log.i("onPostExecute","Methode begonnen");
+
                 //Titel setzten
                 _rezepteTitel.setText(ergebnis.get(0).toString());
+
                 //Rezeptanleitung setzen
                 _rezepteAnleitung.setText(ergebnis.get(2).toString());
 
                 GetImage img = new GetImage();
                 img.execute((String) ergebnis.get(3));
+
+
+                _rezepteIcon.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String url = ergebnis.get(4).toString();
+                        Intent i = new Intent(Intent.ACTION_VIEW);
+                        i.setData(Uri.parse(url));
+                        startActivity(i);
+                    }
+                });
+
+
 
                 //Zutaten bekommen
                 String[][] zutaten = (String[][]) ergebnis.get(1);
@@ -441,8 +457,6 @@ public class RezepteFragment extends Fragment {
                 Log.i("getRecipe: ","Request absetzen begonnen");
                 HttpHeaders httpHeaders = new HttpHeaders();
                 httpHeaders.set("X-Mashape-Key", apiKey);
-                //httpHeaders.setContentType("application/json; charset=UTF-8");
-                //httpHeaders.setAccept("application/json; charset=UTF-8");
                 HttpRequest request = requestFactory.buildGetRequest(url);
                 request.setHeaders(httpHeaders);
                 Log.i("getRecipe","Request absetzen Daten Header hinzugefügt");
@@ -451,7 +465,7 @@ public class RezepteFragment extends Fragment {
 
                 Log.i("getRecipe: ","Request parsen");
                 Log.i("getRecipe: ","Content Charset" +  httpResponse.getContentCharset());
-            String jsonResponseString ="";
+                String jsonResponseString ="";
             try{
                 InputStream inputStream = httpResponse.getContent();
                 jsonResponseString = CharStreams.toString( new InputStreamReader( inputStream, "UTF-8" ) );
@@ -512,8 +526,8 @@ public class RezepteFragment extends Fragment {
                 Log.i("parseRecipe:", "Ingredients geparst");
 
                 String title = i.getString("title");
-                Log.i("parseRecipe:", "title gesetzt");
                 String img_url = i.getString("image");
+                String recipe_url = i.getString("sourceUrl");
 
                 Log.i("parseRecipe:", "title und img_url gesetzt");
 
@@ -529,6 +543,8 @@ public class RezepteFragment extends Fragment {
                 information.add(1, ing);
                 information.add(2,recipeString);
                 information.add(3, img_url);
+                information.add(4, recipe_url);
+
 
                 return information;
 
