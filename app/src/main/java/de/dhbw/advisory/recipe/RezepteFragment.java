@@ -25,13 +25,14 @@ import android.os.AsyncTask;
 import android.content.Context;
 import android.widget.TableRow.LayoutParams;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.CardView;
 
 import java.io.IOException;
 import java.io.InputStream;
 import android.graphics.BitmapFactory;
 import android.app.ProgressDialog;
 import android.widget.Toast;
-import android.net.NetworkInfo;
+
 
 
 import com.google.api.client.http.GenericUrl;
@@ -90,6 +91,10 @@ public class RezepteFragment extends Fragment {
     protected ImageView _rezepteIcon = null;
     protected TextView _rezepteZutaten = null;
     protected TextView _rezepteRezepte = null;
+    protected TableRow _rezepteTableRow = null;
+
+    //Snackbar
+    private Snackbar snackbar;
 
     //Apikey
     private String apiKey;
@@ -134,6 +139,7 @@ public class RezepteFragment extends Fragment {
         _rezepteIcon = (ImageView) view.findViewById(R.id.rezepte_Icon);
         _rezepteZutaten = (TextView) view.findViewById(R.id.rezepte_Zutaten);
         _rezepteRezepte = (TextView) view.findViewById(R.id.rezepte_Rezept);
+        _rezepteTableRow = (TableRow) view.findViewById(R.id.rezepte_TableRow);
 
         //Titel aktualisieren
         int h= actualHour();
@@ -143,7 +149,7 @@ public class RezepteFragment extends Fragment {
         RecipeAPI mat = new RecipeAPI(this.getContext());
 
         if (AppStatus.getInstance(this.getContext()).isOnline() == false) {
-            Snackbar snackbar = Snackbar.make(container, "Keine Internetverbindung!", Snackbar.LENGTH_LONG);
+            snackbar = Snackbar.make(container, "Keine Internetverbindung!", Snackbar.LENGTH_LONG);
 
             // Changing action button text color
             View sbView = snackbar.getView();
@@ -320,7 +326,8 @@ public class RezepteFragment extends Fragment {
                 //Ein Bild ist angekommen
 
                 //Bildbreite so breit wie Auflösung setzen
-                int bildbreite = metrics.widthPixels;
+                //int bildbreite = metrics.widthPixels;
+                int bildbreite = _rezepteTableRow.getWidth();
 
                 int breite_alt = icon.getWidth();
                 int hoehe_alt = icon.getHeight();
@@ -435,14 +442,15 @@ public class RezepteFragment extends Fragment {
 
                     tv_ing[i].setLayoutParams(params);
                     tv_ing[i].setTextColor(Color.BLACK);
-                    tv_ing[i].setTextSize(TypedValue.COMPLEX_UNIT_DIP, 10);
+                    tv_ing[i].setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
                     tv_ing[i].setText("" + zutaten[i][0] + ":");
 
                     tv_amount[i].setLayoutParams(params);
                     tv_amount[i].setTextColor(Color.BLACK);
-                    tv_amount[i].setTextSize(TypedValue.COMPLEX_UNIT_DIP, 10);
+                    tv_amount[i].setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
                     tv_amount[i].setText("" + zutaten[i][1] + " " + zutaten[i][2]);
 
+                    tr[i].setPadding(0,5,0,5);
                     tr[i].addView(tv_ing[i]);
                     tr[i].addView(tv_amount[i]);
                     _rezepteZutatenliste.addView(tr[i]);

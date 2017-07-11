@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:cardview="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,128 +13,178 @@
         android:layout_height="fill_parent"
         android:layout_marginBottom="?attr/actionBarSize"
         >
-
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TableLayout
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:weightSum="3"
+            >
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:stretchColumns="1">
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="8dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                cardview:cardBackgroundColor="@color/white"
+                cardview:cardCornerRadius="2dp"
+                cardview:cardElevation="8dp">
 
-                <TableRow
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:alpha="300"
-                    android:background="@color/colorAccentLight">
-
-                    <TextView
-                        android:id="@+id/Rezepte_Überschrift"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="20dp"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp"
-                        android:layout_marginTop="20dp"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="Hier ihr Mittagessen!"
-                        android:textColor="@color/black"
-                        android:textSize="34sp"
-                        android:textStyle="bold" />
-                </TableRow>
-
-                <TableRow
-                    android:layout_height="wrap_content"
-                    android:layout_width="match_parent"
-                    android:gravity="center_horizontal">
-
-                    <ImageView
-                        android:id="@+id/rezepte_Icon"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:adjustViewBounds="true"
-                        android:scaleType="centerCrop"/>
-
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/colorAccentLight">
-
-                    <TextView
-                        android:id="@+id/Rezepte_Titel"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="20dp"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp"
-                        android:layout_marginTop="20dp"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:textColor="@color/black"
-                        android:textSize="20dp"
-                        android:textStyle="italic" />
-                </TableRow>
-
-                <TableRow
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp">
-
-                    <TextView
-                        android:id="@+id/rezepte_Zutaten"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
-                        android:layout_marginTop="15dp"
-                        android:gravity="left"
-                        android:textColor="@color/black"
-                        android:textSize="16dp" />
-                </TableRow>
 
                 <TableLayout
-                    android:id="@+id/rezepte_Zutatenliste"
-                    android:layout_marginLeft="40dp"
-                    android:layout_marginRight="40dp"></TableLayout>
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:stretchColumns="1">
 
-                <TableRow>
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:alpha="300"
+                        android:background="@color/colorAccentLight">
 
-                    <TextView
-                        android:id="@+id/rezepte_Rezept"
-                        android:layout_width="match_parent"
+                        <TextView
+                            android:id="@+id/Rezepte_Überschrift"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="50dp"
+                            android:layout_marginLeft="30dp"
+                            android:layout_marginRight="30dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="Hier ihr Mittagessen!"
+                            android:textColor="@color/black"
+                            android:textSize="34sp"
+                            android:textStyle="bold" />
+                    </TableRow>
+
+                    <TableRow
+                        android:id="@+id/rezepte_TableRow"
                         android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:gravity="center_horizontal">
+
+                        <ImageView
+                            android:id="@+id/rezepte_Icon"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:adjustViewBounds="true"
+                            android:scaleType="centerCrop"/>
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/colorAccentLight">
+
+                        <TextView
+                            android:id="@+id/Rezepte_Titel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="20dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginTop="20dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:textColor="@color/black"
+                            android:textSize="20dp"
+                            android:textStyle="italic" />
+                    </TableRow>
+                </TableLayout>
+            </android.support.v7.widget.CardView>
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="8dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                cardview:cardBackgroundColor="@color/white"
+                cardview:cardCornerRadius="2dp"
+                cardview:cardElevation="8dp">
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:stretchColumns="1">
+                    <TableRow
                         android:layout_marginLeft="20dp"
                         android:layout_marginRight="20dp"
-                        android:layout_marginTop="20dp"
                         android:layout_marginBottom="20dp"
-                        android:layout_weight="1"
-                        android:gravity="left"
-                        android:textColor="@color/black"
-                        android:textSize="16dp" />
-                </TableRow>
+                        android:layout_marginTop="20dp">
 
-                <TableRow>
+                        <TextView
+                            android:id="@+id/rezepte_Zutaten"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="left"
+                            android:textColor="@color/black"
+                            android:textSize="16dp" />
+                    </TableRow>
 
-                    <TextView
-                        android:id="@+id/rezepte_Rezept_Text"
+                    <TableLayout
+                        android:id="@+id/rezepte_Zutatenliste"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginRight="30dp"
+                        android:layout_marginBottom="20dp"
+                        >
+                    </TableLayout>
+                </TableLayout>
+            </android.support.v7.widget.CardView>
+            <android.support.v7.widget.CardView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="30dp"
-                        android:layout_marginRight="20dp"
-                        android:layout_marginBottom="20dp"
-                        android:layout_weight="1"
-                        android:gravity="left"
-                        android:textColor="@color/black"
-                        android:textSize="12dp" />
-                </TableRow>
-
-            </TableLayout>
-        </RelativeLayout>
-
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        android:layout_marginTop="8dp"
+                        android:paddingTop="4dp"
+                        cardview:cardBackgroundColor="@color/white"
+                        cardview:cardCornerRadius="2dp"
+                        cardview:cardElevation="8dp">
+                          <TableLayout
+                              android:stretchColumns="1"
+                              android:layout_width="match_parent"
+                              android:layout_height="match_parent"
+                              >
+                              <TableRow>
+                                  <TextView
+                                      android:id="@+id/rezepte_Rezept"
+                                      android:layout_width="match_parent"
+                                      android:layout_height="wrap_content"
+                                      android:layout_marginLeft="20dp"
+                                      android:layout_marginRight="20dp"
+                                      android:layout_marginTop="20dp"
+                                      android:layout_marginBottom="20dp"
+                                      android:layout_weight="1"
+                                      android:gravity="left"
+                                      android:textColor="@color/black"
+                                      android:textSize="16dp" />
+                              </TableRow>
+                              <TableRow>
+                                  <TextView
+                                      android:id="@+id/rezepte_Rezept_Text"
+                                      android:layout_width="match_parent"
+                                      android:layout_height="wrap_content"
+                                      android:layout_marginLeft="30dp"
+                                      android:layout_marginRight="30dp"
+                                      android:layout_marginBottom="20dp"
+                                      android:layout_weight="1"
+                                      android:gravity="left"
+                                      android:textColor="@color/black"
+                                      android:textSize="12dp" />
+                                </TableRow>
+                            </TableLayout>
+                        </android.support.v7.widget.CardView>
+        </LinearLayout>
     </ScrollView>
-
-
 </FrameLayout>
