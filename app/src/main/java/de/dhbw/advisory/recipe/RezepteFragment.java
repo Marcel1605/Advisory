@@ -9,6 +9,7 @@ import android.graphics.Matrix;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
@@ -23,6 +24,7 @@ import android.widget.TextView;
 import android.os.AsyncTask;
 import android.content.Context;
 import android.widget.TableRow.LayoutParams;
+import android.support.design.widget.Snackbar;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -141,12 +143,16 @@ public class RezepteFragment extends Fragment {
         RecipeAPI mat = new RecipeAPI(this.getContext());
 
         if (AppStatus.getInstance(this.getContext()).isOnline() == false) {
-            Toast.makeText(this.getContext(), "Keine Internetverbindung!", Toast.LENGTH_SHORT).show();
+            Snackbar snackbar = Snackbar.make(container, "Keine Internetverbindung!", Snackbar.LENGTH_LONG);
+
+            // Changing action button text color
+            View sbView = snackbar.getView();
+            TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+            textView.setTextColor(Color.WHITE);
+            snackbar.show();
         }
 
-
         mat.execute(getEssensTypAnfrage(h));
-
 
         return view;
     }
