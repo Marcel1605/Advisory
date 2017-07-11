@@ -46,33 +46,28 @@ public class GPSDetection extends Service implements LocationListener {
         return null;
     }
 
-    public void setPosition(Runnable onPositionDetected) {
+    //Methode zur Speicherung der aktuellen Position
+    public void setPosition(Runnable onPositionDetected) throws SecurityException {
         this.onPositionDetected = onPositionDetected;
-        try {
-            locationManager = (LocationManager) c.getSystemService(LOCATION_SERVICE);
+        locationManager = (LocationManager) c.getSystemService(LOCATION_SERVICE);
 
-            //ließt den GPS Status aus (Aktiv = Ja/Nein)
-            GPSaktiv = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        //ließt den GPS Status aus (Aktiv = Ja/Nein)
+        GPSaktiv = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
-            if (GPSaktiv) {
-                //Bestimmung der GPS Position, sofern GPS eingeschaltet ist. Die daten werden in der Variable "position" gespeichert.
+        if (GPSaktiv) {
+            //Bestimmung der GPS Position, sofern GPS eingeschaltet ist. Die daten werden in der Variable "position" gespeichert.
+            Log.i("GPSDetection", "LocationManager ausgeführt.");
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 10, this);
+            if (locationManager != null) {
+                Log.i("GPSDetection", "setPosition: Speicherung wird durchgeführt");
 
-                Log.i("GPSDetection", "LocationManager ausgeführt.");
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 10, this);
-                if (locationManager != null) {
-                    Log.i("GPSDetection", "setPosition: Speicherung wird durchgeführt");
-
-                    position = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                    if (position != null){
-                        synchronized (this) {
-                            onPositionDetected.run();
-                        }
+                position = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                if (position != null){
+                    synchronized (this) {
+                        onPositionDetected.run();
                     }
                 }
             }
-        } catch (SecurityException s) {
-            // FIXME sollte gethrowet werden
-            s.printStackTrace();
         }
     }
 
