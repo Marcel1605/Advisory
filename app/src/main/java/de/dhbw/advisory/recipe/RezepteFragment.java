@@ -456,7 +456,7 @@ public class RezepteFragment extends Fragment {
                     _rezepteZutatenliste.addView(tr[i]);
                 }
 
-                _rezepteRezepte.setText("Rezepte:");
+                _rezepteRezepte.setText("Zubereitung:");
                 _rezepteZutaten.setText("Zutaten:");
 
                 _rezepteZutatenliste.refreshDrawableState();
