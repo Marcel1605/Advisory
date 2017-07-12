@@ -6,7 +6,6 @@ import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Matrix;
-import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -24,16 +23,12 @@ import android.widget.TextView;
 import android.os.AsyncTask;
 import android.content.Context;
 import android.widget.TableRow.LayoutParams;
-import android.support.design.widget.Snackbar;
-import android.support.v7.widget.CardView;
 
 import java.io.IOException;
 import java.io.InputStream;
 import android.graphics.BitmapFactory;
 import android.app.ProgressDialog;
 import android.widget.Toast;
-
-
 
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpHeaders;
@@ -43,7 +38,6 @@ import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.common.io.CharStreams;
-
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -58,32 +52,11 @@ import java.util.Properties;
 import de.dhbw.advisory.R;
 import de.dhbw.advisory.common.AsyncTaskResult;
 
-public class RezepteFragment extends Fragment {
+public class RecipeFragment extends Fragment {
     //Ladebildschirm
-    private ProgressDialog alertDialog;
+    private ProgressDialog _alertDialog;
 
-    //Mittagessen, Lunch, Frühstück, Mitternachtssnach, Abendessen,...
-    private String essenTyp;
-
-    //Titel des Rezepts
-    private String rezepte_Titel;
-
-    //Variablen für die Nutritions
-    private int kohlenhydrate;
-    private int proteine;
-    private int zucker;
-    private int fett;
-
-    //2 Dimensionale Liste für die Zutaten: 1. Zutat 2. Anzahl
-    private int [][] zutaten;
-
-    //Rezept Text
-    private String rezeptText;
-
-    //Aktuelle Uhrzeit (nur Stunden)
-    private int actualHour;
-
-    /**UI-Elemente*/
+    //UI-Elemente
     protected TextView _rezepteÜberschrift = null;
     protected TextView _rezepteTitel = null;
     protected TextView _rezepteAnleitung = null;
@@ -94,7 +67,7 @@ public class RezepteFragment extends Fragment {
     protected TableRow _rezepteTableRow = null;
 
     //Snackbar
-    private Snackbar snackbar;
+    private Snackbar _snackbar;
 
     //Apikey
     private String apiKey;
@@ -105,15 +78,17 @@ public class RezepteFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        // Der developer key wird später aus der properties-Datei ausgelesen
+        //Der Developer key wird später aus der properties-Datei ausgelesen
         Properties properties = new Properties();
 
         try {
+            //Hier wird der API-Key geladen
             AssetManager assetManager = context.getAssets();
             InputStream inputStream = assetManager.open("apikey.properties");
             properties.load(inputStream);
             apiKey = properties.getProperty("spoonacular.apikey");
         } catch (IOException e) {
+            //Falls das Fragment nicht geladen werden konnte
             Toast.makeText(context, "Fragment konnte nicht geladen werden", Toast.LENGTH_SHORT).show();
         }
     }
@@ -126,10 +101,10 @@ public class RezepteFragment extends Fragment {
         metrics = this.getResources().getDisplayMetrics();
 
         //Ladebildschirm einfügen
-        alertDialog = new ProgressDialog(getContext());
-        alertDialog.setMessage(getResources().getString(R.string.loader));
-        alertDialog.setCancelable(false);
-        alertDialog.show();
+        _alertDialog = new ProgressDialog(getContext());
+        _alertDialog.setMessage(getResources().getString(R.string.loader));
+        _alertDialog.setCancelable(false);
+        _alertDialog.show();
 
         //Referenzen der Textviews abfragen
         _rezepteTitel = (TextView) view.findViewById(R.id.Rezepte_Titel);
@@ -145,19 +120,20 @@ public class RezepteFragment extends Fragment {
         int h= actualHour();
         _rezepteÜberschrift.setText(getEssensTyp(h));
 
-        //API Aufruf starten und Felder aktualisieren
-        RecipeAPI mat = new RecipeAPI(this.getContext());
 
+
+        //Hier wird überprüft, ob eine Internetverbindung vorhanden ist, falls diese nicht vorhanden ist wird eine Meldung ausgegeben
         if (AppStatus.getInstance(this.getContext()).isOnline() == false) {
-            snackbar = Snackbar.make(container, "Keine Internetverbindung!", Snackbar.LENGTH_LONG);
+            _snackbar = Snackbar.make(container, "Keine Internetverbindung!", Snackbar.LENGTH_LONG);
 
-            // Changing action button text color
-            View sbView = snackbar.getView();
+            View sbView = _snackbar.getView();
             TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
             textView.setTextColor(Color.WHITE);
-            snackbar.show();
+            _snackbar.show();
         }
 
+        //API Aufruf starten und Felder aktualisieren
+        RecipeAPI mat = new RecipeAPI(this.getContext());
         mat.execute(getEssensTypAnfrage(h));
 
         return view;
@@ -166,8 +142,6 @@ public class RezepteFragment extends Fragment {
 
     @Override
     public void onPause(){
-        //The system calls this method as the first indication that the user is leaving the fragment (though it does not always mean the fragment is being destroyed). This is usually where you should commit any changes that should be persisted beyond the current user session (because the user might not come back).
-        Log.e("DEBUG", "OnPause of RezepteFragment");
         super.onPause();
     }
 
@@ -175,7 +149,7 @@ public class RezepteFragment extends Fragment {
      * Diese Methode hidet den Progress Dialog
      */
     public void cancelProgressDialog() {
-        alertDialog.dismiss();
+        _alertDialog.dismiss();
     }
 
 
@@ -187,6 +161,7 @@ public class RezepteFragment extends Fragment {
     public int actualHour(){
         int hh;
         Calendar kalendar = Calendar.getInstance();
+        //Umstellung des Zeitformat nur auf die Stunden
         SimpleDateFormat zeitformatH = new SimpleDateFormat("HH");
         String h = zeitformatH.format(kalendar.getTime());
         hh = Integer.parseInt(h);
@@ -194,7 +169,9 @@ public class RezepteFragment extends Fragment {
     }
 
     /**
-     *
+     * Diese Methode ermittelt anhand der übergebenen Zeit den Titel des Fragments
+     * @param hh gibt die aktuelle Stundenzeit an
+     * @return gibt den Essentyp für den Titel an
      */
     public String getEssensTyp(int hh){
         //breakfast 6-9
@@ -233,15 +210,19 @@ public class RezepteFragment extends Fragment {
             //Fehler
             typ = "Fehler";
         }
-       String r= "Hier " + typ + "!";
+        String r;
+        if (typ == "Fehler") {
+           r = typ;
+        } else
+            r= "Hier " + typ + "!";
 
       return r;
     }
 
     /**
-     * Diese Methode aktualisiert die Überschrift des Fragments
-     *
-     * @param hh
+     * Diese Methode erstellt den Typ des Rezepts für den AI Aufruf
+     * @param hh die aktuelle Stundenzeit
+     * @return gibt den Typ des Essens zurück (für den API Parameter typ)
      */
     public String getEssensTypAnfrage(int hh) {
         //breakfast 6-9
@@ -285,6 +266,9 @@ public class RezepteFragment extends Fragment {
     }
 
 
+    /**
+     * Diese Klasse übernimmt den Abruf eines Bildes und setzt dieses in den entsprechenden ImageView ein
+     */
     public class GetImage extends AsyncTask <String, String, Bitmap> {
 
         protected Context context;
@@ -294,6 +278,11 @@ public class RezepteFragment extends Fragment {
             this.context = context;
         }
 
+        /**
+         * Hier wird das Bild in einem Async Task aufgerufen
+         * @param url die URL von der das Bild abgerufen werden soll
+         * @return gibt das Bild in Form einer Bitmap zurück
+         */
         @Override
         protected Bitmap doInBackground(String... url) {
             Log.i("GetImage - DoInBackground", "Methode gestartet");
@@ -309,29 +298,33 @@ public class RezepteFragment extends Fragment {
                 } catch (Exception e ) {
                     Log.e("Error", e.getMessage());
                 }
-                Log.i("imageDoInBackground", "Beendet");
+                Log.i("GetImage - DoInBackground", "Beendet");
                 return icon;
             } else {
-                //Internetverbindung nicht aktiv
-                Log.i("imageDoInBackground", "Beendet");
+                //Internetverbindung nicht aktiv; gibt dann ein leeres Bild zurück
+                Log.i("GetImage - DoInBackground", "Internetverbindung nicht aktiv");
                 return icon;
             }
 
 
         }
 
+        /**
+         * Die Methode skaliert das erhaltene Bild auf die komplette Breite des CardViews und setzt dieses anschließend darein
+         * @param icon das zu setzende Bild
+         */
         @Override
         protected void onPostExecute(Bitmap icon) {
+            Log.i("GetImage - onPostExecute", "Methode gestartet");
             if (icon != null) {
-                //Ein Bild ist angekommen
-
-                //Bildbreite so breit wie Auflösung setzen
-                //int bildbreite = metrics.widthPixels;
+                //Es ist ein nicht fehlerhaftes Bild angekommen
+                //Bildbreite so breit wie die TableRow (=Breite CardView) setzten
                 int bildbreite = _rezepteTableRow.getWidth();
 
                 int breite_alt = icon.getWidth();
                 int hoehe_alt = icon.getHeight();
 
+                //Das Seitenverhältnis wird beibehalten
                 double skalierung = ((double)hoehe_alt) / ((double)breite_alt);
 
                 int bildhoehe = (int) (bildbreite * skalierung);
@@ -343,23 +336,20 @@ public class RezepteFragment extends Fragment {
                 Matrix matrix = new Matrix();
                 matrix.postScale(scaleWidth, scaleHeight);
 
-                Log.d("bildhoehe/breite", String.valueOf(bildhoehe) + "|" + String.valueOf(bildbreite));
-
                 Bitmap resizedImage = Bitmap.createBitmap(icon, 0, 0, breite_alt, hoehe_alt, matrix, false);
 
                 _rezepteIcon.setImageBitmap(resizedImage);
                 _rezepteIcon.setImageAlpha(90);
             } else {
-                //Das Bild ist nicht richtig angekommen
+                //Das Bild ist fehlerhaft
             }
-
             cancelProgressDialog();
         }
 
     }
 
     /**
-     * Klasse für den Hintergrund Thread
+     * In dieser Klasse wird der API Aufruf durchgeführt
      */
     public class RecipeAPI extends AsyncTask<String, String, AsyncTaskResult<?>> {
 
@@ -370,37 +360,48 @@ public class RezepteFragment extends Fragment {
             this.context = context;
         }
 
+        /**
+         * Diese Methode ruft die Daten aus der API
+         * @param params
+         * @return gibt eine ArrayList zurück die alle benötigten Infos enthält
+         */
         @Override
         protected AsyncTaskResult<?> doInBackground(String... params) {
+            Log.i("Recipe API - doInBackground ", "Methode begonnen");
             ArrayList erg;
             String typ = params[0];
             try{
-                //Zu untersuchende ID via API herausfinden
-                Log.i("doInBackground ", "Methode getRecipe begonnen");
+                //Hier wird der API Aufruf gemacht
                 String jsonResponseRecipeSearch = getRecipe(typ);
+                //Hier wird geparset
                 erg = parseRecipe(jsonResponseRecipeSearch);
 
-                Log.i("doInBackground ", "Methode beendet");
                 return new AsyncTaskResult(erg);
             } catch (Exception e){
                 try {
+                    //Keine Internetverbindung, daher wird eine gespeicherte JSON weitergegeben
+                    Log.i("Recipe API - doInBackground ", "Keine Internetverbindung");
                     RecipeExample example = new RecipeExample();
                     return new AsyncTaskResult(parseRecipe(example.getExampleJsonString(typ)));
                 } catch (Exception f) {
-                    Log.i("doInBackground", "Fehler doInBackground: " + e.getMessage());
+                    Log.i("Recipe API - doInBackground ", "Fehler: " + e.getMessage());
                     return new AsyncTaskResult(f);
                 }
-
             }
-
         }
 
+        /**
+         * Diese Methode setzt die aus der API erhaltenenn Informationen in die Views ein
+         * @param asyncTaskResult die Informationen die eingesetzt werden sollen (ArrayList)
+         */
         @Override
         protected void onPostExecute(AsyncTaskResult asyncTaskResult) {
             Log.i("onPostExecute", "Methode begonnen");
+
             if (asyncTaskResult.isSuccessful()) {
-                final List ergebnis = asyncTaskResult.getResult();
                 Log.i("onPostExecute","AsynTaskResult ist successfull");
+
+                final List ergebnis = asyncTaskResult.getResult();
 
                 //Titel setzten
                 _rezepteTitel.setText(ergebnis.get(0).toString());
@@ -408,10 +409,11 @@ public class RezepteFragment extends Fragment {
                 //Rezeptanleitung setzen
                 _rezepteAnleitung.setText(ergebnis.get(2).toString());
 
+                //Hier wird das Bild abgerufen
                 GetImage img = new GetImage(context);
                 img.execute((String) ergebnis.get(3));
 
-
+                //Mit Klick auf das Rezepte Bild öffnet sich der Link des Rezepts
                 _rezepteIcon.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -430,6 +432,7 @@ public class RezepteFragment extends Fragment {
                 TextView[] tv_ing = new TextView[zutaten.length];
                 TextView[] tv_amount = new TextView[zutaten.length];
 
+                //Legt ein einheitliches Design für die Zutaten fest
                 LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
                 params.weight = 1f;
 
@@ -456,6 +459,7 @@ public class RezepteFragment extends Fragment {
                     _rezepteZutatenliste.addView(tr[i]);
                 }
 
+                //Titel Zubereitung und Zutaten setzen
                 _rezepteRezepte.setText("Zubereitung:");
                 _rezepteZutaten.setText("Zutaten:");
 
@@ -463,7 +467,6 @@ public class RezepteFragment extends Fragment {
 
 
             } else {
-
                 Log.i("onPostExecute","AsynTaskResult ist nicht successfull");
                 _rezepteTitel.setText("Bitte versuchen sie es später erneut! :)");
 
@@ -487,10 +490,8 @@ public class RezepteFragment extends Fragment {
                 Log.i("getRecipe ","Internetverbindung vorhanden");
 
                 //1. Request Factory holen
-                Log.i("getRecipe ","Request Factory holen begonnen");
                 HttpTransport httpTransport = new NetHttpTransport();
                 HttpRequestFactory requestFactory = httpTransport.createRequestFactory();
-                Log.i("getRecipe ","Request Factory holen beendet");
 
                 //2. Url hinzufügen
                 GenericUrl url = new GenericUrl("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/random");
@@ -521,7 +522,7 @@ public class RezepteFragment extends Fragment {
                 return jsonResponseString;
 
             } else {
-                Log.i("getRecipe ","Internetverbindung NICHT vorhanden");
+                Log.i("getRecipe ","Internetverbindung nicht vorhanden");
                 throw new Exception();
 
             }
@@ -538,64 +539,54 @@ public class RezepteFragment extends Fragment {
          * @throws JSONException
          */
         protected ArrayList parseRecipe(String jsonString) throws JSONException {
-                Log.i("parseRecipe:", "Beginnt das parsen");
-                Log.i("parseRecipe:", "Übergebenes Objekt: " + jsonString);
-                //Eigentliches parsen
-                JSONObject jsonObject = new JSONObject(jsonString);
+            Log.i("parseRecipe", "Methode begonnen");
 
-                //Wichtigsten Inhalt entnehmen
-                JSONArray jsonArray = jsonObject.getJSONArray("recipes");
-                JSONObject i = jsonArray.getJSONObject(0);
-                Log.i("parseRecipe:", "Recipes geparst");
+            //Eigentliches parsen
+            JSONObject jsonObject = new JSONObject(jsonString);
 
-                //Rezept parsen (aus den verschiedenen Schritten des Rezepts
-                JSONArray recipe = i.getJSONArray("analyzedInstructions").getJSONObject(0).getJSONArray("steps");
-                String recipeString = "";
+            //Wichtigsten Inhalt entnehmen
+            JSONArray jsonArray = jsonObject.getJSONArray("recipes");
+            JSONObject i = jsonArray.getJSONObject(0);
 
-                for(int l = 0; l < recipe.length(); l++) {
-                    recipeString = recipeString + recipe.getJSONObject(l).getString("step");
-                    recipeString = recipeString + "\n";
-                }
+            //Rezept parsen (aus den verschiedenen Schritten des Rezepts
+            JSONArray recipe = i.getJSONArray("analyzedInstructions").getJSONObject(0).getJSONArray("steps");
+            String recipeString = "";
 
-                Log.i("parseRecipe:", "Servings geparst");
+            //Hier wird das eigentliche Rezept entnommen
+            for(int l = 0; l < recipe.length(); l++) {
+                recipeString = recipeString + recipe.getJSONObject(l).getString("step");
+                recipeString = recipeString + "\n";
+            }
 
-                JSONArray ingredients = i.getJSONArray("extendedIngredients");
-                int length = ingredients.length();
-                //[][0] = name
-                //[][1] = amount
-                //[][2] = unit
-                String[][] ing = new String[length][3];
+            JSONArray ingredients = i.getJSONArray("extendedIngredients");
+            int length = ingredients.length();
+            //[][0] = name
+            //[][1] = amount
+            //[][2] = unit
+            String[][] ing = new String[length][3];
 
-                for(int x = 0; x < length; x++){
-                    ing [x][0] = ingredients.getJSONObject(x).getString("name");
-                    ing [x][1] = ingredients.getJSONObject(x).getString("amount");
-                    ing [x][2] = ingredients.getJSONObject(x).getString("unit");
-                }
+            //Zutatenliste erstellen
+            for(int x = 0; x < length; x++){
+                ing [x][0] = ingredients.getJSONObject(x).getString("name");
+                ing [x][1] = ingredients.getJSONObject(x).getString("amount");
+                ing [x][2] = ingredients.getJSONObject(x).getString("unit");
+            }
 
-                Log.i("parseRecipe:", "Ingredients geparst");
+            //Titel, Bild und Rezept URL parsen
+            String title = i.getString("title");
+            String img_url = i.getString("image");
+            String recipe_url = i.getString("sourceUrl");
 
-                String title = i.getString("title");
-                String img_url = i.getString("image");
-                String recipe_url = i.getString("sourceUrl");
+            ArrayList<Object> information = new ArrayList<>();
 
-                Log.i("parseRecipe:", "title und img_url gesetzt");
+            //Infos in die ArrayList setzen
+            information.add(0,title);
+            information.add(1, ing);
+            information.add(2,recipeString);
+            information.add(3, img_url);
+            information.add(4, recipe_url);
 
-                ArrayList<Object> information = new ArrayList<>();
-
-                Log.i("parseRecipe:", "Parsen fast beendet");
-                Log.i("parseRecipe:", "title: " + title);
-                Log.i("parseRecipe:", "ing: " + ing.toString());
-                Log.i("parseRecipe:", "instructions: " + recipeString);
-
-                information.add(0,title);
-                information.add(1, ing);
-                information.add(2,recipeString);
-                information.add(3, img_url);
-                information.add(4, recipe_url);
-
-
-                return information;
-
+            return information;
         }
     }
 }

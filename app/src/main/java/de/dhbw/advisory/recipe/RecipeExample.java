@@ -2,26 +2,19 @@ package de.dhbw.advisory.recipe;
 
 
 /**
- * Created by Magnus on 11.07.17.
+ * Created by Magnus on 01.07.17.
  */
 
 public class RecipeExample {
 
     //String der angezeigt wird, wenn der API Abruf nicht klappt
     private String jsonExampleStringBreakfast;
-
     private String jsonExampleStringAppetizer;
-
     private String jsonExampleStringMainCourse;
-
     private String jsonExampleStringSideDish;
-
     private String jsonExampleStringDessert;
-
     private String jsonExampleStringSalad;
-
     private String jsonExampleStringSoup;
-
 
     /**
      * Konstruktor für ein Rezept Beispiel
@@ -37,8 +30,14 @@ public class RecipeExample {
         jsonExampleStringBreakfast = "{\"recipes\":[{\"vegetarian\":true,\"vegan\":false,\"glutenFree\":false,\"dairyFree\":true,\"veryHealthy\":false,\"cheap\":false,\"veryPopular\":false,\"sustainable\":false,\"weightWatcherSmartPoints\":15,\"gaps\":\"no\",\"lowFodmap\":false,\"ketogenic\":false,\"whole30\":false,\"servings\":12,\"preparationMinutes\":5,\"cookingMinutes\":22,\"sourceUrl\":\"http://www.theroastedroot.net/gluten-free-coconut-muffins/\",\"spoonacularSourceUrl\":\"https://spoonacular.com/majorly-coconutty-coconut-muffins-512666\",\"aggregateLikes\":99,\"spoonacularScore\":31.0,\"healthScore\":2.0,\"creditText\":\"The Roasted Root\",\"sourceName\":\"The Roasted Root\",\"pricePerServing\":74.68,\"extendedIngredients\":[{\"id\":20081,\"aisle\":\"Baking\",\"image\":\"https://spoonacular.com/cdn/ingredients_100x100/flour.png\",\"name\":\"all purpose flour\",\"amount\":1.0,\"unit\":\"cup\",\"unitShort\":\"cup\",\"unitLong\":\"cup\",\"originalString\":\"1 cup gluten-free all purpose flour\",\"metaInformation\":[\"gluten-free\"]},{\"id\":18371,\"aisle\":\"Baking\",\"image\":\"https://spoonacular.com/cdn/ingredients_100x100/white-powder.jpg\",\"name\":\"baking powder\",\"amount\":2.0,\"unit\":\"teaspoons\",\"unitShort\":\"tsp\",\"unitLong\":\"teaspoons\",\"originalString\":\"2 teaspoons baking powder\",\"metaInformation\":[]},{\"id\":18372,\"aisle\":\"Baking\",\"image\":\"https://spoonacular.com/cdn/ingredients_100x100/white-powder.jpg\",\"name\":\"baking soda\",\"amount\":1.0,\"unit\":\"teaspoon\",\"unitShort\":\"tsp\",\"unitLong\":\"teaspoon\",\"originalString\":\"1 teaspoon baking soda\",\"metaInformation\":[]},{\"id\":93747,\"aisle\":\"Gluten Free;Health Foods;Baking\",\"image\":\"https://spoonacular.com/cdn/ingredients_100x100/coconut-flour-or-other-gluten-free-flour.jpg\",\"name\":\"coconut flour\",\"amount\":0.5,\"unit\":\"cup\",\"unitShort\":\"cup\",\"unitLong\":\"cups\",\"originalString\":\"½ cup coconut flour\",\"metaInformation\":[]},{\"id\":4047,\"aisle\":\"Health Foods;Baking\",\"image\":\"https://spoonacular.com/cdn/ingredients_100x100/oil-coconut.jpg\",\"name\":\"coconut oil\",\"amount\":0.3333333333333333,\"unit\":\"cup\",\"unitShort\":\"cup\",\"unitLong\":\"cups\",\"originalString\":\"1/3 cup coconut oil, melted and cooled\",\"metaInformation\":[\"cooled\",\"melted\"]},{\"id\":93831,\"aisle\":\"Baking\",\"image\":\"https://spoonacular.com/cdn/ingredients_100x100/palm-sugar.jpg\",\"name\":\"coconut sugar\",\"amount\":1.0,\"unit\":\"cup\",\"unitShort\":\"cup\",\"unitLong\":\"cup\",\"originalString\":\"1 cup coconut sugar\",\"metaInformation\":[]},{\"id\":1123,\"aisle\":\"Milk, Eggs, Other Dairy\",\"image\":\"https://spoonacular.com/cdn/ingredients_100x100/egg.jpg\",\"name\":\"eggs\",\"amount\":2.0,\"unit\":\"\",\"unitShort\":\"\",\"unitLong\":\"\",\"originalString\":\"2 eggs\",\"metaInformation\":[]},{\"id\":12118,\"aisle\":\"Canned and Jarred;Milk, Eggs, Other Dairy\",\"image\":\"https://spoonacular.com/cdn/ingredients_100x100/coconut-milk.jpg\",\"name\":\"full-fat coconut milk\",\"amount\":14.0,\"unit\":\"ounce\",\"unitShort\":\"oz\",\"unitLong\":\"ounces\",\"originalString\":\"1 14-ounce can full-fat canned coconut milk (1 14-ounce can)\",\"metaInformation\":[\"canned\"]},{\"id\":2047,\"aisle\":\"Spices and Seasonings\",\"image\":\"https://spoonacular.com/cdn/ingredients_100x100/salt.jpg\",\"name\":\"salt\",\"amount\":0.5,\"unit\":\"teaspoon\",\"unitShort\":\"tsp\",\"unitLong\":\"teaspoons\",\"originalString\":\"½ teaspoon salt\",\"metaInformation\":[]},{\"id\":10012108,\"aisle\":\"Baking\",\"image\":\"https://spoonacular.com/cdn/ingredients_100x100/coconut-shredded.jpg\",\"name\":\"unsweetened shredded coconut\",\"amount\":1.5,\"unit\":\"cups\",\"unitShort\":\"cup\",\"unitLong\":\"cups\",\"originalString\":\"1.5 cups unsweetened shredded coconut, separated\",\"metaInformation\":[\"shredded\",\"unsweetened\",\"separated\"]},{\"id\":2050,\"aisle\":\"Baking\",\"image\":\"https://spoonacular.com/cdn/ingredients_100x100/vanilla-extract.jpg\",\"name\":\"vanilla extract\",\"amount\":1.0,\"unit\":\"teaspoon\",\"unitShort\":\"tsp\",\"unitLong\":\"teaspoon\",\"originalString\":\"1 teaspoon vanilla extract\",\"metaInformation\":[]}],\"id\":512666,\"title\":\"Majorly Coconutty Coconut Muffins\",\"readyInMinutes\":27,\"image\":\"https://spoonacular.com/recipeImages/Coconut-Muffins-512666.jpg\",\"imageType\":\"jpg\",\"cuisines\":[],\"dishTypes\":[\"morning meal\",\"brunch\",\"breakfast\"],\"diets\":[\"dairy free\",\"vegetarian\"],\"instructions\":\"Preheat the oven to 350 degrees F and lightly oil a 12-muffin panIn a large mixing bowl, combine the flours, baking powder and soda, coconut sugar, salt and one cup of the shredded coconut.In a separate bowl, whisk together the wet ingredients.Pour the wet ingredients into the bowl with the flours and mix until combined.Pour the batter into the prepared muffin pan.  Sprinkle the remaining half cup of shredded coconut over the batter and bake in the oven for 22 to 25 minutes until a toothpick tests clean.\",\"analyzedInstructions\":[{\"name\":\"\",\"steps\":[{\"number\":1,\"step\":\"Preheat the oven to 350 degrees F and lightly oil a 12-muffin pan\",\"ingredients\":[],\"equipment\":[{\"id\":404784,\"name\":\"oven\",\"image\":\"https://spoonacular.com/cdn/equipment_100x100/oven.jpg\",\"temperature\":{\"number\":350.0,\"unit\":\"Fahrenheit\"}},{\"id\":404645,\"name\":\"frying pan\",\"image\":\"https://spoonacular.com/cdn/equipment_100x100/pan.png\"}]},{\"number\":2,\"step\":\"In a large mixing bowl, combine the flours, baking powder and soda, coconut sugar, salt and one cup of the shredded coconut.In a separate bowl, whisk together the wet ingredients.\",\"ingredients\":[{\"id\":18371,\"name\":\"baking powder\",\"image\":\"https://spoonacular.com/cdn/ingredients_100x100/white-powder.jpg\"},{\"id\":93831,\"name\":\"coconut sugar\",\"image\":\"https://spoonacular.com/cdn/ingredients_100x100/coconut-sugar.jpg\"},{\"id\":2047,\"name\":\"salt\",\"image\":\"https://spoonacular.com/cdn/ingredients_100x100/salt.jpg\"}],\"equipment\":[{\"id\":405907,\"name\":\"mixing bowl\",\"image\":\"https://spoonacular.com/cdn/equipment_100x100/mixing-bowl.jpg\"},{\"id\":404661,\"name\":\"whisk\",\"image\":\"https://spoonacular.com/cdn/equipment_100x100/whisk.png\"}]},{\"number\":3,\"step\":\"Pour the wet ingredients into the bowl with the flours and mix until combined.\",\"ingredients\":[],\"equipment\":[{\"id\":404783,\"name\":\"bowl\",\"image\":\"https://spoonacular.com/cdn/equipment_100x100/bowl.jpg\"}]},{\"number\":4,\"step\":\"Pour the batter into the prepared muffin pan.  Sprinkle the remaining half cup of shredded coconut over the batter and bake in the oven for 22 to 25 minutes until a toothpick tests clean.\",\"ingredients\":[],\"equipment\":[{\"id\":404671,\"name\":\"muffin tray\",\"image\":\"https://spoonacular.com/cdn/equipment_100x100/muffin-tray.jpg\"},{\"id\":404644,\"name\":\"toothpicks\",\"image\":\"https://spoonacular.com/cdn/equipment_100x100/toothpicks.jpg\"},{\"id\":404784,\"name\":\"oven\",\"image\":\"https://spoonacular.com/cdn/equipment_100x100/oven.jpg\"}],\"length\":{\"number\":22,\"unit\":\"minutes\"}}]}]}]}";
     }
 
+    /**
+     * Diese Methode entscheidet anhand welchem Typ welcher String zurückgegeben werden muss
+     * @param typ der Essentyp
+     * @return ein JSON String
+     */
     public String getExampleJsonString (String typ){
         String jsonExampleString = "";
+
         switch (typ) {
             case "soup":
                 jsonExampleString = jsonExampleStringSoup;

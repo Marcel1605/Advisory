@@ -5,15 +5,18 @@ import android.net.NetworkInfo;
 import android.util.Log;
 
 /**
- * Created by Magnus on 11.07.17.
+ * Created by Magnus on 01.07.17.
  */
 
+/**
+ * Mit Hilfe dieser Klasse wird abgefragt, ob das Endgerät eine Internetverbindung hat (egal ob Mobile Daten oder normale Internetverbindung)
+ */
 public class AppStatus {
 
     private static AppStatus instance = new AppStatus();
     static Context context;
     ConnectivityManager connectivityManager;
-    NetworkInfo wifiInfo, mobileInfo;
+
     boolean connected = false;
 
     public static AppStatus getInstance(Context ctx) {
@@ -21,10 +24,14 @@ public class AppStatus {
         return instance;
     }
 
+    /**
+     * Diese Methode gibt zurück, ob das Gerät Internetverbindung hat oder nicht
+     * @return true --> ja Internet , false --> kein Internet
+     */
     public boolean isOnline() {
         try {
-            connectivityManager = (ConnectivityManager) context
-                    .getSystemService(Context.CONNECTIVITY_SERVICE);
+            //Mit Hilfe des ConnectivityManagers wird ausgelesen ob eine Internetverbindung besteht oder nicht
+            connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
             NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
             connected = networkInfo != null && networkInfo.isAvailable() &&
@@ -33,8 +40,7 @@ public class AppStatus {
 
 
         } catch (Exception e) {
-            System.out.println("CheckConnectivity Exception: " + e.getMessage());
-            Log.v("connectivity", e.toString());
+            Log.e("AppStatus - isOnline", "Fehler:" + e.getMessage());
         }
         return connected;
     }

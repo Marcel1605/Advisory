@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import de.dhbw.advisory.common.FragmentChangeListener;
 import de.dhbw.advisory.gym.GymFragment;
-import de.dhbw.advisory.recipe.RezepteFragment;
+import de.dhbw.advisory.recipe.RecipeFragment;
 
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, FragmentChangeListener{
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             transaction.replace(R.id.main_container, _fragment).addToBackStack("tag").commit();
             break;
         case R.id.rezepte:
-            _fragment = new RezepteFragment();
+            _fragment = new RecipeFragment();
             transaction = _fragmentManager.beginTransaction();
             transaction.replace(R.id.main_container, _fragment).addToBackStack("tag").commit();
             break;
