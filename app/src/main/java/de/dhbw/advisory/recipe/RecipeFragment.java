@@ -77,7 +77,7 @@ public class RecipeFragment extends Fragment {
 
     @Override
     public void onAttach(Context context) {
-        Log.i("Recipe-Fragment onAttach", "Methode gestartet");
+        Log.i("Recipe-Fragment - onAttach", "Methode gestartet");
         super.onAttach(context);
         //Der Developer key wird später aus der properties-Datei ausgelesen
         Properties properties = new Properties();
@@ -92,12 +92,13 @@ public class RecipeFragment extends Fragment {
             //Falls das Fragment nicht geladen werden konnte
             Toast.makeText(context, "Fragment konnte nicht geladen werden", Toast.LENGTH_SHORT).show();
         }
+        Log.i("Recipe-Fragment - onAttach", "Methode beendet");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.i("Recipe-Fragment onCreate", "Methode gestartet");
+        Log.i("RecipeFragment - onCreate", "Methode gestartet");
         View view = inflater.inflate(R.layout.fragment_rezepte, container, false);
 
         metrics = this.getResources().getDisplayMetrics();
@@ -138,13 +139,14 @@ public class RecipeFragment extends Fragment {
         RecipeAPI mat = new RecipeAPI(this.getContext());
         mat.execute(getEssensTypAnfrage(h));
 
+        Log.i("RecipeFragment - onCreate", "Methode beendet");
         return view;
     }
 
 
     @Override
     public void onPause(){
-        Log.i("Recipe-Fragment onPause", "Methode gestartet");
+        Log.i("RecipeFragment - onPause", "Methode gestartet/ beendet");
         super.onPause();
     }
 
@@ -152,7 +154,7 @@ public class RecipeFragment extends Fragment {
      * Diese Methode hidet den Progress Dialog
      */
     public void cancelProgressDialog() {
-        Log.i("Recipe-Fragment cancelProgressDialog", "Methode gestartet");
+        Log.i("RecipeFragment - cancelProgressDialog", "Methode gestartet/ beendet");
         _alertDialog.dismiss();
     }
 
@@ -163,13 +165,14 @@ public class RecipeFragment extends Fragment {
      * @return gibt die aktuelle Stundenzeit zurück
      */
     public int actualHour(){
-        Log.i("Recipe-Fragment actualHour", "Methode gestartet");
+        Log.i("RecipeFragment - actualHour", "Methode gestartet");
         int hh;
         Calendar kalendar = Calendar.getInstance();
         //Umstellung des Zeitformat nur auf die Stunden
         SimpleDateFormat zeitformatH = new SimpleDateFormat("HH");
         String h = zeitformatH.format(kalendar.getTime());
         hh = Integer.parseInt(h);
+        Log.i("RecipeFragment - actualHour", "Methode beendet");
         return hh;
     }
 
@@ -179,7 +182,7 @@ public class RecipeFragment extends Fragment {
      * @return gibt den Essentyp für den Titel an
      */
     public String getEssensTyp(int hh){
-        Log.i("Recipe-Fragment getEssensTyp", "Methode gestartet");
+        Log.i("RecipeFragment - getEssensTyp", "Methode gestartet");
         //breakfast 6-9
         //appetizer 10-11
         //main course 12-14
@@ -222,7 +225,8 @@ public class RecipeFragment extends Fragment {
         } else
             r= "Hier " + typ + "!";
 
-      return r;
+        Log.i("RecipeFragment - getEssensTyp", "Methode beendet");
+        return r;
     }
 
     /**
@@ -231,7 +235,7 @@ public class RecipeFragment extends Fragment {
      * @return gibt den Typ des Essens zurück (für den API Parameter typ)
      */
     public String getEssensTypAnfrage(int hh) {
-        Log.i("Recipe-Fragment getEssensTypAnfrage", "Methode gestartet");
+        Log.i("RecipeFragment - getEssensTypAnfrage", "Methode gestartet");
         //breakfast 6-9
         //appetizer 10-11
         //main course 12-14
@@ -269,6 +273,7 @@ public class RecipeFragment extends Fragment {
             typ = "Fehler!";
         }
 
+        Log.i("RecipeFragment - getEssensTypAnfrage", "Methode beendet");
         return typ;
     }
 
@@ -305,11 +310,12 @@ public class RecipeFragment extends Fragment {
                 } catch (Exception e ) {
                     Log.e("Error", e.getMessage());
                 }
-                Log.i("GetImage - DoInBackground", "Beendet");
+                Log.i("GetImage - DoInBackground", "Methode beendet");
                 return icon;
             } else {
                 //Internetverbindung nicht aktiv; gibt dann ein leeres Bild zurück
                 Log.i("GetImage - DoInBackground", "Internetverbindung nicht aktiv");
+                Log.i("GetImage - doInBackground", "Methode beendet");
                 return icon;
             }
 
@@ -326,6 +332,7 @@ public class RecipeFragment extends Fragment {
             if (icon != null) {
                 //Es ist ein nicht fehlerhaftes Bild angekommen
                 //Bildbreite so breit wie die TableRow (=Breite CardView) setzten
+
                 int bildbreite = _rezepteTableRow.getWidth();
 
                 int breite_alt = icon.getWidth();
@@ -337,7 +344,6 @@ public class RecipeFragment extends Fragment {
                 int bildhoehe = (int) (bildbreite * skalierung);
 
                 float scaleWidth = ((float) bildbreite) / breite_alt;
-
                 float scaleHeight = ((float) bildhoehe) / hoehe_alt;
 
                 Matrix matrix = new Matrix();
@@ -346,11 +352,14 @@ public class RecipeFragment extends Fragment {
                 Bitmap resizedImage = Bitmap.createBitmap(icon, 0, 0, breite_alt, hoehe_alt, matrix, false);
 
                 _rezepteIcon.setImageBitmap(resizedImage);
+
+
                 _rezepteIcon.setImageAlpha(90);
             } else {
                 //Das Bild ist fehlerhaft
             }
             cancelProgressDialog();
+            Log.i("GetImage - onPostExecute", "Methode beendet");
         }
 
     }
@@ -383,15 +392,20 @@ public class RecipeFragment extends Fragment {
                 //Hier wird geparset
                 erg = parseRecipe(jsonResponseRecipeSearch);
 
+                Log.i("Recipe API - doInBackground ", "Methode beendet");
                 return new AsyncTaskResult(erg);
             } catch (Exception e){
                 try {
                     //Keine Internetverbindung, daher wird eine gespeicherte JSON weitergegeben
                     Log.i("Recipe API - doInBackground ", "Keine Internetverbindung");
+                    Log.i("Recipe API - doInBackground" , "Fehler: " + e.getMessage());
                     RecipeExample example = new RecipeExample();
+                    Log.i("Recipe API - doInBackground ", "Methode beendet");
                     return new AsyncTaskResult(parseRecipe(example.getExampleJsonString(typ)));
                 } catch (Exception f) {
+
                     Log.i("Recipe API - doInBackground ", "Fehler: " + e.getMessage());
+                    Log.i("Recipe API - doInBackground ", "Methode beendet");
                     return new AsyncTaskResult(f);
                 }
             }
@@ -481,6 +495,7 @@ public class RecipeFragment extends Fragment {
             }
             Log.i("onPostExecute", "Methode beendet");
             cancelProgressDialog();
+            Log.i("Recipe API - onPostExecute", "Methode beendet");
         }
 
         /**
@@ -525,11 +540,12 @@ public class RecipeFragment extends Fragment {
                     httpResponse.disconnect();
                 }
 
-
+                Log.i("Recipe API - getRecipe ","Methode beendet");
                 return jsonResponseString;
 
             } else {
                 Log.i("getRecipe ","Internetverbindung nicht vorhanden");
+                Log.i("Recipe API - getRecipe ","Methode beendet");
                 throw new Exception();
 
             }
@@ -593,6 +609,7 @@ public class RecipeFragment extends Fragment {
             information.add(3, img_url);
             information.add(4, recipe_url);
 
+            Log.i("Recipe API - parseRecipe", "Methode beendet");
             return information;
         }
     }

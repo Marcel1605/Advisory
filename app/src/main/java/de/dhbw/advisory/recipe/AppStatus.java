@@ -20,6 +20,7 @@ public class AppStatus {
     boolean connected = false;
 
     public static AppStatus getInstance(Context ctx) {
+        Log.i("AppStatus - getInstance", "Methode gestartet");
         context = ctx.getApplicationContext();
         return instance;
     }
@@ -29,6 +30,7 @@ public class AppStatus {
      * @return true --> ja Internet , false --> kein Internet
      */
     public boolean isOnline() {
+        Log.i("AppStatus - isOnline", "Methode gestartet");
         try {
             //Mit Hilfe des ConnectivityManagers wird ausgelesen ob eine Internetverbindung besteht oder nicht
             connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
