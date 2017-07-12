@@ -77,6 +77,7 @@ public class RecipeFragment extends Fragment {
 
     @Override
     public void onAttach(Context context) {
+        Log.i("Recipe-Fragment onAttach", "Methode gestartet");
         super.onAttach(context);
         //Der Developer key wird später aus der properties-Datei ausgelesen
         Properties properties = new Properties();
@@ -96,6 +97,7 @@ public class RecipeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.i("Recipe-Fragment onCreate", "Methode gestartet");
         View view = inflater.inflate(R.layout.fragment_rezepte, container, false);
 
         metrics = this.getResources().getDisplayMetrics();
@@ -142,6 +144,7 @@ public class RecipeFragment extends Fragment {
 
     @Override
     public void onPause(){
+        Log.i("Recipe-Fragment onPause", "Methode gestartet");
         super.onPause();
     }
 
@@ -149,6 +152,7 @@ public class RecipeFragment extends Fragment {
      * Diese Methode hidet den Progress Dialog
      */
     public void cancelProgressDialog() {
+        Log.i("Recipe-Fragment cancelProgressDialog", "Methode gestartet");
         _alertDialog.dismiss();
     }
 
@@ -159,6 +163,7 @@ public class RecipeFragment extends Fragment {
      * @return gibt die aktuelle Stundenzeit zurück
      */
     public int actualHour(){
+        Log.i("Recipe-Fragment actualHour", "Methode gestartet");
         int hh;
         Calendar kalendar = Calendar.getInstance();
         //Umstellung des Zeitformat nur auf die Stunden
@@ -174,6 +179,7 @@ public class RecipeFragment extends Fragment {
      * @return gibt den Essentyp für den Titel an
      */
     public String getEssensTyp(int hh){
+        Log.i("Recipe-Fragment getEssensTyp", "Methode gestartet");
         //breakfast 6-9
         //appetizer 10-11
         //main course 12-14
@@ -225,6 +231,7 @@ public class RecipeFragment extends Fragment {
      * @return gibt den Typ des Essens zurück (für den API Parameter typ)
      */
     public String getEssensTypAnfrage(int hh) {
+        Log.i("Recipe-Fragment getEssensTypAnfrage", "Methode gestartet");
         //breakfast 6-9
         //appetizer 10-11
         //main course 12-14
@@ -285,7 +292,7 @@ public class RecipeFragment extends Fragment {
          */
         @Override
         protected Bitmap doInBackground(String... url) {
-            Log.i("GetImage - DoInBackground", "Methode gestartet");
+            Log.i("GetImage - doInBackground", "Methode gestartet");
 
             Bitmap icon = null;
             if (AppStatus.getInstance(context).isOnline()) {
@@ -396,7 +403,7 @@ public class RecipeFragment extends Fragment {
          */
         @Override
         protected void onPostExecute(AsyncTaskResult asyncTaskResult) {
-            Log.i("onPostExecute", "Methode begonnen");
+            Log.i("Recipe API - onPostExecute", "Methode begonnen");
 
             if (asyncTaskResult.isSuccessful()) {
                 Log.i("onPostExecute","AsynTaskResult ist successfull");
@@ -485,7 +492,7 @@ public class RecipeFragment extends Fragment {
          * @throws Exception
          */
         protected String getRecipe(String typ) throws Exception {
-            Log.i("getRecipe ","Methode begonnen");
+            Log.i("Recipe API - getRecipe ","Methode begonnen");
             if (AppStatus.getInstance(context).isOnline()) {
                 Log.i("getRecipe ","Internetverbindung vorhanden");
 
@@ -539,7 +546,7 @@ public class RecipeFragment extends Fragment {
          * @throws JSONException
          */
         protected ArrayList parseRecipe(String jsonString) throws JSONException {
-            Log.i("parseRecipe", "Methode begonnen");
+            Log.i("Recipe API - parseRecipe", "Methode begonnen");
 
             //Eigentliches parsen
             JSONObject jsonObject = new JSONObject(jsonString);
